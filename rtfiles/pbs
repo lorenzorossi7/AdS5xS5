@@ -1,0 +1,32 @@
+#!/bin/bash
+############################################################
+## 'man qsub' for additional information.
+############################################################
+
+#PBS -N AdS5D1p1
+#PBS -l nodes=4:ppn=1
+#PBS -l walltime=24:00:00
+#PBS -r n
+
+export NPROCS=`wc -l $PBS_NODEFILE |gawk '//{print $1}'`
+
+### The following statements dump some diagnostic information to 
+### the batch job's standard output.
+echo The master node of this job is `hostname`
+echo The working directory is `echo $PBS_O_WORKDIR`
+echo The node file is $PBS_NODEFILE
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+echo This job runs on the following nodes:
+echo `cat $PBS_NODEFILE`
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+echo This job has allocated $NPROCS nodes
+
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+
+### Change to the working directory of the qsub command. 
+cd $PBS_O_WORKDIR
+
+### the full pathname as is done here.
+cat /home/bantilan/numrel/AdS5D1p1/src/AdS5D1p1.fparam AdS5D1p1.rtparam > localAdS5D.param
+/bin/cp /home/bantilan/numrel/AdS5D1p1/src/AdS5D1p1 localAdS5D
+mpirun --mca btl_openib_ib_timeout 20 -hostfile $PBS_NODEFILE ./localAdS5D localAdS5D.param | tee out
