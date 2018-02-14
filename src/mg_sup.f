@@ -201,8 +201,8 @@ c
 c NOTE: if we ever add gb_xy,gb_xz,gb_yz, must define them
 c       as AMRD MG_cnst vars
 c-----------------------------------------------------------------------
-        subroutine init_ghb(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,
-     &                      L,phys_bdy,x,chr,ex,Nx,rhoa,rhob)
+        subroutine init_ghb(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,rhoa,rhob,
+     &                      L,phys_bdy,chr,ex,x,Nx)
         implicit none
         integer Nx
         integer phys_bdy(2)

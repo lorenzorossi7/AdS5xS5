@@ -34,6 +34,15 @@ real phi1_amp_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[1],phi1_width_1[1],phi1_amp2_1,
 real phi1_amp_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[1],phi1_width_2[1],phi1_amp2_2,phi1_r02_2,phi1_delta2_2,phi1_x02_2[1],phi1_width2_2[1];
 real phi1_amp_3,phi1_r0_3,phi1_delta_3,phi1_x0_3[1],phi1_width_3[1],phi1_amp2_3,phi1_r02_3,phi1_delta2_3,phi1_x02_3[1],phi1_width2_3[1];
 
+// if nonzero, initialize with exact BH
+real ief_bh_r0;
+
+// excision parameters
+real ex_rbuf[MAX_BHS];
+
+// "internal" excision parameters, set by AH finder 
+real ex_r[MAX_BHS][2],ex_xc[MAX_BHS][2];
+
 int background,skip_constraints;
 
 // new parameters in rtfile
@@ -487,6 +496,31 @@ void AdS5xS5_var_post_init(char *pfile)
    rhoa=1; AMRD_real_param(pfile,"rhoa",&rhoa,1);
    rhob=1; AMRD_real_param(pfile,"rhob",&rhob,1);
 
+   // set fraction, 1-ex_rbuf, of AH radius to be excised
+   int j;
+   char buf[64];
+   for (j=0; j<MAX_BHS; j++)
+   {
+      AMRD_real_param(pfile,buf,&ex_rbuf[j],1);
+      if (ex_rbuf[j]<0 || ex_rbuf[j]>1 ) printf("WARNING ... ex_rbuf[%i]=%lf is outside of standard bbox\n",j,ex_rbuf[j]);
+   }
+
+   ief_bh_r0=0; AMRD_real_param(pfile,"ief_bh_r0",&ief_bh_r0,1);
+
+   // (the following is for a single analytic BH j=0)
+   // xh is radius in uncompcatified coordicates, xh_c in compactified,
+   // ief_bh_r0 is BH radius parameter, ex_r[c_BH][0] is excision radius
+   if (ief_bh_r0!=0)
+   {
+     real xh,xh_c;
+     xh=AdS_L*sqrt(sqrt(1+4*ief_bh_r0*ief_bh_r0/AdS_L/AdS_L)/2-0.5);
+     xh_c=xh/(1+xh);
+     ex_r[0][0]=xh_c*(1-ex_rbuf[0]);
+     if (my_rank==0) printf("\nBH initial data\n xh/L=%lf\n"
+                            "Initial BH radius=%lf, (%lf in compactified (code) coords)\n"
+                            "Initial excision radius=%lf\n\n",xh/AdS_L,xh,xh_c,ex_r[0][0]);
+   }
+
    if (AMRD_do_ex==0) AMRD_stop("require excision to be on","");
 
    PAMR_excision_on("chr",&AdS5xS5_fill_ex_mask,AMRD_ex,1);
@@ -576,8 +610,16 @@ void AdS5xS5_t0_cnst_data(void)
    ldptr_mg();
 
    // initialize gbars
-   init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,
-             &AdS_L,phys_bdy,x,chr_mg,&AMRD_ex,&Nx,&rhoa,&rhob);
+   if (ief_bh_r0==0 && skip_constraints==0)
+   {
+     init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,&rhoa,&rhob,
+               &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
+   }
+   else
+   {
+     init_schw_(gb_tt,gb_tx,gb_xx,psi,&ief_bh_r0,
+                &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
+   }   
 
    // initialize nm1,np1 time levels and hbars
    if (AMRD_id_pl_method==3 && phi1_nm1)
@@ -816,6 +858,13 @@ void AdS5xS5_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real exci
    {
       x=bbox[0]+i*dx;
       mask[i]=excised-1;
+      for (l=0; l<MAX_BHS; l++)
+      {
+         if (ief_bh_r0!=0) // only activates for analytic BH initial data (nonzero ief_bh_r0)
+         {
+           if (x/ex_r[l][0]<1) mask[i]=excised; 
+         }
+      }
    }
 
 }
@@ -903,6 +952,12 @@ real AdS5xS5_MG_residual(void)
 
    ldptr_mg();
 
+   if (skip_constraints)
+   {
+      zero_f(zetab_res);
+      return 0;
+   }
+
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,
            phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,&norm,&Nx);
@@ -922,6 +977,12 @@ real AdS5xS5_MG_relax(void)
 
    ldptr_mg();
 
+   if (skip_constraints)
+   {
+      const_f(zetab,1);
+      return 0;
+   } 
+
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,
            phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,&norm,&Nx);
@@ -940,6 +1001,12 @@ void AdS5xS5_L_op(void)
    real norm;
 
    ldptr_mg();
+
+   if (skip_constraints)
+   {
+      zero_f(zetab_lop);
+      return;
+   }
 
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,

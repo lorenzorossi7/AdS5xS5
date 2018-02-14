@@ -269,6 +269,71 @@ c-----------------------------------------------------------------------
         end
 
 c----------------------------------------------------------------------
+c initializes the metric to an exact black hole solution
+c with radius parameter r0
+c----------------------------------------------------------------------
+        subroutine init_schw(gb_tt,gb_tx,gb_xx,psi,r0,
+     &                       L,phys_bdy,chr,ex,x,Nx)
+        implicit none
+        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),psi(Nx)
+        real*8 chr(Nx),x(Nx)
+        real*8 r0,ex,L
+        integer phys_bdy(2)
+        integer i,Nx
+
+        real*8 r_h,x_h,x0
+
+        !--------------------------------------------------------------
+
+        ! compute horizon global radius r_h and corresponding compactified x_h
+        r_h=L*sqrt(2*sqrt(1+4*(r0/L)**2)-2)/2
+        x_h=r_h/(1+r_h)
+
+        ! initialize metric 
+        do i=1,Nx
+           if (chr(i).eq.ex) then
+              gb_tt(i)=0
+              gb_tx(i)=0
+              gb_xx(i)=0
+              psi(i)=0
+           else
+              x0=x(i)
+
+              ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
+              gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
+              gb_tx(i)=1/(1+x0)**2/(1-x_h)**5*(1-x0)
+              gb_xx(i)=-((L**2*(1 - x0)*
+     &                ((1 - x0)**6 - 4*(1 - x0)**7 + 
+     &                (6 + L**2)*(1 - x0)**8 - 
+     &                2*(2 + L**2)*(1 - x0)**9 + 
+     &                (1 + L**2)*(1 - x0)**10 - 
+     &                L**2*r0**2*(-1 + x_h)**10))/
+     &                ((1 + (1 - x0)*(-1 + L**2*(1 - x0) - x0))*
+     &                (-1 - x0)*(L**2*r0**2*(1 - x0)**4 - 
+     &                (1 + (1 - x0)*(-1 + L**2*(1 - x0) - x0))*
+     &                x0**2)*(-1 + x_h)**10))
+              psi(i)=0
+
+!              ! Schwarzschild coordinates (WARNING: not horizon-penetrating)
+!              gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
+!              gb_tx(i)=0
+!              gb_xx(i)=(L**4*r0**2*(1 - x0))/
+!     &                ((1 + (1 - x0)*(-1 + L**2*(1 - x0) - x0))*
+!     &                (-1 - x0)*(L**2*r0**2*(1 - x0)**4 - 
+!     &                (1 + (1 - x0)*(-1 + L**2*(1 - x0) - x0))*x0**2)
+!     &                )
+!              psi(i)=0
+
+           end if
+        end do
+
+        ! (REGION) x=0; impose regularity conditions 
+        call axi_reg_g(gb_tt,gb_tx,gb_xx,psi,chr,ex,L,x,Nx)
+
+        return
+        end
+
+c----------------------------------------------------------------------
 c calculates all the tensorial objects in x coordinates, at point i
 c----------------------------------------------------------------------
         subroutine tensor_init(

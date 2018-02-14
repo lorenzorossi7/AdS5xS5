@@ -18,6 +18,8 @@ extern int pre_tstep_global_first;
 extern real phi1_amp_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[1],phi1_width_1[1];
 extern real phi1_amp_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[1],phi1_width_2[1];
 
+extern real ief_bh_r0;
+
 extern int background,skip_constraints;
 
 extern int interptype, i_shift;
@@ -149,9 +151,6 @@ void ires_(real *efe_all_ires,real *kg_ires,
 void mg_sup_(int *action, real *zetab, real *zetab_rhs, real *zetab_lop,real *zetab_res, 
              real *phi1, real *AdS_L, real *cmask, int *phys_bdy, real *chr, real *ex, real *x, real *norm, int *Nx);
 
-void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_xx, real *psi,
-               real *AdS_L, int *phys_bdy, real *x, real *chr, real *ex, int *Nx, real* rhoa, real* rhob);
-
 void init_hb_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
               real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1, 
               real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1, 
@@ -184,5 +183,11 @@ void hb_i_evo_(real *res,
                int *phys_bdy, int *ghost_width, int *Nx,
                real *Hb_t_0, real *Hb_x_0,
                int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2);
+
+void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_xx, real *psi, real* rhoa, real* rhob,
+               real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, int *Nx);
+
+void init_schw(real *gb_tt, real *gb_tx, real *gb_xx, real *psi, real *ief_bh_r0, 
+               real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, int *Nx);
 
 #endif

@@ -19,10 +19,14 @@ c----------------------------------------------------------------------
 
         if (x(1).gt.dx/2) return
 
-        if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
-          phi(1)=(4*phi(2)-phi(3))/3
-        else
-          write(*,*) 'WARNING axi_reg_phi, dx=',dx
+        if (chr(1).ne.ex) then
+
+          if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
+            phi(1)=(4*phi(2)-phi(3))/3
+          else
+            write(*,*) 'WARNING axi_reg_phi, dx=',dx
+          end if
+
         end if
 
         return
@@ -50,13 +54,17 @@ c----------------------------------------------------------------------
 
         if (x(1).gt.dx/2) return
 
-        if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
-          gb_tt(1)=(4*gb_tt(2)-gb_tt(3))/3                            !gbtt,x=0 at x=0 
-          gb_xx(1)=-(4*gb_xx(2)-gb_xx(3))/3 + 2*(4*psi(2)-psi(3))/3   !gbxx,x=2*psi,x at x=0, substituting in psi=gbxx at x=0
-          psi(1)=gb_xx(1)                                             !psi=gbxx at x=0
-          gb_tx(1)=0                                                  !gbtx=0 at x=0
-        else
-          write(*,*) 'WARNING axi_reg_g, dx=',dx
+        if (chr(1).ne.ex) then
+
+          if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
+            gb_tt(1)=(4*gb_tt(2)-gb_tt(3))/3                            !gbtt,x=0 at x=0 
+            gb_xx(1)=-(4*gb_xx(2)-gb_xx(3))/3 + 2*(4*psi(2)-psi(3))/3   !gbxx,x=2*psi,x at x=0, substituting in psi=gbxx at x=0
+            psi(1)=gb_xx(1)                                             !psi=gbxx at x=0
+            gb_tx(1)=0                                                  !gbtx=0 at x=0
+          else
+            write(*,*) 'WARNING axi_reg_g, dx=',dx
+          end if
+
         end if
 
         return
@@ -84,11 +92,15 @@ c----------------------------------------------------------------------
 
         if (x(1).gt.dx/2) return
 
-        if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
-          Hb_t(1)=(4*Hb_t(2)-Hb_t(3))/3
-          Hb_x(1)=0
-        else
-          write(*,*) 'WARNING axi_reg_Hb, dx=',dx
+        if (chr(1).ne.ex) then
+
+          if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
+            Hb_t(1)=(4*Hb_t(2)-Hb_t(3))/3
+            Hb_x(1)=0
+          else
+            write(*,*) 'WARNING axi_reg_Hb, dx=',dx
+          end if
+
         end if
 
         return
