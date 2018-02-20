@@ -23,8 +23,8 @@ do_ex := 1
 #       See the maple scripts for the exact definitions     
 #==============================================================================
 
-num_hyperbolic_vars := 22
-hyperbolic_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_hyperbolic_vars := 28
+hyperbolic_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
 #==============================================================================
 # For now only time-symmetric initial data ... conformal to slice of  AdS space
@@ -46,17 +46,17 @@ MGH_work_vars := [ "mg_w1" "mg_w2" "mg_w3" "mg_w4" ]
 num_AMRH_work_in_MGH_vars := 12
 AMRH_work_in_MGH_vars := [ "w1" "w2" "w3" "w4" "gb_res" "hb_t_res" "hb_i_res" "Hb_t_0" "Hb_x_0" "kg_res" "efe_all_ires" "kg_ires" ]
 
-num_amr_inject   := 22
-amr_inject       := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_amr_inject   := 28
+amr_inject       := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
-num_amr_sync     := 22
-amr_sync         := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_amr_sync     := 28
+amr_sync         := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
-num_amr_interp4  := 22
-amr_interp4      := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_amr_interp4  := 28
+amr_interp4      := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
-num_amr_transfer4:= 22
-amr_transfer4    := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_amr_transfer4:= 28
+amr_transfer4    := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
 num_mg_hw_restr  := 2
 mg_hw_restr      := [ "zetab" "phi1" ]
@@ -67,24 +67,24 @@ mg_sync          := [ "zetab" ]
 num_mg_interp2   := 1
 mg_interp2       := [ "zetab" ]
 
-num_MG_cnst_data_vars := 20
-MG_cnst_data_vars     := [ "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]  
+num_MG_cnst_data_vars := 26
+MG_cnst_data_vars     := [ "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]  
 
-num_rg_diss_vars := 22
-rg_diss_vars     := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_rg_diss_vars := 28
+rg_diss_vars     := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
-num_tn_diss_vars := 22
-tn_diss_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
-num_tnp1_diss_vars := 22
-tnp1_diss_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_tn_diss_vars := 28
+tn_diss_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_tnp1_diss_vars := 28
+tnp1_diss_vars := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
-num_even_vars_x0min := 16
-even_vars_x0min := [ "phi1" "phi1_t" "gb_tt" "gb_tt_t" "gb_xx" "gb_xx_t" "psi" "psi_t" "gb_ty" "gb_ty_t" "gb_yy" "gb_yy_t" "omega" "omega_t" "Hb_t" "Hb_t_t" ]
-num_odd_vars_x0min := 6
-odd_vars_x0min := [ "gb_tx" "gb_tx_t" "gb_xy" "gb_xy_t" "Hb_x" "Hb_x_t" ]
+num_even_vars_x0min := 20
+even_vars_x0min := [ "phi1" "phi1_t" "gb_tt" "gb_tt_t" "gb_xx" "gb_xx_t" "psi" "psi_t" "gb_ty" "gb_ty_t" "gb_yy" "gb_yy_t" "omega" "omega_t" "fb_t" "fb_t_t" "fb_y" "fb_y_t" "Hb_t" "Hb_t_t" ]
+num_odd_vars_x0min := 8
+odd_vars_x0min := [ "gb_tx" "gb_tx_t" "gb_xy" "gb_xy_t" "fb_x" "fb_x_t" "Hb_x" "Hb_x_t" ]
 
 num_even_vars_x0max := 0
-num_odd_vars_x0max := 22
-odd_vars_x0max := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_odd_vars_x0max := 28
+odd_vars_x0max := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
 
 #-----------------------------------------------------
