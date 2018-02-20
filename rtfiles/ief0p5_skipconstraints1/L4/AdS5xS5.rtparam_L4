@@ -164,14 +164,14 @@ which_gb_ii_res := 0
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 10
-save_1_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "Hb_t" "Hb_x" "chr" "iresall" "gb_res" ]
+num_save_1_vars := 14
+save_1_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "Hb_t" "Hb_x" "chr" "iresall" "gb_res" ]
 
-num_save_2_vars := 7
-save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "Hb_t" "Hb_x" ]
+num_save_2_vars := 11
+save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "Hb_t" "Hb_x" ]
 
-num_save_3_vars := 7
-save_3_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "Hb_t" "Hb_x" ]
+num_save_3_vars := 11
+save_3_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "gb_ty" "gb_xy" "gb_yy" "omega" "psi" "Hb_t" "Hb_x" ]
 
 calc_global_var_norms := 1
 global_var_norm_floor := 1
