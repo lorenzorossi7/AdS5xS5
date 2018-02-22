@@ -1,7 +1,7 @@
 //============================================================================
-// in polar coordinates t,x for x in [0,1]
-// using r=x/(1-x) compactification
-// using (t,r,psi) in the AdS_5 sector and (chi,omega) in the S^5 sector
+// in polar coordinates t,x,y for x in [0,1] and y in [0,1]
+// using r=x/(1-x) compactification and \chi=\pi y rescaling 
+// using (t,x,psi) in the AdS_5 sector and (y,omega) in the S^5 sector
 //
 // application interface functions for AdS5xS5
 //=============================================================================

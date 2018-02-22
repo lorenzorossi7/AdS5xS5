@@ -374,8 +374,8 @@ c----------------------------------------------------------------------
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 dx
-        real*8 x0     
+        real*8 dx,dy
+        real*8 x0,y0   
 
         real*8 grad_phi1_sq
 
@@ -395,6 +395,8 @@ c----------------------------------------------------------------------
         real*8 einstein_ll(5,5),set_ll(5,5)
         real*8 Hads_l(5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
+        real*8 f0_l(5),f0_ll(5,5),FF_ll(5,5)
+        real*8 fads_l(5),fads_ll(5,5)
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -413,24 +415,27 @@ c----------------------------------------------------------------------
         real*8 phi1_tt,phi1_tx,phi1_xx
   
         real*8 gb_tt0,gb_tx0,gb_xx0,psi0,phi10
+        real*8 g0_tt_ads0,g0_xx_ads0,g0_psi_ads0
 
         real*8 g0_tt_ads_x,g0_tt_ads_xx
         real*8 g0_xx_ads_x,g0_xx_ads_xx
         real*8 g0_psi_ads_x,g0_psi_ads_xx
 
-        real*8 g0_tt_ads0,g0_xx_ads0,g0_psi_ads0
-
         real*8 Hb_t_t,Hb_t_x
         real*8 Hb_x_t,Hb_x_x
 
         real*8 Hb_t0,Hb_x0
+
+        real*8 fb_t0,fb_x0,fb_y0
+        real*8 f0_tx_ads0,f0_y_ads0
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
 
         x0=x(i)
 
-        ! set gads values
+        ! set gads values using sin(theta1)=sin(theta2)=1 w.l.o.g 
+        !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_tt_ads0 =-((1-x0)**2+x0**2)/(1-x0)**2
         g0_xx_ads0 =1/((1-x0)**2+x0**2)/(1-x0)**2
         g0_psi_ads0=x0**2/(1-x0)**2
@@ -447,6 +452,11 @@ c----------------------------------------------------------------------
 
         ! set phi1 value
         phi10=phi1_n(i)
+
+        ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
+        f0_tx_ads0 = 4/L*(-16*x0**3*(1+x0**2)/(1-x0**2)**5)
+        f0_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
 
         ! set gads derivatives
         g0_tt_ads_x  =-2*x0/(1-x0)**3
@@ -490,8 +500,8 @@ c----------------------------------------------------------------------
      &       phi1_tt,phi1_tx,phi1_xx,
      &       dx,dt,i,chr,ex,Nx,'phi1')
 
-        ! give values to the metric, using sin(chi)=1,sin(theta)=1 w.l.o.g 
-        !(considering chi,theta-independent case, so chi=pi/2,theta=pi/2 will do)
+        ! give values to the metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
+        !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
         g0_ll(1,2)=           gb_tx0*(1-x0**2)**2
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
@@ -678,8 +688,8 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        ! give values to the ads metric, using sin(chi)=1,sin(theta)=1 w.l.o.g 
-        !(considering chi,theta-independent case, so chi=pi/2,theta=pi/2 will do)
+        ! give values to the ads metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
+        !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         gads_ll(1,1)=g0_tt_ads0
         gads_ll(2,2)=g0_xx_ads0
         gads_ll(3,3)=g0_psi_ads0
@@ -749,8 +759,8 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        ! give values to the metric deviation, using sin(chi)=1,sin(theta)=1 w.l.o.g 
-        !(considering chi,theta-independent case, so chi=pi/2,theta=pi/2 will do)
+        ! give values to the metric deviation, using sin(theta1)=sin(theta2)=1 w.l.o.g 
+        !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 will do)
         h0_ll(1,1)=gb_tt0*(1-x0**2)
         h0_ll(1,2)=gb_tx0*(1-x0**2)**2
         h0_ll(2,2)=gb_xx0*(1-x0**2)
