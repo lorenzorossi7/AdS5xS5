@@ -401,6 +401,7 @@ c----------------------------------------------------------------------
         real*8 f0_l(5),f0_ll(5,5),ff_ll(5,5)
         real*8 f_lllll(5,5,5,5,5),f_luuuu(5,5,5,5,5)
         real*8 fads_l(5),fads_ll(5,5)
+        real*8 levicivi(5,5,5),vol(5,5,5),sqrtdetg
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -898,6 +899,43 @@ c----------------------------------------------------------------------
         do a=1,4
           do b=a+1,5
             phi10_xx(b,a)=phi10_xx(a,b)
+          end do
+        end do
+
+        ! define Levi Civita symbol
+        do a=1,3
+          do b=1,3
+            do c=1,3
+                if ((a.eq.1.and.b.eq.2.and.c.eq.3)
+     &          .or.(a.eq.3.and.b.eq.1.and.c.eq.2)
+     &          .or.(a.eq.2.and.b.eq.3.and.c.eq.1))
+     &          then
+                  levicivi(a,b,c)=+1
+                end if
+                if ((a.eq.2.and.b.eq.1.and.c.eq.3)
+     &          .or.(a.eq.1.and.b.eq.3.and.c.eq.2)
+     &          .or.(a.eq.3.and.b.eq.2.and.c.eq.1))
+     &          then
+                  levicivi(a,b,c)=-1
+                end if
+            end do
+          end do
+        end do
+
+       ! define square root of determinant of metric in (t,x,y) subsector
+       sqrtdetg=sqrt(abs(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)
+     &                  +g0_ll(1,2)*g0_ll(2,3)*g0_ll(3,1)
+     &                  +g0_ll(1,3)*g0_ll(2,1)*g0_ll(3,2)
+     &                  -g0_ll(1,3)*g0_ll(2,2)*g0_ll(3,1)
+     &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
+     &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2)))
+
+       ! define volume form in in (t,x,y) subsector
+        do a=1,3
+          do b=1,3
+            do c=1,3
+              vol(a,b,c)=levicivi(a,b,c)*sqrtdetg
+            end do
           end do
         end do
 
