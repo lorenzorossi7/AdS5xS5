@@ -368,8 +368,11 @@ c----------------------------------------------------------------------
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
         real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
+        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
+        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
+        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
 
-        integer a,b,c,d,e,f,g,h
+        integer a,b,c,d,e,m,n,o,p
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -395,7 +398,8 @@ c----------------------------------------------------------------------
         real*8 einstein_ll(5,5),set_ll(5,5)
         real*8 Hads_l(5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
-        real*8 f0_l(5),f0_ll(5,5),FF_ll(5,5)
+        real*8 f0_l(5),f0_ll(5,5),ff_ll(5,5)
+        real*8 f_lllll(5,5,5,5,5),f_luuuu(5,5,5,5,5)
         real*8 fads_l(5),fads_ll(5,5)
 
         !--------------------------------------------------------------
@@ -440,11 +444,21 @@ c----------------------------------------------------------------------
         g0_xx_ads0 =1/((1-x0)**2+x0**2)/(1-x0)**2
         g0_psi_ads0=x0**2/(1-x0)**2
 
+        ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
+        f0_tx_ads0 = 4/L*(-16*x0**3*(1+x0**2)/(1-x0**2)**5)
+        f0_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
+
         ! set gbar values
         gb_tt0=gb_tt_n(i)
         gb_tx0=gb_tx_n(i)
         gb_xx0=gb_xx_n(i)
         psi0  =psi_n(i)
+
+        ! set fbar values
+        fb_t0=fb_t_n(i)
+        fb_x0=fb_x_n(i)
+        fb_y0=fb_y_n(i)
 
         ! set hbar values
         Hb_t0=Hb_t_n(i)
@@ -452,11 +466,6 @@ c----------------------------------------------------------------------
 
         ! set phi1 value
         phi10=phi1_n(i)
-
-        ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
-        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f0_tx_ads0 = 4/L*(-16*x0**3*(1+x0**2)/(1-x0**2)**5)
-        f0_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
 
         ! set gads derivatives
         g0_tt_ads_x  =-2*x0/(1-x0)**3
@@ -891,6 +900,76 @@ c----------------------------------------------------------------------
             phi10_xx(b,a)=phi10_xx(a,b)
           end do
         end do
+
+        ! give values to the field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
+        f0_l(1)   =          fb_t0
+        f0_l(2)   =          fb_x0
+        f0_l(3)   =f0_y_ads0+fb_y0
+        f0_ll(1,2)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
+        f0_ll(1,3)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
+        f0_ll(2,3)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
+
+        ! give values to the ads field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do) 
+        fads_ll(1,2)=f0_tx_ads0
+        fads_l(3)   =f0_y_ads0
+
+        ! calculate field strength F_abcde = 
+        do a=1,5
+          do b=1,5
+            do c=1,5
+              do d=1,5
+                do e=1,5
+                  f_lllll(a,b,c,d,e)=0.0d0 !need to update as (5) in small_bh_AdS5xS5.tex
+                end do
+              end do
+            end do
+          end do
+        end do
+        
+        ! calculate raised field strength F_a^bcde = F_a
+        do a=1,5
+          do b=1,5
+            do c=1,5
+              do d=1,5
+                do e=1,5
+                  f_luuuu(a,b,c,d,e)=0.0d0
+                  do m=1,5
+                    do n=1,5
+                      do o=1,5
+                        do p=1,5
+                          f_luuuu(a,b,c,d,e)=f_luuuu(a,b,c,d,e)
+     &                                      +f_lllll(a,m,n,o,p)
+     &                                      *g0_uu(b,m)*g0_uu(c,n)
+     &                                      *g0_uu(d,o)*g0_uu(e,p)
+                        end do
+                      end do
+                    end do
+                  end do
+                end do
+              end do
+            end do
+          end do
+        end do
+
+        ! calculate contraction of field strength F_acdem F_b^cdem
+        do a=1,5
+          do b=1,5
+            ff_ll(a,b)=0.0d0
+            do c=1,5
+              do d=1,5
+                do e=1,5
+                  do m=1,5
+                    ff_ll(a,b)=ff_ll(a,b)
+     &                        +f_lllll(a,c,d,e,m)
+     ^                        *f_luuuu(b,c,d,e,m)
+                  end do
+                end do
+              end do
+            end do
+          end do
+        end do 
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
