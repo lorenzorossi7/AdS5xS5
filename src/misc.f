@@ -352,6 +352,7 @@ c----------------------------------------------------------------------
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                  einstein_ll,set_ll,
      &                  phi10_x,phi10_xx,
+!     &                  ff_ll,
      &                  x,dt,chr,L,ex,Nx,i)
         implicit none
 
@@ -372,7 +373,7 @@ c----------------------------------------------------------------------
         real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
         real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
 
-        integer a,b,c,d,e,m,n,o,p
+        integer a,b,c,d,e,f,m,n,o,p
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -384,7 +385,7 @@ c----------------------------------------------------------------------
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
-        !(indices are t,x,y,theta,phi)
+        !(indices are t,x,y,psi,omega)
         !--------------------------------------------------------------
         real*8 g0_ll(5,5),g0_uu(5,5)
         real*8 g0_ll_x(5,5,5),g0_uu_x(5,5,5),g0_ll_xx(5,5,5,5)
@@ -398,10 +399,11 @@ c----------------------------------------------------------------------
         real*8 einstein_ll(5,5),set_ll(5,5)
         real*8 Hads_l(5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
-        real*8 f0_l(5),f0_ll(5,5),ff_ll(5,5)
-        real*8 f_lllll(5,5,5,5,5),f_luuuu(5,5,5,5,5)
-        real*8 fads_l(5),fads_ll(5,5)
-        real*8 levicivi(5,5,5),vol(5,5,5),sqrtdetg
+        !NOTE: below I have implemented direct calculation
+        real*8 f0_l(10),f0_ll(10,10),ff_ll(10,10) 
+        real*8 f_lllll(10,10,10,10,10)
+        real*8 fads_l(10),fads_ll(10,10)
+        real*8 levicivi(3,3,3),vol(3,3,3),sqrtdetg
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -944,43 +946,50 @@ c----------------------------------------------------------------------
         f0_l(1)   =          fb_t0
         f0_l(2)   =          fb_x0
         f0_l(3)   =f0_y_ads0+fb_y0
-        f0_ll(1,2)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
-        f0_ll(1,3)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
-        f0_ll(2,3)=0.0d0 ! NOTE: need to update as (7) in small_bh_AdS5xS5.tex
+        f0_ll(1,2)=0.0d0 
+        f0_ll(1,3)=0.0d0 
+        f0_ll(2,3)=0.0d0 
+        do a=1,3
+          do b=1,3
+            f0_ll(1,2)=-vol(1,2,a)*f0_l(b)*g0_uu(a,b)
+            f0_ll(1,3)=-vol(1,3,a)*f0_l(b)*g0_uu(a,b)
+            f0_ll(2,3)=-vol(2,3,a)*f0_l(b)*g0_uu(a,b)
+          end do
+        end do
 
         ! give values to the ads field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do) 
         fads_ll(1,2)=f0_tx_ads0
         fads_l(3)   =f0_y_ads0
 
-        ! calculate field strength F_abcde = 
-        do a=1,5
-          do b=1,5
-            do c=1,5
-              do d=1,5
-                do e=1,5
-                  f_lllll(a,b,c,d,e)=0.0d0 !need to update as (5) in small_bh_AdS5xS5.tex
-                end do
-              end do
-            end do
-          end do
-        end do
-        
-        ! calculate raised field strength F_a^bcde = F_a
-        do a=1,5
-          do b=1,5
-            do c=1,5
-              do d=1,5
-                do e=1,5
-                  f_luuuu(a,b,c,d,e)=0.0d0
-                  do m=1,5
-                    do n=1,5
-                      do o=1,5
-                        do p=1,5
-                          f_luuuu(a,b,c,d,e)=f_luuuu(a,b,c,d,e)
-     &                                      +f_lllll(a,m,n,o,p)
-     &                                      *g0_uu(b,m)*g0_uu(c,n)
-     &                                      *g0_uu(d,o)*g0_uu(e,p)
+        ! calculate field strength F_abcde 
+        f_lllll(1,2,4,5,6) =f0_ll(1,2)
+        f_lllll(1,3,4,5,6) =f0_ll(1,3)
+        f_lllll(2,3,4,5,6) =f0_ll(2,3)
+        f_lllll(1,7,8,9,10)=f0_l(1)
+        f_lllll(2,7,8,9,10)=f0_l(2)
+        f_lllll(3,7,8,9,10)=f0_l(3)
+
+        ! NOTE: need to antisymmetrize f_lllll
+
+        ! calculate contraction of field strength F_acemo*F_bdfmp*g^cd*g^ef*g^mn*g^op
+        do a=1,10
+          do b=1,10
+            ff_ll(a,b)=0.0d0
+            do c=1,10
+              do d=1,10
+                do e=1,10
+                  do f=1,10
+                    do m=1,10
+                      do n=1,10
+                        do o=1,10
+                          do p=1,10
+                            ff_ll(a,b)=ff_ll(a,b)
+     &                                +f_lllll(a,c,e,m,o)
+     &                                *f_lllll(b,d,f,n,p)
+     &                                *g0_uu(c,d)*g0_uu(e,f)
+     &                                *g0_uu(m,n)*g0_uu(o,p)
+                          end do
                         end do
                       end do
                     end do
@@ -989,25 +998,8 @@ c----------------------------------------------------------------------
               end do
             end do
           end do
-        end do
-
-        ! calculate contraction of field strength F_acdem F_b^cdem
-        do a=1,5
-          do b=1,5
-            ff_ll(a,b)=0.0d0
-            do c=1,5
-              do d=1,5
-                do e=1,5
-                  do m=1,5
-                    ff_ll(a,b)=ff_ll(a,b)
-     &                        +f_lllll(a,c,d,e,m)
-     ^                        *f_luuuu(b,c,d,e,m)
-                  end do
-                end do
-              end do
-            end do
-          end do
         end do 
+!        write(*,*) 'ff_ll(1,2)=',ff_ll(1,1)
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)

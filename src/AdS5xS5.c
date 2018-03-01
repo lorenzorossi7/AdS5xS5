@@ -1,7 +1,8 @@
 //============================================================================
 // in polar coordinates t,x,y for x in [0,1] and y in [0,1]
 // using r=x/(1-x) compactification and \chi=\pi y rescaling 
-// using (t,x,psi) in the AdS_5 sector and (y,omega) in the S^5 sector
+// coordinate labels are (1:t),(2:x),(3:y),(4,5,6,:psi),(7,8,9,10:omega) 
+// for (t,x,psi) in the AdS_5 sector and (y,omega) in the S^5 sector
 //
 // application interface functions for AdS5xS5
 //=============================================================================
@@ -614,6 +615,8 @@ void AdS5xS5_var_post_init(char *pfile)
    char buf[64];
    for (j=0; j<MAX_BHS; j++)
    {
+      if (j==0) { if (!AMRD_cp_restart) ex_rbuf[j]=0; sprintf(buf,"ex_rbuf"); }
+      else { if (!AMRD_cp_restart) ex_rbuf[j]=ex_rbuf[0]; sprintf(buf,"ex_rbuf_%i",j+1); }
       AMRD_real_param(pfile,buf,&ex_rbuf[j],1);
       if (ex_rbuf[j]<0 || ex_rbuf[j]>1 ) printf("WARNING ... ex_rbuf[%i]=%lf is outside of standard bbox\n",j,ex_rbuf[j]);
    }

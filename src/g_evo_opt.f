@@ -173,6 +173,7 @@ c----------------------------------------------------------------------
         real*8 einstein_ll(5,5),set_ll(5,5)
         real*8 Hads_l(5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
+        real*8 ff_ll(10,10)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -246,6 +247,8 @@ c----------------------------------------------------------------------
         data phi10_x/5*0.0/
         data phi10_xx/25*0.0/
 
+        data ff_ll/100*0.0/
+
         !--------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
 
@@ -301,6 +304,7 @@ c----------------------------------------------------------------------
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
+!     &                ff_ll,
      &                x,dt,chr,L,ex,Nx,i)
 
               ! computes auxiliary objects at point i
