@@ -464,129 +464,791 @@ c----------------------------------------------------------------------
               ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
               !
               !----------------------------------------------------------------
-              do a=1,3
-                do b=a,3
-                  term1(a,b)=-0.5d0*(                             
-     &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
-     &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
-     &                          g0_uu(3,3)*g0_ll_xx(a,b,3,3)+
-     &                          g0_uu(4,4)*g0_ll_xx(a,b,4,4)+
-     &                          g0_uu(5,5)*g0_ll_xx(a,b,5,5)+
-     &                       2*(g0_uu(1,2)*g0_ll_xx(a,b,1,2)+
-     &                          g0_uu(1,3)*g0_ll_xx(a,b,1,3)+
-     &                          g0_uu(1,4)*g0_ll_xx(a,b,1,4)+
-     &                          g0_uu(1,5)*g0_ll_xx(a,b,1,5)+
-     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3)+
-     &                          g0_uu(2,4)*g0_ll_xx(a,b,2,4)+
-     &                          g0_uu(2,5)*g0_ll_xx(a,b,2,5)+
-     &                          g0_uu(3,4)*g0_ll_xx(a,b,3,4)+
-     &                          g0_uu(3,5)*g0_ll_xx(a,b,3,5)+
-     &                          g0_uu(4,5)*g0_ll_xx(a,b,4,5))
+!              do a=1,3
+!                do b=a,3
+!                  term1(a,b)=-0.5d0*(                             
+!     &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
+!     &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
+!     &                          g0_uu(3,3)*g0_ll_xx(a,b,3,3)+
+!     &                          g0_uu(4,4)*g0_ll_xx(a,b,4,4)+
+!     &                          g0_uu(5,5)*g0_ll_xx(a,b,5,5)+
+!     &                       2*(g0_uu(1,2)*g0_ll_xx(a,b,1,2)+
+!     &                          g0_uu(1,3)*g0_ll_xx(a,b,1,3)+
+!     &                          g0_uu(1,4)*g0_ll_xx(a,b,1,4)+
+!     &                          g0_uu(1,5)*g0_ll_xx(a,b,1,5)+
+!     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3)+
+!     &                          g0_uu(2,4)*g0_ll_xx(a,b,2,4)+
+!     &                          g0_uu(2,5)*g0_ll_xx(a,b,2,5)+
+!     &                          g0_uu(3,4)*g0_ll_xx(a,b,3,4)+
+!     &                          g0_uu(3,5)*g0_ll_xx(a,b,3,5)+
+!     &                          g0_uu(4,5)*g0_ll_xx(a,b,4,5))
+!     &                              )
+!     &
+!                  term2(a,b)=-0.5d0*(                             
+!     &                          g0_uu_x(1,1,a)* g0_ll_x(b,1,1) +
+!     &                          g0_uu_x(1,2,a)*(g0_ll_x(b,1,2) +
+!     &                                          g0_ll_x(b,2,1))+
+!     &                          g0_uu_x(1,3,a)*(g0_ll_x(b,1,3) +
+!     &                                          g0_ll_x(b,3,1))+
+!     &                          g0_uu_x(1,4,a)*(g0_ll_x(b,1,4) +
+!     &                                          g0_ll_x(b,4,1))+
+!     &                          g0_uu_x(1,5,a)*(g0_ll_x(b,1,5) +
+!     &                                          g0_ll_x(b,5,1))+
+!     &                          g0_uu_x(2,2,a)* g0_ll_x(b,2,2) +
+!     &                          g0_uu_x(2,3,a)*(g0_ll_x(b,2,3) +
+!     &                                          g0_ll_x(b,3,2))+
+!     &                          g0_uu_x(2,4,a)*(g0_ll_x(b,2,4) +
+!     &                                          g0_ll_x(b,4,2))+
+!     &                          g0_uu_x(2,5,a)*(g0_ll_x(b,2,5) +
+!     &                                          g0_ll_x(b,5,2))+
+!     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3) +
+!     &                          g0_uu_x(3,4,a)*(g0_ll_x(b,3,4) +
+!     &                                          g0_ll_x(b,4,3))+
+!     &                          g0_uu_x(3,5,a)*(g0_ll_x(b,3,5) +
+!     &                                          g0_ll_x(b,5,3))+
+!     &                          g0_uu_x(4,4,a)* g0_ll_x(b,4,4) +
+!     &                          g0_uu_x(4,5,a)*(g0_ll_x(b,4,5) +
+!     &                                          g0_ll_x(b,5,4))+
+!     &                          g0_uu_x(5,5,a)* g0_ll_x(b,5,5)
+!     &                            )
+!     &
+!                  term3(a,b)=-0.5d0*(                            
+!     &                          g0_uu_x(1,1,b)* g0_ll_x(a,1,1) +
+!     &                          g0_uu_x(1,2,b)*(g0_ll_x(a,1,2) +
+!     &                                          g0_ll_x(a,2,1))+
+!     &                          g0_uu_x(1,3,b)*(g0_ll_x(a,1,3) +
+!     &                                          g0_ll_x(a,3,1))+
+!     &                          g0_uu_x(1,4,b)*(g0_ll_x(a,1,4) +
+!     &                                          g0_ll_x(a,4,1))+
+!     &                          g0_uu_x(1,5,b)*(g0_ll_x(a,1,5) +
+!     &                                          g0_ll_x(a,5,1))+
+!     &                          g0_uu_x(2,2,b)* g0_ll_x(a,2,2) +
+!     &                          g0_uu_x(2,3,b)*(g0_ll_x(a,2,3) +
+!     &                                          g0_ll_x(a,3,2))+
+!     &                          g0_uu_x(2,4,b)*(g0_ll_x(a,2,4) +
+!     &                                          g0_ll_x(a,4,2))+
+!     &                          g0_uu_x(2,5,b)*(g0_ll_x(a,2,5) +
+!     &                                          g0_ll_x(a,5,2))+
+!     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3) +
+!     &                          g0_uu_x(3,4,b)*(g0_ll_x(a,3,4) +
+!     &                                          g0_ll_x(a,4,3))+
+!     &                          g0_uu_x(3,5,b)*(g0_ll_x(a,3,5) +
+!     &                                          g0_ll_x(a,5,3))+
+!     &                          g0_uu_x(4,4,b)* g0_ll_x(a,4,4) +
+!     &                          g0_uu_x(4,5,b)*(g0_ll_x(a,4,5) +
+!     &                                          g0_ll_x(a,5,4))+
+!     &                          g0_uu_x(5,5,b)* g0_ll_x(a,5,5)
+!     &                            )
+!     &
+!                  term4(a,b)=-0.5d0*(Hads_l_x(a,b)+A_l_x(a,b))
+!     &
+!                  term5(a,b)=-0.5d0*(Hads_l_x(b,a)+A_l_x(b,a))
+!     &
+!                  term6(a,b)=     (           
+!     &                          (Hads_l(1)+A_l(1))*gamma_ull(1,a,b)+
+!     &                          (Hads_l(2)+A_l(2))*gamma_ull(2,a,b)+
+!     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)+
+!     &                          (Hads_l(4)+A_l(4))*gamma_ull(4,a,b)+
+!     &                          (Hads_l(5)+A_l(5))*gamma_ull(5,a,b)
+!     &                            ) 
+!     &                           
+!                  term7(a,b)=    -(
+!     &                          gamma_ull(1,1,b)*gamma_ull(1,1,a)+
+!     &                          gamma_ull(1,2,b)*gamma_ull(2,1,a)+
+!     &                          gamma_ull(1,3,b)*gamma_ull(3,1,a)+
+!     &                          gamma_ull(1,4,b)*gamma_ull(4,1,a)+
+!     &                          gamma_ull(1,5,b)*gamma_ull(5,1,a)+
+!     &                          gamma_ull(2,1,b)*gamma_ull(1,2,a)+
+!     &                          gamma_ull(2,2,b)*gamma_ull(2,2,a)+
+!     &                          gamma_ull(2,3,b)*gamma_ull(3,2,a)+
+!     &                          gamma_ull(2,4,b)*gamma_ull(4,2,a)+
+!     &                          gamma_ull(2,5,b)*gamma_ull(5,2,a)+
+!     &                          gamma_ull(3,1,b)*gamma_ull(1,3,a)+
+!     &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
+!     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)+
+!     &                          gamma_ull(3,4,b)*gamma_ull(4,3,a)+
+!     &                          gamma_ull(3,5,b)*gamma_ull(5,3,a)+
+!     &                          gamma_ull(4,1,b)*gamma_ull(1,4,a)+
+!     &                          gamma_ull(4,2,b)*gamma_ull(2,4,a)+
+!     &                          gamma_ull(4,3,b)*gamma_ull(3,4,a)+
+!     &                          gamma_ull(4,4,b)*gamma_ull(4,4,a)+
+!     &                          gamma_ull(4,5,b)*gamma_ull(5,4,a)+
+!     &                          gamma_ull(5,1,b)*gamma_ull(1,5,a)+
+!     &                          gamma_ull(5,2,b)*gamma_ull(2,5,a)+
+!     &                          gamma_ull(5,3,b)*gamma_ull(3,5,a)+
+!     &                          gamma_ull(5,4,b)*gamma_ull(4,5,a)+
+!     &                          gamma_ull(5,5,b)*gamma_ull(5,5,a)
+!     &                            )
+!                  term8(a,b)=-2*lambda5*g0_ll(a,b)/3
+!     &
+!                  efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
+!     &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
+!     &                    -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
+!
+!                end do
+!              end do
+
+
+                do a=1,4
+                  do b=a,4
+                    term1(a,b)=-0.5d0*(                             
+     &                            h0_uu(1,1)*h0_ll_xx(a,b,1,1)+
+     &                            h0_uu(2,2)*h0_ll_xx(a,b,2,2)+
+     &                            h0_uu(3,3)*h0_ll_xx(a,b,3,3)+
+     &                            h0_uu(4,4)*h0_ll_xx(a,b,4,4)+
+     &                            h0_uu(5,5)*h0_ll_xx(a,b,5,5)+
+     &                         2*(h0_uu(1,2)*h0_ll_xx(a,b,1,2)+
+     &                            h0_uu(1,3)*h0_ll_xx(a,b,1,3)+
+     &                            h0_uu(1,4)*h0_ll_xx(a,b,1,4)+
+     &                            h0_uu(1,5)*h0_ll_xx(a,b,1,5)+
+     &                            h0_uu(2,3)*h0_ll_xx(a,b,2,3)+
+     &                            h0_uu(2,4)*h0_ll_xx(a,b,2,4)+
+     &                            h0_uu(2,5)*h0_ll_xx(a,b,2,5)+
+     &                            h0_uu(3,4)*h0_ll_xx(a,b,3,4)+
+     &                            h0_uu(3,5)*h0_ll_xx(a,b,3,5)+
+     &                            h0_uu(4,5)*h0_ll_xx(a,b,4,5))
+     &                         +
+     &                            gads_uu(1,1)*h0_ll_xx(a,b,1,1)+
+     &                            gads_uu(2,2)*h0_ll_xx(a,b,2,2)+
+     &                            gads_uu(3,3)*h0_ll_xx(a,b,3,3)+
+     &                            gads_uu(4,4)*h0_ll_xx(a,b,4,4)+
+     &                            gads_uu(5,5)*h0_ll_xx(a,b,5,5)+
+     &                         2*(gads_uu(1,2)*h0_ll_xx(a,b,1,2)+
+     &                            gads_uu(1,3)*h0_ll_xx(a,b,1,3)+
+     &                            gads_uu(1,4)*h0_ll_xx(a,b,1,4)+
+     &                            gads_uu(1,5)*h0_ll_xx(a,b,1,5)+
+     &                            gads_uu(2,3)*h0_ll_xx(a,b,2,3)+
+     &                            gads_uu(2,4)*h0_ll_xx(a,b,2,4)+
+     &                            gads_uu(2,5)*h0_ll_xx(a,b,2,5)+
+     &                            gads_uu(3,4)*h0_ll_xx(a,b,3,4)+
+     &                            gads_uu(3,5)*h0_ll_xx(a,b,3,5)+
+     &                            gads_uu(4,5)*h0_ll_xx(a,b,4,5))
+     &                         +
+     &                            h0_uu(1,1)*gads_ll_xx(a,b,1,1)+
+     &                            h0_uu(2,2)*gads_ll_xx(a,b,2,2)+
+     &                            h0_uu(3,3)*gads_ll_xx(a,b,3,3)+
+     &                            h0_uu(4,4)*gads_ll_xx(a,b,4,4)+
+     &                            h0_uu(5,5)*gads_ll_xx(a,b,5,5)+
+     &                         2*(h0_uu(1,2)*gads_ll_xx(a,b,1,2)+
+     &                            h0_uu(1,3)*gads_ll_xx(a,b,1,3)+
+     &                            h0_uu(1,4)*gads_ll_xx(a,b,1,4)+
+     &                            h0_uu(1,5)*gads_ll_xx(a,b,1,5)+
+     &                            h0_uu(2,3)*gads_ll_xx(a,b,2,3)+
+     &                            h0_uu(2,4)*gads_ll_xx(a,b,2,4)+
+     &                            h0_uu(2,5)*gads_ll_xx(a,b,2,5)+
+     &                            h0_uu(3,4)*gads_ll_xx(a,b,3,4)+
+     &                            h0_uu(3,5)*gads_ll_xx(a,b,3,5)+
+     &                            h0_uu(4,5)*gads_ll_xx(a,b,4,5))
+     &                                )
+     &
+                    term2(a,b)=-0.5d0*(                             
+     &                            h0_uu_x(1,1,a)* h0_ll_x(b,1,1) +
+     &                            h0_uu_x(1,2,a)*(h0_ll_x(b,1,2) +
+     &                                            h0_ll_x(b,2,1))+
+     &                            h0_uu_x(1,3,a)*(h0_ll_x(b,1,3) +
+     &                                            h0_ll_x(b,3,1))+
+     &                            h0_uu_x(1,4,a)*(h0_ll_x(b,1,4) +
+     &                                            h0_ll_x(b,4,1))+
+     &                            h0_uu_x(1,5,a)*(h0_ll_x(b,1,5) +
+     &                                            h0_ll_x(b,5,1))+
+     &                            h0_uu_x(2,2,a)* h0_ll_x(b,2,2) +
+     &                            h0_uu_x(2,3,a)*(h0_ll_x(b,2,3) +
+     &                                            h0_ll_x(b,3,2))+
+     &                            h0_uu_x(2,4,a)*(h0_ll_x(b,2,4) +
+     &                                            h0_ll_x(b,4,2))+
+     &                            h0_uu_x(2,5,a)*(h0_ll_x(b,2,5) +
+     &                                            h0_ll_x(b,5,2))+
+     &                            h0_uu_x(3,3,a)* h0_ll_x(b,3,3) +
+     &                            h0_uu_x(3,4,a)*(h0_ll_x(b,3,4) +
+     &                                            h0_ll_x(b,4,3))+
+     &                            h0_uu_x(3,5,a)*(h0_ll_x(b,3,5) +
+     &                                            h0_ll_x(b,5,3))+
+     &                            h0_uu_x(4,4,a)* h0_ll_x(b,4,4) +
+     &                            h0_uu_x(4,5,a)*(h0_ll_x(b,4,5) +
+     &                                            h0_ll_x(b,5,4))+
+     &                            h0_uu_x(5,5,a)* h0_ll_x(b,5,5)
+     &                         +
+     &                            gads_uu_x(1,1,a)* h0_ll_x(b,1,1) +
+     &                            gads_uu_x(1,2,a)*(h0_ll_x(b,1,2) +
+     &                                              h0_ll_x(b,2,1))+
+     &                            gads_uu_x(1,3,a)*(h0_ll_x(b,1,3) +
+     &                                              h0_ll_x(b,3,1))+
+     &                            gads_uu_x(1,4,a)*(h0_ll_x(b,1,4) +
+     &                                              h0_ll_x(b,4,1))+
+     &                            gads_uu_x(1,5,a)*(h0_ll_x(b,1,5) +
+     &                                              h0_ll_x(b,5,1))+
+     &                            gads_uu_x(2,2,a)* h0_ll_x(b,2,2) +
+     &                            gads_uu_x(2,3,a)*(h0_ll_x(b,2,3) +
+     &                                              h0_ll_x(b,3,2))+
+     &                            gads_uu_x(2,4,a)*(h0_ll_x(b,2,4) +
+     &                                              h0_ll_x(b,4,2))+
+     &                            gads_uu_x(2,5,a)*(h0_ll_x(b,2,5) +
+     &                                              h0_ll_x(b,5,2))+
+     &                            gads_uu_x(3,3,a)* h0_ll_x(b,3,3) +
+     &                            gads_uu_x(3,4,a)*(h0_ll_x(b,3,4) +
+     &                                              h0_ll_x(b,4,3))+
+     &                            gads_uu_x(3,5,a)*(h0_ll_x(b,3,5) +
+     &                                              h0_ll_x(b,5,3))+
+     &                            gads_uu_x(4,4,a)* h0_ll_x(b,4,4) +
+     &                            gads_uu_x(4,5,a)*(h0_ll_x(b,4,5) +
+     &                                              h0_ll_x(b,5,4))+
+     &                            gads_uu_x(5,5,a)* h0_ll_x(b,5,5)
+     &                         +
+     &                            h0_uu_x(1,1,a)* gads_ll_x(b,1,1) +
+     &                            h0_uu_x(1,2,a)*(gads_ll_x(b,1,2) + 
+     &                                            gads_ll_x(b,2,1))+ 
+     &                            h0_uu_x(1,3,a)*(gads_ll_x(b,1,3) + 
+     &                                            gads_ll_x(b,3,1))+ 
+     &                            h0_uu_x(1,4,a)*(gads_ll_x(b,1,4) +
+     &                                            gads_ll_x(b,4,1))+
+     &                            h0_uu_x(1,5,a)*(gads_ll_x(b,1,5) +
+     &                                            gads_ll_x(b,5,1))+
+     &                            h0_uu_x(2,2,a)* gads_ll_x(b,2,2) +
+     &                            h0_uu_x(2,3,a)*(gads_ll_x(b,2,3) +
+     &                                            gads_ll_x(b,3,2))+
+     &                            h0_uu_x(2,4,a)*(gads_ll_x(b,2,4) +
+     &                                            gads_ll_x(b,4,2))+
+     &                            h0_uu_x(2,5,a)*(gads_ll_x(b,2,5) +
+     &                                            gads_ll_x(b,5,2))+
+     &                            h0_uu_x(3,3,a)* gads_ll_x(b,3,3) +
+     &                            h0_uu_x(3,4,a)*(gads_ll_x(b,3,4) +
+     &                                            gads_ll_x(b,4,3))+
+     &                            h0_uu_x(3,5,a)*(gads_ll_x(b,3,5) +
+     &                                            gads_ll_x(b,5,3))+
+     &                            h0_uu_x(4,4,a)* gads_ll_x(b,4,4) +
+     &                            h0_uu_x(4,5,a)*(gads_ll_x(b,4,5) +
+     &                                            gads_ll_x(b,5,4))+
+     &                            h0_uu_x(5,5,a)* gads_ll_x(b,5,5)
      &                              )
      &
-                  term2(a,b)=-0.5d0*(                             
-     &                          g0_uu_x(1,1,a)* g0_ll_x(b,1,1) +
-     &                          g0_uu_x(1,2,a)*(g0_ll_x(b,1,2) +
-     &                                          g0_ll_x(b,2,1))+
-     &                          g0_uu_x(1,3,a)*(g0_ll_x(b,1,3) +
-     &                                          g0_ll_x(b,3,1))+
-     &                          g0_uu_x(1,4,a)*(g0_ll_x(b,1,4) +
-     &                                          g0_ll_x(b,4,1))+
-     &                          g0_uu_x(1,5,a)*(g0_ll_x(b,1,5) +
-     &                                          g0_ll_x(b,5,1))+
-     &                          g0_uu_x(2,2,a)* g0_ll_x(b,2,2) +
-     &                          g0_uu_x(2,3,a)*(g0_ll_x(b,2,3) +
-     &                                          g0_ll_x(b,3,2))+
-     &                          g0_uu_x(2,4,a)*(g0_ll_x(b,2,4) +
-     &                                          g0_ll_x(b,4,2))+
-     &                          g0_uu_x(2,5,a)*(g0_ll_x(b,2,5) +
-     &                                          g0_ll_x(b,5,2))+
-     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3) +
-     &                          g0_uu_x(3,4,a)*(g0_ll_x(b,3,4) +
-     &                                          g0_ll_x(b,4,3))+
-     &                          g0_uu_x(3,5,a)*(g0_ll_x(b,3,5) +
-     &                                          g0_ll_x(b,5,3))+
-     &                          g0_uu_x(4,4,a)* g0_ll_x(b,4,4) +
-     &                          g0_uu_x(4,5,a)*(g0_ll_x(b,4,5) +
-     &                                          g0_ll_x(b,5,4))+
-     &                          g0_uu_x(5,5,a)* g0_ll_x(b,5,5)
-     &                            )
+                    term3(a,b)=-0.5d0*(                            
+     &                            h0_uu_x(1,1,b)* h0_ll_x(a,1,1) +
+     &                            h0_uu_x(1,2,b)*(h0_ll_x(a,1,2) +
+     &                                            h0_ll_x(a,2,1))+
+     &                            h0_uu_x(1,3,b)*(h0_ll_x(a,1,3) +
+     &                                            h0_ll_x(a,3,1))+
+     &                            h0_uu_x(1,4,b)*(h0_ll_x(a,1,4) +
+     &                                            h0_ll_x(a,4,1))+
+     &                            h0_uu_x(1,5,b)*(h0_ll_x(a,1,5) +
+     &                                            h0_ll_x(a,5,1))+
+     &                            h0_uu_x(2,2,b)* h0_ll_x(a,2,2) +
+     &                            h0_uu_x(2,3,b)*(h0_ll_x(a,2,3) +
+     &                                            h0_ll_x(a,3,2))+
+     &                            h0_uu_x(2,4,b)*(h0_ll_x(a,2,4) +
+     &                                            h0_ll_x(a,4,2))+
+     &                            h0_uu_x(2,5,b)*(h0_ll_x(a,2,5) +
+     &                                            h0_ll_x(a,5,2))+
+     &                            h0_uu_x(3,3,b)* h0_ll_x(a,3,3) +
+     &                            h0_uu_x(3,4,b)*(h0_ll_x(a,3,4) +
+     &                                            h0_ll_x(a,4,3))+
+     &                            h0_uu_x(3,5,b)*(h0_ll_x(a,3,5) +
+     &                                            h0_ll_x(a,5,3))+
+     &                            h0_uu_x(4,4,b)* h0_ll_x(a,4,4) +
+     &                            h0_uu_x(4,5,b)*(h0_ll_x(a,4,5) +
+     &                                            h0_ll_x(a,5,4))+
+     &                            h0_uu_x(5,5,b)* h0_ll_x(a,5,5)
+     &                         +
+     &                            gads_uu_x(1,1,b)* h0_ll_x(a,1,1) +
+     &                            gads_uu_x(1,2,b)*(h0_ll_x(a,1,2) +
+     &                                              h0_ll_x(a,2,1))+
+     &                            gads_uu_x(1,3,b)*(h0_ll_x(a,1,3) +
+     &                                              h0_ll_x(a,3,1))+
+     &                            gads_uu_x(1,4,b)*(h0_ll_x(a,1,4) +
+     &                                              h0_ll_x(a,4,1))+
+     &                            gads_uu_x(1,5,b)*(h0_ll_x(a,1,5) +
+     &                                              h0_ll_x(a,5,1))+
+     &                            gads_uu_x(2,2,b)* h0_ll_x(a,2,2) +
+     &                            gads_uu_x(2,3,b)*(h0_ll_x(a,2,3) +
+     &                                              h0_ll_x(a,3,2))+
+     &                            gads_uu_x(2,4,b)*(h0_ll_x(a,2,4) +
+     &                                              h0_ll_x(a,4,2))+
+     &                            gads_uu_x(2,5,b)*(h0_ll_x(a,2,5) +
+     &                                              h0_ll_x(a,5,2))+
+     &                            gads_uu_x(3,3,b)* h0_ll_x(a,3,3) +
+     &                            gads_uu_x(3,4,b)*(h0_ll_x(a,3,4) +
+     &                                              h0_ll_x(a,4,3))+
+     &                            gads_uu_x(3,5,b)*(h0_ll_x(a,3,5) +
+     &                                              h0_ll_x(a,5,3))+
+     &                            gads_uu_x(4,4,b)* h0_ll_x(a,4,4) +
+     &                            gads_uu_x(4,5,b)*(h0_ll_x(a,4,5) +
+     &                                              h0_ll_x(a,5,4))+
+     &                            gads_uu_x(5,5,b)* h0_ll_x(a,5,5)
+     &                         +
+     &                            h0_uu_x(1,1,b)* gads_ll_x(a,1,1) +
+     &                            h0_uu_x(1,2,b)*(gads_ll_x(a,1,2) +  
+     &                                            gads_ll_x(a,2,1))+  
+     &                            h0_uu_x(1,3,b)*(gads_ll_x(a,1,3) +  
+     &                                            gads_ll_x(a,3,1))+   
+     &                            h0_uu_x(1,4,b)*(gads_ll_x(a,1,4) +
+     &                                            gads_ll_x(a,4,1))+
+     &                            h0_uu_x(1,5,b)*(gads_ll_x(a,1,5) +
+     &                                            gads_ll_x(a,5,1))+
+     &                            h0_uu_x(2,2,b)* gads_ll_x(a,2,2) +
+     &                            h0_uu_x(2,3,b)*(gads_ll_x(a,2,3) +
+     &                                            gads_ll_x(a,3,2))+
+     &                            h0_uu_x(2,4,b)*(gads_ll_x(a,2,4) +
+     &                                            gads_ll_x(a,4,2))+
+     &                            h0_uu_x(2,5,b)*(gads_ll_x(a,2,5) +
+     &                                            gads_ll_x(a,5,2))+
+     &                            h0_uu_x(3,3,b)* gads_ll_x(a,3,3) +
+     &                            h0_uu_x(3,4,b)*(gads_ll_x(a,3,4) +
+     &                                            gads_ll_x(a,4,3))+
+     &                            h0_uu_x(3,5,b)*(gads_ll_x(a,3,5) +
+     &                                            gads_ll_x(a,5,3))+
+     &                            h0_uu_x(4,4,b)* gads_ll_x(a,4,4) +
+     &                            h0_uu_x(4,5,b)*(gads_ll_x(a,4,5) +
+     &                                            gads_ll_x(a,5,4))+
+     &                            h0_uu_x(5,5,b)* gads_ll_x(a,5,5)
+     &                              )
      &
-                  term3(a,b)=-0.5d0*(                            
-     &                          g0_uu_x(1,1,b)* g0_ll_x(a,1,1) +
-     &                          g0_uu_x(1,2,b)*(g0_ll_x(a,1,2) +
-     &                                          g0_ll_x(a,2,1))+
-     &                          g0_uu_x(1,3,b)*(g0_ll_x(a,1,3) +
-     &                                          g0_ll_x(a,3,1))+
-     &                          g0_uu_x(1,4,b)*(g0_ll_x(a,1,4) +
-     &                                          g0_ll_x(a,4,1))+
-     &                          g0_uu_x(1,5,b)*(g0_ll_x(a,1,5) +
-     &                                          g0_ll_x(a,5,1))+
-     &                          g0_uu_x(2,2,b)* g0_ll_x(a,2,2) +
-     &                          g0_uu_x(2,3,b)*(g0_ll_x(a,2,3) +
-     &                                          g0_ll_x(a,3,2))+
-     &                          g0_uu_x(2,4,b)*(g0_ll_x(a,2,4) +
-     &                                          g0_ll_x(a,4,2))+
-     &                          g0_uu_x(2,5,b)*(g0_ll_x(a,2,5) +
-     &                                          g0_ll_x(a,5,2))+
-     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3) +
-     &                          g0_uu_x(3,4,b)*(g0_ll_x(a,3,4) +
-     &                                          g0_ll_x(a,4,3))+
-     &                          g0_uu_x(3,5,b)*(g0_ll_x(a,3,5) +
-     &                                          g0_ll_x(a,5,3))+
-     &                          g0_uu_x(4,4,b)* g0_ll_x(a,4,4) +
-     &                          g0_uu_x(4,5,b)*(g0_ll_x(a,4,5) +
-     &                                          g0_ll_x(a,5,4))+
-     &                          g0_uu_x(5,5,b)* g0_ll_x(a,5,5)
-     &                            )
+                    term4(a,b)=-0.5d0*A_l_x(a,b)                  
      &
-                  term4(a,b)=-0.5d0*(Hads_l_x(a,b)+A_l_x(a,b))
+                    term5(a,b)=-0.5d0*A_l_x(b,a)           
      &
-                  term5(a,b)=-0.5d0*(Hads_l_x(b,a)+A_l_x(b,a))
+                    term6(a,b)=     (           
+     &                            Hads_l(1)*gammahh(1,a,b)+      
+     &                            Hads_l(2)*gammahh(2,a,b)+
+     &                            Hads_l(3)*gammahh(3,a,b)+
+     &                            Hads_l(4)*gammahh(4,a,b)+
+     &                            Hads_l(5)*gammahh(5,a,b)
+     &                         +
+     &                            Hads_l(1)*gammagh(1,a,b)+
+     &                            Hads_l(2)*gammagh(2,a,b)+
+     &                            Hads_l(3)*gammagh(3,a,b)+
+     &                            Hads_l(4)*gammagh(4,a,b)+
+     &                            Hads_l(5)*gammagh(5,a,b)
+     &                         +
+     &                            Hads_l(1)*gammahg(1,a,b)+
+     &                            Hads_l(2)*gammahg(2,a,b)+
+     &                            Hads_l(3)*gammahg(3,a,b)+
+     &                            Hads_l(4)*gammahg(4,a,b)+
+     &                            Hads_l(5)*gammahg(5,a,b)
+     &                         +                  
+     &                            A_l(1)*gammagg(1,a,b)  +
+     &                            A_l(2)*gammagg(2,a,b)  +
+     &                            A_l(3)*gammagg(3,a,b)  +
+     &                            A_l(4)*gammagg(4,a,b)  +
+     &                            A_l(5)*gammagg(5,a,b)
+     &                         +
+     &                            A_l(1)*gammahh(1,a,b)  +
+     &                            A_l(2)*gammahh(2,a,b)  +
+     &                            A_l(3)*gammahh(3,a,b)  +
+     &                            A_l(4)*gammahh(4,a,b)  +
+     &                            A_l(5)*gammahh(5,a,b)   
+     &                         +
+     &                            A_l(1)*gammagh(1,a,b)  +
+     &                            A_l(2)*gammagh(2,a,b)  +
+     &                            A_l(3)*gammagh(3,a,b)  +
+     &                            A_l(4)*gammagh(4,a,b)  +
+     &                            A_l(5)*gammagh(5,a,b)
+     &                         +
+     &                            A_l(1)*gammahg(1,a,b)  +
+     &                            A_l(2)*gammahg(2,a,b)  +
+     &                            A_l(3)*gammahg(3,a,b)  +
+     &                            A_l(4)*gammahg(4,a,b)  +
+     &                            A_l(5)*gammahg(5,a,b)
+     &                              ) 
+     &                             
+                    term7(a,b)=    -(
+     &                            gammahh(1,1,b)*gammahh(1,1,a)+
+     &                            gammahh(1,2,b)*gammahh(2,1,a)+
+     &                            gammahh(1,3,b)*gammahh(3,1,a)+
+     &                            gammahh(1,4,b)*gammahh(4,1,a)+
+     &                            gammahh(1,5,b)*gammahh(5,1,a)+
+     &                            gammahh(2,1,b)*gammahh(1,2,a)+
+     &                            gammahh(2,2,b)*gammahh(2,2,a)+
+     &                            gammahh(2,3,b)*gammahh(3,2,a)+
+     &                            gammahh(2,4,b)*gammahh(4,2,a)+
+     &                            gammahh(2,5,b)*gammahh(5,2,a)+
+     &                            gammahh(3,1,b)*gammahh(1,3,a)+
+     &                            gammahh(3,2,b)*gammahh(2,3,a)+
+     &                            gammahh(3,3,b)*gammahh(3,3,a)+
+     &                            gammahh(3,4,b)*gammahh(4,3,a)+
+     &                            gammahh(3,5,b)*gammahh(5,3,a)+
+     &                            gammahh(4,1,b)*gammahh(1,4,a)+
+     &                            gammahh(4,2,b)*gammahh(2,4,a)+
+     &                            gammahh(4,3,b)*gammahh(3,4,a)+
+     &                            gammahh(4,4,b)*gammahh(4,4,a)+
+     &                            gammahh(4,5,b)*gammahh(5,4,a)+
+     &                            gammahh(5,1,b)*gammahh(1,5,a)+
+     &                            gammahh(5,2,b)*gammahh(2,5,a)+
+     &                            gammahh(5,3,b)*gammahh(3,5,a)+
+     &                            gammahh(5,4,b)*gammahh(4,5,a)+
+     &                            gammahh(5,5,b)*gammahh(5,5,a)
+     &                         +
+     &                            gammagg(1,1,b)*gammahh(1,1,a)+
+     &                            gammagg(1,2,b)*gammahh(2,1,a)+
+     &                            gammagg(1,3,b)*gammahh(3,1,a)+
+     &                            gammagg(1,4,b)*gammahh(4,1,a)+
+     &                            gammagg(1,5,b)*gammahh(5,1,a)+
+     &                            gammagg(2,1,b)*gammahh(1,2,a)+
+     &                            gammagg(2,2,b)*gammahh(2,2,a)+
+     &                            gammagg(2,3,b)*gammahh(3,2,a)+
+     &                            gammagg(2,4,b)*gammahh(4,2,a)+
+     &                            gammagg(2,5,b)*gammahh(5,2,a)+
+     &                            gammagg(3,1,b)*gammahh(1,3,a)+
+     &                            gammagg(3,2,b)*gammahh(2,3,a)+
+     &                            gammagg(3,3,b)*gammahh(3,3,a)+
+     &                            gammagg(3,4,b)*gammahh(4,3,a)+
+     &                            gammagg(3,5,b)*gammahh(5,3,a)+
+     &                            gammagg(4,1,b)*gammahh(1,4,a)+
+     &                            gammagg(4,2,b)*gammahh(2,4,a)+
+     &                            gammagg(4,3,b)*gammahh(3,4,a)+
+     &                            gammagg(4,4,b)*gammahh(4,4,a)+
+     &                            gammagg(4,5,b)*gammahh(5,4,a)+
+     &                            gammagg(5,1,b)*gammahh(1,5,a)+
+     &                            gammagg(5,2,b)*gammahh(2,5,a)+
+     &                            gammagg(5,3,b)*gammahh(3,5,a)+
+     &                            gammagg(5,4,b)*gammahh(4,5,a)+
+     &                            gammagg(5,5,b)*gammahh(5,5,a)
+     &                         +
+     &                            gammagg(1,1,b)*gammagh(1,1,a)+
+     &                            gammagg(1,2,b)*gammagh(2,1,a)+
+     &                            gammagg(1,3,b)*gammagh(3,1,a)+
+     &                            gammagg(1,4,b)*gammagh(4,1,a)+
+     &                            gammagg(1,5,b)*gammagh(5,1,a)+
+     &                            gammagg(2,1,b)*gammagh(1,2,a)+
+     &                            gammagg(2,2,b)*gammagh(2,2,a)+
+     &                            gammagg(2,3,b)*gammagh(3,2,a)+
+     &                            gammagg(2,4,b)*gammagh(4,2,a)+
+     &                            gammagg(2,5,b)*gammagh(5,2,a)+
+     &                            gammagg(3,1,b)*gammagh(1,3,a)+
+     &                            gammagg(3,2,b)*gammagh(2,3,a)+
+     &                            gammagg(3,3,b)*gammagh(3,3,a)+
+     &                            gammagg(3,4,b)*gammagh(4,3,a)+
+     &                            gammagg(3,5,b)*gammagh(5,3,a)+
+     &                            gammagg(4,1,b)*gammagh(1,4,a)+
+     &                            gammagg(4,2,b)*gammagh(2,4,a)+
+     &                            gammagg(4,3,b)*gammagh(3,4,a)+
+     &                            gammagg(4,4,b)*gammagh(4,4,a)+
+     &                            gammagg(4,5,b)*gammagh(5,4,a)+
+     &                            gammagg(5,1,b)*gammagh(1,5,a)+
+     &                            gammagg(5,2,b)*gammagh(2,5,a)+
+     &                            gammagg(5,3,b)*gammagh(3,5,a)+
+     &                            gammagg(5,4,b)*gammagh(4,5,a)+
+     &                            gammagg(5,5,b)*gammagh(5,5,a)
+     &                         +
+     &                            gammagg(1,1,b)*gammahg(1,1,a)+
+     &                            gammagg(1,2,b)*gammahg(2,1,a)+
+     &                            gammagg(1,3,b)*gammahg(3,1,a)+
+     &                            gammagg(1,4,b)*gammahg(4,1,a)+
+     &                            gammagg(1,5,b)*gammahg(5,1,a)+
+     &                            gammagg(2,1,b)*gammahg(1,2,a)+
+     &                            gammagg(2,2,b)*gammahg(2,2,a)+
+     &                            gammagg(2,3,b)*gammahg(3,2,a)+
+     &                            gammagg(2,4,b)*gammahg(4,2,a)+
+     &                            gammagg(2,5,b)*gammahg(5,2,a)+
+     &                            gammagg(3,1,b)*gammahg(1,3,a)+
+     &                            gammagg(3,2,b)*gammahg(2,3,a)+
+     &                            gammagg(3,3,b)*gammahg(3,3,a)+
+     &                            gammagg(3,4,b)*gammahg(4,3,a)+
+     &                            gammagg(3,5,b)*gammahg(5,3,a)+
+     &                            gammagg(4,1,b)*gammahg(1,4,a)+
+     &                            gammagg(4,2,b)*gammahg(2,4,a)+
+     &                            gammagg(4,3,b)*gammahg(3,4,a)+
+     &                            gammagg(4,4,b)*gammahg(4,4,a)+
+     &                            gammagg(4,5,b)*gammahg(5,4,a)+
+     &                            gammagg(5,1,b)*gammahg(1,5,a)+
+     &                            gammagg(5,2,b)*gammahg(2,5,a)+
+     &                            gammagg(5,3,b)*gammahg(3,5,a)+
+     &                            gammagg(5,4,b)*gammahg(4,5,a)+
+     &                            gammagg(5,5,b)*gammahg(5,5,a)
+     &                         +
+     &                            gammahh(1,1,b)*gammagg(1,1,a)+
+     &                            gammahh(1,2,b)*gammagg(2,1,a)+
+     &                            gammahh(1,3,b)*gammagg(3,1,a)+
+     &                            gammahh(1,4,b)*gammagg(4,1,a)+
+     &                            gammahh(1,5,b)*gammagg(5,1,a)+
+     &                            gammahh(2,1,b)*gammagg(1,2,a)+
+     &                            gammahh(2,2,b)*gammagg(2,2,a)+
+     &                            gammahh(2,3,b)*gammagg(3,2,a)+
+     &                            gammahh(2,4,b)*gammagg(4,2,a)+
+     &                            gammahh(2,5,b)*gammagg(5,2,a)+
+     &                            gammahh(3,1,b)*gammagg(1,3,a)+
+     &                            gammahh(3,2,b)*gammagg(2,3,a)+
+     &                            gammahh(3,3,b)*gammagg(3,3,a)+
+     &                            gammahh(3,4,b)*gammagg(4,3,a)+
+     &                            gammahh(3,5,b)*gammagg(5,3,a)+
+     &                            gammahh(4,1,b)*gammagg(1,4,a)+
+     &                            gammahh(4,2,b)*gammagg(2,4,a)+
+     &                            gammahh(4,3,b)*gammagg(3,4,a)+
+     &                            gammahh(4,4,b)*gammagg(4,4,a)+
+     &                            gammahh(4,5,b)*gammagg(5,4,a)+
+     &                            gammahh(5,1,b)*gammagg(1,5,a)+
+     &                            gammahh(5,2,b)*gammagg(2,5,a)+
+     &                            gammahh(5,3,b)*gammagg(3,5,a)+
+     &                            gammahh(5,4,b)*gammagg(4,5,a)+
+     &                            gammahh(5,5,b)*gammagg(5,5,a)
+     &                         +
+     &                            gammahh(1,1,b)*gammagh(1,1,a)+
+     &                            gammahh(1,2,b)*gammagh(2,1,a)+
+     &                            gammahh(1,3,b)*gammagh(3,1,a)+
+     &                            gammahh(1,4,b)*gammagh(4,1,a)+
+     &                            gammahh(1,5,b)*gammagh(5,1,a)+
+     &                            gammahh(2,1,b)*gammagh(1,2,a)+
+     &                            gammahh(2,2,b)*gammagh(2,2,a)+
+     &                            gammahh(2,3,b)*gammagh(3,2,a)+
+     &                            gammahh(2,4,b)*gammagh(4,2,a)+
+     &                            gammahh(2,5,b)*gammagh(5,2,a)+
+     &                            gammahh(3,1,b)*gammagh(1,3,a)+
+     &                            gammahh(3,2,b)*gammagh(2,3,a)+
+     &                            gammahh(3,3,b)*gammagh(3,3,a)+
+     &                            gammahh(3,4,b)*gammagh(4,3,a)+
+     &                            gammahh(3,5,b)*gammagh(5,3,a)+
+     &                            gammahh(4,1,b)*gammagh(1,4,a)+
+     &                            gammahh(4,2,b)*gammagh(2,4,a)+
+     &                            gammahh(4,3,b)*gammagh(3,4,a)+
+     &                            gammahh(4,4,b)*gammagh(4,4,a)+
+     &                            gammahh(4,5,b)*gammagh(5,4,a)+
+     &                            gammahh(5,1,b)*gammagh(1,5,a)+
+     &                            gammahh(5,2,b)*gammagh(2,5,a)+
+     &                            gammahh(5,3,b)*gammagh(3,5,a)+
+     &                            gammahh(5,4,b)*gammagh(4,5,a)+
+     &                            gammahh(5,5,b)*gammagh(5,5,a)
+     &                         +
+     &                            gammahh(1,1,b)*gammahg(1,1,a)+
+     &                            gammahh(1,2,b)*gammahg(2,1,a)+
+     &                            gammahh(1,3,b)*gammahg(3,1,a)+
+     &                            gammahh(1,4,b)*gammahg(4,1,a)+
+     &                            gammahh(1,5,b)*gammahg(5,1,a)+
+     &                            gammahh(2,1,b)*gammahg(1,2,a)+
+     &                            gammahh(2,2,b)*gammahg(2,2,a)+
+     &                            gammahh(2,3,b)*gammahg(3,2,a)+
+     &                            gammahh(2,4,b)*gammahg(4,2,a)+
+     &                            gammahh(2,5,b)*gammahg(5,2,a)+
+     &                            gammahh(3,1,b)*gammahg(1,3,a)+
+     &                            gammahh(3,2,b)*gammahg(2,3,a)+
+     &                            gammahh(3,3,b)*gammahg(3,3,a)+
+     &                            gammahh(3,4,b)*gammahg(4,3,a)+
+     &                            gammahh(3,5,b)*gammahg(5,3,a)+
+     &                            gammahh(4,1,b)*gammahg(1,4,a)+
+     &                            gammahh(4,2,b)*gammahg(2,4,a)+
+     &                            gammahh(4,3,b)*gammahg(3,4,a)+
+     &                            gammahh(4,4,b)*gammahg(4,4,a)+
+     &                            gammahh(4,5,b)*gammahg(5,4,a)+
+     &                            gammahh(5,1,b)*gammahg(1,5,a)+
+     &                            gammahh(5,2,b)*gammahg(2,5,a)+
+     &                            gammahh(5,3,b)*gammahg(3,5,a)+
+     &                            gammahh(5,4,b)*gammahg(4,5,a)+
+     &                            gammahh(5,5,b)*gammahg(5,5,a)
+     &                         +
+     &                            gammagh(1,1,b)*gammagg(1,1,a)+
+     &                            gammagh(1,2,b)*gammagg(2,1,a)+
+     &                            gammagh(1,3,b)*gammagg(3,1,a)+
+     &                            gammagh(1,4,b)*gammagg(4,1,a)+
+     &                            gammagh(1,5,b)*gammagg(5,1,a)+
+     &                            gammagh(2,1,b)*gammagg(1,2,a)+
+     &                            gammagh(2,2,b)*gammagg(2,2,a)+
+     &                            gammagh(2,3,b)*gammagg(3,2,a)+
+     &                            gammagh(2,4,b)*gammagg(4,2,a)+
+     &                            gammagh(2,5,b)*gammagg(5,2,a)+
+     &                            gammagh(3,1,b)*gammagg(1,3,a)+
+     &                            gammagh(3,2,b)*gammagg(2,3,a)+
+     &                            gammagh(3,3,b)*gammagg(3,3,a)+
+     &                            gammagh(3,4,b)*gammagg(4,3,a)+
+     &                            gammagh(3,5,b)*gammagg(5,3,a)+
+     &                            gammagh(4,1,b)*gammagg(1,4,a)+
+     &                            gammagh(4,2,b)*gammagg(2,4,a)+
+     &                            gammagh(4,3,b)*gammagg(3,4,a)+
+     &                            gammagh(4,4,b)*gammagg(4,4,a)+
+     &                            gammagh(4,5,b)*gammagg(5,4,a)+
+     &                            gammagh(5,1,b)*gammagg(1,5,a)+
+     &                            gammagh(5,2,b)*gammagg(2,5,a)+
+     &                            gammagh(5,3,b)*gammagg(3,5,a)+
+     &                            gammagh(5,4,b)*gammagg(4,5,a)+
+     &                            gammagh(5,5,b)*gammagg(5,5,a)
+     &                         +
+     &                            gammagh(1,1,b)*gammahh(1,1,a)+
+     &                            gammagh(1,2,b)*gammahh(2,1,a)+
+     &                            gammagh(1,3,b)*gammahh(3,1,a)+
+     &                            gammagh(1,4,b)*gammahh(4,1,a)+
+     &                            gammagh(1,5,b)*gammahh(5,1,a)+
+     &                            gammagh(2,1,b)*gammahh(1,2,a)+
+     &                            gammagh(2,2,b)*gammahh(2,2,a)+
+     &                            gammagh(2,3,b)*gammahh(3,2,a)+
+     &                            gammagh(2,4,b)*gammahh(4,2,a)+
+     &                            gammagh(2,5,b)*gammahh(5,2,a)+
+     &                            gammagh(3,1,b)*gammahh(1,3,a)+
+     &                            gammagh(3,2,b)*gammahh(2,3,a)+
+     &                            gammagh(3,3,b)*gammahh(3,3,a)+
+     &                            gammagh(3,4,b)*gammahh(4,3,a)+
+     &                            gammagh(3,5,b)*gammahh(5,3,a)+
+     &                            gammagh(4,1,b)*gammahh(1,4,a)+
+     &                            gammagh(4,2,b)*gammahh(2,4,a)+
+     &                            gammagh(4,3,b)*gammahh(3,4,a)+
+     &                            gammagh(4,4,b)*gammahh(4,4,a)+
+     &                            gammagh(4,5,b)*gammahh(5,4,a)+
+     &                            gammagh(5,1,b)*gammahh(1,5,a)+
+     &                            gammagh(5,2,b)*gammahh(2,5,a)+
+     &                            gammagh(5,3,b)*gammahh(3,5,a)+
+     &                            gammagh(5,4,b)*gammahh(4,5,a)+
+     &                            gammagh(5,5,b)*gammahh(5,5,a)
+     &                         +
+     &                            gammagh(1,1,b)*gammagh(1,1,a)+
+     &                            gammagh(1,2,b)*gammagh(2,1,a)+
+     &                            gammagh(1,3,b)*gammagh(3,1,a)+
+     &                            gammagh(1,4,b)*gammagh(4,1,a)+
+     &                            gammagh(1,5,b)*gammagh(5,1,a)+
+     &                            gammagh(2,1,b)*gammagh(1,2,a)+
+     &                            gammagh(2,2,b)*gammagh(2,2,a)+
+     &                            gammagh(2,3,b)*gammagh(3,2,a)+
+     &                            gammagh(2,4,b)*gammagh(4,2,a)+
+     &                            gammagh(2,5,b)*gammagh(5,2,a)+
+     &                            gammagh(3,1,b)*gammagh(1,3,a)+
+     &                            gammagh(3,2,b)*gammagh(2,3,a)+
+     &                            gammagh(3,3,b)*gammagh(3,3,a)+
+     &                            gammagh(3,4,b)*gammagh(4,3,a)+
+     &                            gammagh(3,5,b)*gammagh(5,3,a)+
+     &                            gammagh(4,1,b)*gammagh(1,4,a)+
+     &                            gammagh(4,2,b)*gammagh(2,4,a)+
+     &                            gammagh(4,3,b)*gammagh(3,4,a)+
+     &                            gammagh(4,4,b)*gammagh(4,4,a)+
+     &                            gammagh(4,5,b)*gammagh(5,4,a)+
+     &                            gammagh(5,1,b)*gammagh(1,5,a)+
+     &                            gammagh(5,2,b)*gammagh(2,5,a)+
+     &                            gammagh(5,3,b)*gammagh(3,5,a)+
+     &                            gammagh(5,4,b)*gammagh(4,5,a)+
+     &                            gammagh(5,5,b)*gammagh(5,5,a)
+     &                         +
+     &                            gammagh(1,1,b)*gammahg(1,1,a)+
+     &                            gammagh(1,2,b)*gammahg(2,1,a)+
+     &                            gammagh(1,3,b)*gammahg(3,1,a)+
+     &                            gammagh(1,4,b)*gammahg(4,1,a)+
+     &                            gammagh(1,5,b)*gammahg(5,1,a)+
+     &                            gammagh(2,1,b)*gammahg(1,2,a)+
+     &                            gammagh(2,2,b)*gammahg(2,2,a)+
+     &                            gammagh(2,3,b)*gammahg(3,2,a)+
+     &                            gammagh(2,4,b)*gammahg(4,2,a)+
+     &                            gammagh(2,5,b)*gammahg(5,2,a)+
+     &                            gammagh(3,1,b)*gammahg(1,3,a)+
+     &                            gammagh(3,2,b)*gammahg(2,3,a)+
+     &                            gammagh(3,3,b)*gammahg(3,3,a)+
+     &                            gammagh(3,4,b)*gammahg(4,3,a)+
+     &                            gammagh(3,5,b)*gammahg(5,3,a)+
+     &                            gammagh(4,1,b)*gammahg(1,4,a)+
+     &                            gammagh(4,2,b)*gammahg(2,4,a)+
+     &                            gammagh(4,3,b)*gammahg(3,4,a)+
+     &                            gammagh(4,4,b)*gammahg(4,4,a)+
+     &                            gammagh(4,5,b)*gammahg(5,4,a)+
+     &                            gammagh(5,1,b)*gammahg(1,5,a)+
+     &                            gammagh(5,2,b)*gammahg(2,5,a)+
+     &                            gammagh(5,3,b)*gammahg(3,5,a)+
+     &                            gammagh(5,4,b)*gammahg(4,5,a)+
+     &                            gammagh(5,5,b)*gammahg(5,5,a)
+     &                         +
+     &                            gammahg(1,1,b)*gammagg(1,1,a)+
+     &                            gammahg(1,2,b)*gammagg(2,1,a)+
+     &                            gammahg(1,3,b)*gammagg(3,1,a)+
+     &                            gammahg(1,4,b)*gammagg(4,1,a)+
+     &                            gammahg(1,5,b)*gammagg(5,1,a)+
+     &                            gammahg(2,1,b)*gammagg(1,2,a)+
+     &                            gammahg(2,2,b)*gammagg(2,2,a)+
+     &                            gammahg(2,3,b)*gammagg(3,2,a)+
+     &                            gammahg(2,4,b)*gammagg(4,2,a)+
+     &                            gammahg(2,5,b)*gammagg(5,2,a)+
+     &                            gammahg(3,1,b)*gammagg(1,3,a)+
+     &                            gammahg(3,2,b)*gammagg(2,3,a)+
+     &                            gammahg(3,3,b)*gammagg(3,3,a)+
+     &                            gammahg(3,4,b)*gammagg(4,3,a)+
+     &                            gammahg(3,5,b)*gammagg(5,3,a)+
+     &                            gammahg(4,1,b)*gammagg(1,4,a)+
+     &                            gammahg(4,2,b)*gammagg(2,4,a)+
+     &                            gammahg(4,3,b)*gammagg(3,4,a)+
+     &                            gammahg(4,4,b)*gammagg(4,4,a)+
+     &                            gammahg(4,5,b)*gammagg(5,4,a)+
+     &                            gammahg(5,1,b)*gammagg(1,5,a)+
+     &                            gammahg(5,2,b)*gammagg(2,5,a)+
+     &                            gammahg(5,3,b)*gammagg(3,5,a)+
+     &                            gammahg(5,4,b)*gammagg(4,5,a)+
+     &                            gammahg(5,5,b)*gammagg(5,5,a)
+     &                         +
+     &                            gammahg(1,1,b)*gammahh(1,1,a)+
+     &                            gammahg(1,2,b)*gammahh(2,1,a)+
+     &                            gammahg(1,3,b)*gammahh(3,1,a)+
+     &                            gammahg(1,4,b)*gammahh(4,1,a)+
+     &                            gammahg(1,5,b)*gammahh(5,1,a)+
+     &                            gammahg(2,1,b)*gammahh(1,2,a)+
+     &                            gammahg(2,2,b)*gammahh(2,2,a)+
+     &                            gammahg(2,3,b)*gammahh(3,2,a)+
+     &                            gammahg(2,4,b)*gammahh(4,2,a)+
+     &                            gammahg(2,5,b)*gammahh(5,2,a)+
+     &                            gammahg(3,1,b)*gammahh(1,3,a)+
+     &                            gammahg(3,2,b)*gammahh(2,3,a)+
+     &                            gammahg(3,3,b)*gammahh(3,3,a)+
+     &                            gammahg(3,4,b)*gammahh(4,3,a)+
+     &                            gammahg(3,5,b)*gammahh(5,3,a)+
+     &                            gammahg(4,1,b)*gammahh(1,4,a)+
+     &                            gammahg(4,2,b)*gammahh(2,4,a)+
+     &                            gammahg(4,3,b)*gammahh(3,4,a)+
+     &                            gammahg(4,4,b)*gammahh(4,4,a)+
+     &                            gammahg(4,5,b)*gammahh(5,4,a)+
+     &                            gammahg(5,1,b)*gammahh(1,5,a)+
+     &                            gammahg(5,2,b)*gammahh(2,5,a)+
+     &                            gammahg(5,3,b)*gammahh(3,5,a)+
+     &                            gammahg(5,4,b)*gammahh(4,5,a)+
+     &                            gammahg(5,5,b)*gammahh(5,5,a)
+     &                         +
+     &                            gammahg(1,1,b)*gammagh(1,1,a)+
+     &                            gammahg(1,2,b)*gammagh(2,1,a)+
+     &                            gammahg(1,3,b)*gammagh(3,1,a)+
+     &                            gammahg(1,4,b)*gammagh(4,1,a)+
+     &                            gammahg(1,5,b)*gammagh(5,1,a)+
+     &                            gammahg(2,1,b)*gammagh(1,2,a)+
+     &                            gammahg(2,2,b)*gammagh(2,2,a)+
+     &                            gammahg(2,3,b)*gammagh(3,2,a)+
+     &                            gammahg(2,4,b)*gammagh(4,2,a)+
+     &                            gammahg(2,5,b)*gammagh(5,2,a)+
+     &                            gammahg(3,1,b)*gammagh(1,3,a)+
+     &                            gammahg(3,2,b)*gammagh(2,3,a)+
+     &                            gammahg(3,3,b)*gammagh(3,3,a)+
+     &                            gammahg(3,4,b)*gammagh(4,3,a)+
+     &                            gammahg(3,5,b)*gammagh(5,3,a)+
+     &                            gammahg(4,1,b)*gammagh(1,4,a)+
+     &                            gammahg(4,2,b)*gammagh(2,4,a)+
+     &                            gammahg(4,3,b)*gammagh(3,4,a)+
+     &                            gammahg(4,4,b)*gammagh(4,4,a)+
+     &                            gammahg(4,5,b)*gammagh(5,4,a)+
+     &                            gammahg(5,1,b)*gammagh(1,5,a)+
+     &                            gammahg(5,2,b)*gammagh(2,5,a)+
+     &                            gammahg(5,3,b)*gammagh(3,5,a)+
+     &                            gammahg(5,4,b)*gammagh(4,5,a)+
+     &                            gammahg(5,5,b)*gammagh(5,5,a)
+     &                         +
+     &                            gammahg(1,1,b)*gammahg(1,1,a)+
+     &                            gammahg(1,2,b)*gammahg(2,1,a)+
+     &                            gammahg(1,3,b)*gammahg(3,1,a)+
+     &                            gammahg(1,4,b)*gammahg(4,1,a)+
+     &                            gammahg(1,5,b)*gammahg(5,1,a)+
+     &                            gammahg(2,1,b)*gammahg(1,2,a)+
+     &                            gammahg(2,2,b)*gammahg(2,2,a)+
+     &                            gammahg(2,3,b)*gammahg(3,2,a)+
+     &                            gammahg(2,4,b)*gammahg(4,2,a)+
+     &                            gammahg(2,5,b)*gammahg(5,2,a)+
+     &                            gammahg(3,1,b)*gammahg(1,3,a)+
+     &                            gammahg(3,2,b)*gammahg(2,3,a)+
+     &                            gammahg(3,3,b)*gammahg(3,3,a)+
+     &                            gammahg(3,4,b)*gammahg(4,3,a)+
+     &                            gammahg(3,5,b)*gammahg(5,3,a)+
+     &                            gammahg(4,1,b)*gammahg(1,4,a)+
+     &                            gammahg(4,2,b)*gammahg(2,4,a)+
+     &                            gammahg(4,3,b)*gammahg(3,4,a)+
+     &                            gammahg(4,4,b)*gammahg(4,4,a)+
+     &                            gammahg(4,5,b)*gammahg(5,4,a)+
+     &                            gammahg(5,1,b)*gammahg(1,5,a)+
+     &                            gammahg(5,2,b)*gammahg(2,5,a)+
+     &                            gammahg(5,3,b)*gammahg(3,5,a)+
+     &                            gammahg(5,4,b)*gammahg(4,5,a)+
+     &                            gammahg(5,5,b)*gammahg(5,5,a)
+     &                              )
+                    term8(a,b)=-2*lambda5*h0_ll(a,b)/3
      &
-                  term6(a,b)=     (           
-     &                          (Hads_l(1)+A_l(1))*gamma_ull(1,a,b)+
-     &                          (Hads_l(2)+A_l(2))*gamma_ull(2,a,b)+
-     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)+
-     &                          (Hads_l(4)+A_l(4))*gamma_ull(4,a,b)+
-     &                          (Hads_l(5)+A_l(5))*gamma_ull(5,a,b)
-     &                            ) 
-     &                           
-                  term7(a,b)=    -(
-     &                          gamma_ull(1,1,b)*gamma_ull(1,1,a)+
-     &                          gamma_ull(1,2,b)*gamma_ull(2,1,a)+
-     &                          gamma_ull(1,3,b)*gamma_ull(3,1,a)+
-     &                          gamma_ull(1,4,b)*gamma_ull(4,1,a)+
-     &                          gamma_ull(1,5,b)*gamma_ull(5,1,a)+
-     &                          gamma_ull(2,1,b)*gamma_ull(1,2,a)+
-     &                          gamma_ull(2,2,b)*gamma_ull(2,2,a)+
-     &                          gamma_ull(2,3,b)*gamma_ull(3,2,a)+
-     &                          gamma_ull(2,4,b)*gamma_ull(4,2,a)+
-     &                          gamma_ull(2,5,b)*gamma_ull(5,2,a)+
-     &                          gamma_ull(3,1,b)*gamma_ull(1,3,a)+
-     &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
-     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)+
-     &                          gamma_ull(3,4,b)*gamma_ull(4,3,a)+
-     &                          gamma_ull(3,5,b)*gamma_ull(5,3,a)+
-     &                          gamma_ull(4,1,b)*gamma_ull(1,4,a)+
-     &                          gamma_ull(4,2,b)*gamma_ull(2,4,a)+
-     &                          gamma_ull(4,3,b)*gamma_ull(3,4,a)+
-     &                          gamma_ull(4,4,b)*gamma_ull(4,4,a)+
-     &                          gamma_ull(4,5,b)*gamma_ull(5,4,a)+
-     &                          gamma_ull(5,1,b)*gamma_ull(1,5,a)+
-     &                          gamma_ull(5,2,b)*gamma_ull(2,5,a)+
-     &                          gamma_ull(5,3,b)*gamma_ull(3,5,a)+
-     &                          gamma_ull(5,4,b)*gamma_ull(4,5,a)+
-     &                          gamma_ull(5,5,b)*gamma_ull(5,5,a)
-     &                            )
-                  term8(a,b)=-2*lambda5*g0_ll(a,b)/3
-     &
-                  efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
-     &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
-     &                    -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
+                    efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
+     &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
+     &                      -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
 
+                  end do
                 end do
-              end do
+
 
         ! NOTE: TEMPORARY CHECK
 !        write(*,*) 'x0,max{efe}',x0,max(abs(efe(1,1)),
