@@ -51,7 +51,7 @@ c----------------------------------------------------------------------
         real*8 riemann_ulll(5,5,5,5)
         real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
         real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),A_l(5),A_l_x(5,5)
+        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
         real*8 ff_ll(10,10)
 
@@ -82,7 +82,7 @@ c----------------------------------------------------------------------
         data riemann_ulll/625*0.0/
 
         data A_l,Hads_l/5*0.0,5*0.0/
-        data A_l_x/25*0.0/
+        data A_l_x,Hads_l_x/25*0.0,25*0.0/
 
         data phi10_x/5*0.0/
         data phi10_xx/25*0.0/
@@ -124,7 +124,7 @@ c----------------------------------------------------------------------
      &              g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &              gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &              h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
-     &              A_l,A_l_x,Hads_l,
+     &              A_l,A_l_x,Hads_l,Hads_l_x,
      &              gamma_ull,gamma_ull_x,
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
      &              einstein_ll,set_ll,

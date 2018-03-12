@@ -347,7 +347,7 @@ c----------------------------------------------------------------------
      &                  g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
-     &                  A_l,A_l_x,Hads_l,
+     &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                  einstein_ll,set_ll,
@@ -397,7 +397,7 @@ c----------------------------------------------------------------------
         real*8 riemann_ulll(5,5,5,5)
         real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
         real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),A_l(5),A_l_x(5,5)
+        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
         real*8 phi10_x(5),phi10_xx(5,5)
         !NOTE: below I have implemented direct calculation
         real*8 f0_l(10),f0_ll(10,10),ff_ll(10,10) 
@@ -435,6 +435,8 @@ c----------------------------------------------------------------------
 
         real*8 fb_t0,fb_x0,fb_y0
         real*8 f0_tx_ads0,f0_y_ads0
+
+        real*8 tmp
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -449,7 +451,7 @@ c----------------------------------------------------------------------
 
         ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f0_tx_ads0 = 4/L*(-16*x0**3*(1+x0**2)/(1-x0**2)**5)
+        f0_tx_ads0 = 4/L*(-x0**3/(1-x0)**5)
         f0_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
 
         ! set gbar values
@@ -868,8 +870,11 @@ c----------------------------------------------------------------------
      &            -2*x0*2*(1-x0**2)*Hb_x0
 
         ! give values to the ads gh source functions
-        Hads_l(1)=0
         Hads_l(2)=(3-4*x0*(2-x0)*(1-x0))/(x0*(1-x0)*(1-2*x0*(1-x0)))
+
+        ! give values to the ads gh source function derivatives
+        Hads_l_x(2,2)=-3/x0**2 
+     &               +(3-4*x0+4*x0**4)/(1-x0)**2/(1-2*(1-x0)*x0)**2
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3
@@ -972,33 +977,36 @@ c----------------------------------------------------------------------
 
         ! NOTE: need to antisymmetrize f_lllll
 
-        ! calculate contraction of field strength F_acemo*F_bdfmp*g^cd*g^ef*g^mn*g^op
-        do a=1,10
-          do b=1,10
-            ff_ll(a,b)=0.0d0
-            do c=1,10
-              do d=1,10
-                do e=1,10
-                  do f=1,10
-                    do m=1,10
-                      do n=1,10
-                        do o=1,10
-                          do p=1,10
-                            ff_ll(a,b)=ff_ll(a,b)
-     &                                +f_lllll(a,c,e,m,o)
-     &                                *f_lllll(b,d,f,n,p)
-     &                                *g0_uu(c,d)*g0_uu(e,f)
-     &                                *g0_uu(m,n)*g0_uu(o,p)
-                          end do
-                        end do
-                      end do
-                    end do
-                  end do
-                end do
-              end do
-            end do
-          end do
-        end do 
+        ! NOTE: TEMPORARY CHECK
+        f_lllll(1,2,3,4,5) =4.0d0/L*(-x0**3/(1-x0)**5)
+
+!        ! calculate contraction of field strength F_acemo*F_bdfmp*g^cd*g^ef*g^mn*g^op
+!        do a=1,10
+!          do b=1,10
+!            ff_ll(a,b)=0.0d0
+!            do c=1,10
+!              do d=1,10
+!                do e=1,10
+!                  do f=1,10
+!                    do m=1,10
+!                      do n=1,10
+!                        do o=1,10
+!                          do p=1,10
+!                            ff_ll(a,b)=ff_ll(a,b)
+!     &                                +f_lllll(a,c,e,m,o)
+!     &                                *f_lllll(b,d,f,n,p)
+!     &                                *g0_uu(c,d)*g0_uu(e,f)
+!     &                                *g0_uu(m,n)*g0_uu(o,p)
+!                          end do
+!                        end do
+!                      end do
+!                    end do
+!                  end do
+!                end do
+!              end do
+!            end do
+!          end do
+!        end do 
 !        write(*,*) 'ff_ll(1,2)=',ff_ll(1,1)
 
         ! calculate Christoffel symbol derivatives at point i
@@ -1123,6 +1131,29 @@ c----------------------------------------------------------------------
      &           -g0_ll(a,b)*(grad_phi1_sq/2)
           end do
         end do
+
+        ! NOTE: TEMPORARY CHECK
+!        set_ll(1,1)=set_ll(1,1)
+!     &  +gads_uu(2,2)*gads_uu(3,3)*gads_uu(4,4)*gads_uu(5,5)
+!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
+!        set_ll(2,2)=set_ll(2,2)
+!     &  +gads_uu(1,1)*gads_uu(3,3)*gads_uu(4,4)*gads_uu(5,5)
+!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
+!        set_ll(3,3)=set_ll(3,3)
+!     &  +gads_uu(1,1)*gads_uu(2,2)*gads_uu(4,4)*gads_uu(5,5)
+!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
+!        set_ll(4,4)=set_ll(4,4)
+!     &  +gads_uu(1,1)*gads_uu(2,2)*gads_uu(3,3)*gads_uu(5,5)
+!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
+!        set_ll(5,5)=set_ll(5,5)
+!     &  +gads_uu(1,1)*gads_uu(2,2)*gads_uu(3,3)*gads_uu(4,4)
+!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
+!        tmp=set_ll(5,5)/gads_ll(5,5)
+!        write(*,*) 'set(m,n)/gads(m,n)=',tmp
+!        tmp=gads_uu(2,2)*gads_uu(3,3)*gads_uu(4,4)*gads_uu(5,5)
+!     &     *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32/PI*(-3.0d0/2.0d0)
+!     &     /gads_ll(1,1)
+!        write(*,*) 'set(1,1)/gads(1,1)=',tmp
 
         return
         end
