@@ -470,6 +470,7 @@ c----------------------------------------------------------------------
               !----------------------------------------------------------------
               do a=1,3
                 do b=a,3
+
                   term1(a,b)=-0.5d0*(                             
      &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
      &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
@@ -589,118 +590,139 @@ c----------------------------------------------------------------------
      &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
      &                    -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
 
-                  tmp(a,b)=-0.5d0*(
-     &                          gads_uu(1,1)*gads_ll_xx(a,b,1,1)+
-     &                          gads_uu(2,2)*gads_ll_xx(a,b,2,2)+
-     &                          gads_uu(3,3)*gads_ll_xx(a,b,3,3)+
-     &                          gads_uu(4,4)*gads_ll_xx(a,b,4,4)+
-     &                          gads_uu(5,5)*gads_ll_xx(a,b,5,5)+
-     &                       2*(gads_uu(1,2)*gads_ll_xx(a,b,1,2)+
-     &                          gads_uu(1,3)*gads_ll_xx(a,b,1,3)+
-     &                          gads_uu(1,4)*gads_ll_xx(a,b,1,4)+
-     &                          gads_uu(1,5)*gads_ll_xx(a,b,1,5)+
-     &                          gads_uu(2,3)*gads_ll_xx(a,b,2,3)+
-     &                          gads_uu(2,4)*gads_ll_xx(a,b,2,4)+
-     &                          gads_uu(2,5)*gads_ll_xx(a,b,2,5)+
-     &                          gads_uu(3,4)*gads_ll_xx(a,b,3,4)+
-     &                          gads_uu(3,5)*gads_ll_xx(a,b,3,5)+
-     &                          gads_uu(4,5)*gads_ll_xx(a,b,4,5))
-     &                              )
-     &                     -0.5d0*(
-     &                          gads_uu_x(1,1,a)* gads_ll_x(b,1,1) +
-     &                          gads_uu_x(1,2,a)*(gads_ll_x(b,1,2) +
-     &                                            gads_ll_x(b,2,1))+
-     &                          gads_uu_x(1,3,a)*(gads_ll_x(b,1,3) +
-     &                                            gads_ll_x(b,3,1))+
-     &                          gads_uu_x(1,4,a)*(gads_ll_x(b,1,4) +
-     &                                            gads_ll_x(b,4,1))+
-     &                          gads_uu_x(1,5,a)*(gads_ll_x(b,1,5) +
-     &                                            gads_ll_x(b,5,1))+
-     &                          gads_uu_x(2,2,a)* gads_ll_x(b,2,2) +
-     &                          gads_uu_x(2,3,a)*(gads_ll_x(b,2,3) +
-     &                                            gads_ll_x(b,3,2))+
-     &                          gads_uu_x(2,4,a)*(gads_ll_x(b,2,4) +
-     &                                            gads_ll_x(b,4,2))+
-     &                          gads_uu_x(2,5,a)*(gads_ll_x(b,2,5) +
-     &                                            gads_ll_x(b,5,2))+
-     &                          gads_uu_x(3,3,a)* gads_ll_x(b,3,3) +
-     &                          gads_uu_x(3,4,a)*(gads_ll_x(b,3,4) +
-     &                                            gads_ll_x(b,4,3))+
-     &                          gads_uu_x(3,5,a)*(gads_ll_x(b,3,5) +
-     &                                            gads_ll_x(b,5,3))+
-     &                          gads_uu_x(4,4,a)* gads_ll_x(b,4,4) +
-     &                          gads_uu_x(4,5,a)*(gads_ll_x(b,4,5) +
-     &                                            gads_ll_x(b,5,4))+
-     &                          gads_uu_x(5,5,a)* gads_ll_x(b,5,5)
-     &                            )
-     &                     -0.5d0*(
-     &                          gads_uu_x(1,1,b)* gads_ll_x(a,1,1) +
-     &                          gads_uu_x(1,2,b)*(gads_ll_x(a,1,2) +
-     &                                            gads_ll_x(a,2,1))+
-     &                          gads_uu_x(1,3,b)*(gads_ll_x(a,1,3) +
-     &                                            gads_ll_x(a,3,1))+
-     &                          gads_uu_x(1,4,b)*(gads_ll_x(a,1,4) +
-     &                                            gads_ll_x(a,4,1))+
-     &                          gads_uu_x(1,5,b)*(gads_ll_x(a,1,5) +
-     &                                            gads_ll_x(a,5,1))+
-     &                          gads_uu_x(2,2,b)* gads_ll_x(a,2,2) +
-     &                          gads_uu_x(2,3,b)*(gads_ll_x(a,2,3) +
-     &                                            gads_ll_x(a,3,2))+
-     &                          gads_uu_x(2,4,b)*(gads_ll_x(a,2,4) +
-     &                                            gads_ll_x(a,4,2))+
-     &                          gads_uu_x(2,5,b)*(gads_ll_x(a,2,5) +
-     &                                            gads_ll_x(a,5,2))+
-     &                          gads_uu_x(3,3,b)* gads_ll_x(a,3,3) +
-     &                          gads_uu_x(3,4,b)*(gads_ll_x(a,3,4) +
-     &                                            gads_ll_x(a,4,3))+
-     &                          gads_uu_x(3,5,b)*(gads_ll_x(a,3,5) +
-     &                                            gads_ll_x(a,5,3))+
-     &                          gads_uu_x(4,4,b)* gads_ll_x(a,4,4) +
-     &                          gads_uu_x(4,5,b)*(gads_ll_x(a,4,5) +
-     &                                            gads_ll_x(a,5,4))+
-     &                          gads_uu_x(5,5,b)* gads_ll_x(a,5,5)
-     &                            )
-     &                     -0.5d0*(Hads_l_x(a,b))
-     &                     -0.5d0*(Hads_l_x(b,a))
-     &                           +(
-     &                          Hads_l(1)*gammagg(1,a,b)+
-     &                          Hads_l(2)*gammagg(2,a,b)+
-     &                          Hads_l(3)*gammagg(3,a,b)+
-     &                          Hads_l(4)*gammagg(4,a,b)+
-     &                          Hads_l(5)*gammagg(5,a,b)
-     &                            )
-     &                           -(
-     &                          gammagg(1,1,b)*gammagg(1,1,a)+
-     &                          gammagg(1,2,b)*gammagg(2,1,a)+
-     &                          gammagg(1,3,b)*gammagg(3,1,a)+
-     &                          gammagg(1,4,b)*gammagg(4,1,a)+
-     &                          gammagg(1,5,b)*gammagg(5,1,a)+
-     &                          gammagg(2,1,b)*gammagg(1,2,a)+
-     &                          gammagg(2,2,b)*gammagg(2,2,a)+
-     &                          gammagg(2,3,b)*gammagg(3,2,a)+
-     &                          gammagg(2,4,b)*gammagg(4,2,a)+
-     &                          gammagg(2,5,b)*gammagg(5,2,a)+
-     &                          gammagg(3,1,b)*gammagg(1,3,a)+
-     &                          gammagg(3,2,b)*gammagg(2,3,a)+
-     &                          gammagg(3,3,b)*gammagg(3,3,a)+
-     &                          gammagg(3,4,b)*gammagg(4,3,a)+
-     &                          gammagg(3,5,b)*gammagg(5,3,a)+
-     &                          gammagg(4,1,b)*gammagg(1,4,a)+
-     &                          gammagg(4,2,b)*gammagg(2,4,a)+
-     &                          gammagg(4,3,b)*gammagg(3,4,a)+
-     &                          gammagg(4,4,b)*gammagg(4,4,a)+
-     &                          gammagg(4,5,b)*gammagg(5,4,a)+
-     &                          gammagg(5,1,b)*gammagg(1,5,a)+
-     &                          gammagg(5,2,b)*gammagg(2,5,a)+
-     &                          gammagg(5,3,b)*gammagg(3,5,a)+
-     &                          gammagg(5,4,b)*gammagg(4,5,a)+
-     &                          gammagg(5,5,b)*gammagg(5,5,a)
-     &                            )
-     &                       -2*lambda5*gads_ll(a,b)/3
-
                 end do
               end do
 
+!              write(*,*) 'x0,term1(1,1)=',x0,term1(1,1)
+
+!              write(*,*) 'x0,tmp(1,1)=',x0,max(abs(efe(1,1)),
+!     &                                         abs(efe(1,2)),
+!     &                                         abs(efe(1,3)),
+!     &                                         abs(efe(1,4)),
+!     &                                         abs(efe(1,5)),
+!     &                                         abs(efe(2,2)),
+!     &                                         abs(efe(2,3)),
+!     &                                         abs(efe(2,4)),
+!     &                                         abs(efe(2,5)),
+!     &                                         abs(efe(3,3)),
+!     &                                         abs(efe(3,4)),
+!     &                                         abs(efe(3,5)),
+!     &                                         abs(efe(4,4)),
+!     &                                         abs(efe(4,5)),
+!     &                                         abs(efe(5,5)))
+
+!              do a=1,3
+!                do b=a,3
+!                  tmp(a,b)=-0.5d0*(
+!     &                          gads_uu(1,1)*gads_ll_xx(a,b,1,1)+
+!     &                          gads_uu(2,2)*gads_ll_xx(a,b,2,2)+
+!     &                          gads_uu(3,3)*gads_ll_xx(a,b,3,3)+
+!     &                          gads_uu(4,4)*gads_ll_xx(a,b,4,4)+
+!     &                          gads_uu(5,5)*gads_ll_xx(a,b,5,5)+
+!     &                       2*(gads_uu(1,2)*gads_ll_xx(a,b,1,2)+
+!     &                          gads_uu(1,3)*gads_ll_xx(a,b,1,3)+
+!     &                          gads_uu(1,4)*gads_ll_xx(a,b,1,4)+
+!     &                          gads_uu(1,5)*gads_ll_xx(a,b,1,5)+
+!     &                          gads_uu(2,3)*gads_ll_xx(a,b,2,3)+
+!     &                          gads_uu(2,4)*gads_ll_xx(a,b,2,4)+
+!     &                          gads_uu(2,5)*gads_ll_xx(a,b,2,5)+
+!     &                          gads_uu(3,4)*gads_ll_xx(a,b,3,4)+
+!     &                          gads_uu(3,5)*gads_ll_xx(a,b,3,5)+
+!     &                          gads_uu(4,5)*gads_ll_xx(a,b,4,5))
+!     &                              )
+!     &                     -0.5d0*(
+!     &                          gads_uu_x(1,1,a)* gads_ll_x(b,1,1) +
+!     &                          gads_uu_x(1,2,a)*(gads_ll_x(b,1,2) +
+!     &                                            gads_ll_x(b,2,1))+
+!     &                          gads_uu_x(1,3,a)*(gads_ll_x(b,1,3) +
+!     &                                            gads_ll_x(b,3,1))+
+!     &                          gads_uu_x(1,4,a)*(gads_ll_x(b,1,4) +
+!     &                                            gads_ll_x(b,4,1))+
+!     &                          gads_uu_x(1,5,a)*(gads_ll_x(b,1,5) +
+!     &                                            gads_ll_x(b,5,1))+
+!     &                          gads_uu_x(2,2,a)* gads_ll_x(b,2,2) +
+!     &                          gads_uu_x(2,3,a)*(gads_ll_x(b,2,3) +
+!     &                                            gads_ll_x(b,3,2))+
+!     &                          gads_uu_x(2,4,a)*(gads_ll_x(b,2,4) +
+!     &                                            gads_ll_x(b,4,2))+
+!     &                          gads_uu_x(2,5,a)*(gads_ll_x(b,2,5) +
+!     &                                            gads_ll_x(b,5,2))+
+!     &                          gads_uu_x(3,3,a)* gads_ll_x(b,3,3) +
+!     &                          gads_uu_x(3,4,a)*(gads_ll_x(b,3,4) +
+!     &                                            gads_ll_x(b,4,3))+
+!     &                          gads_uu_x(3,5,a)*(gads_ll_x(b,3,5) +
+!     &                                            gads_ll_x(b,5,3))+
+!     &                          gads_uu_x(4,4,a)* gads_ll_x(b,4,4) +
+!     &                          gads_uu_x(4,5,a)*(gads_ll_x(b,4,5) +
+!     &                                            gads_ll_x(b,5,4))+
+!     &                          gads_uu_x(5,5,a)* gads_ll_x(b,5,5)
+!     &                            )
+!     &                     -0.5d0*(
+!     &                          gads_uu_x(1,1,b)* gads_ll_x(a,1,1) +
+!     &                          gads_uu_x(1,2,b)*(gads_ll_x(a,1,2) +
+!     &                                            gads_ll_x(a,2,1))+
+!     &                          gads_uu_x(1,3,b)*(gads_ll_x(a,1,3) +
+!     &                                            gads_ll_x(a,3,1))+
+!     &                          gads_uu_x(1,4,b)*(gads_ll_x(a,1,4) +
+!     &                                            gads_ll_x(a,4,1))+
+!     &                          gads_uu_x(1,5,b)*(gads_ll_x(a,1,5) +
+!     &                                            gads_ll_x(a,5,1))+
+!     &                          gads_uu_x(2,2,b)* gads_ll_x(a,2,2) +
+!     &                          gads_uu_x(2,3,b)*(gads_ll_x(a,2,3) +
+!     &                                            gads_ll_x(a,3,2))+
+!     &                          gads_uu_x(2,4,b)*(gads_ll_x(a,2,4) +
+!     &                                            gads_ll_x(a,4,2))+
+!     &                          gads_uu_x(2,5,b)*(gads_ll_x(a,2,5) +
+!     &                                            gads_ll_x(a,5,2))+
+!     &                          gads_uu_x(3,3,b)* gads_ll_x(a,3,3) +
+!     &                          gads_uu_x(3,4,b)*(gads_ll_x(a,3,4) +
+!     &                                            gads_ll_x(a,4,3))+
+!     &                          gads_uu_x(3,5,b)*(gads_ll_x(a,3,5) +
+!     &                                            gads_ll_x(a,5,3))+
+!     &                          gads_uu_x(4,4,b)* gads_ll_x(a,4,4) +
+!     &                          gads_uu_x(4,5,b)*(gads_ll_x(a,4,5) +
+!     &                                            gads_ll_x(a,5,4))+
+!     &                          gads_uu_x(5,5,b)* gads_ll_x(a,5,5)
+!     &                            )
+!     &                     -0.5d0*(Hads_l_x(a,b))
+!     &                     -0.5d0*(Hads_l_x(b,a))
+!     &                           +(
+!     &                          Hads_l(1)*gammagg(1,a,b)+
+!     &                          Hads_l(2)*gammagg(2,a,b)+
+!     &                          Hads_l(3)*gammagg(3,a,b)+
+!     &                          Hads_l(4)*gammagg(4,a,b)+
+!     &                          Hads_l(5)*gammagg(5,a,b)
+!     &                            )
+!     &                           -(
+!     &                          gammagg(1,1,b)*gammagg(1,1,a)+
+!     &                          gammagg(1,2,b)*gammagg(2,1,a)+
+!     &                          gammagg(1,3,b)*gammagg(3,1,a)+
+!     &                          gammagg(1,4,b)*gammagg(4,1,a)+
+!     &                          gammagg(1,5,b)*gammagg(5,1,a)+
+!     &                          gammagg(2,1,b)*gammagg(1,2,a)+
+!     &                          gammagg(2,2,b)*gammagg(2,2,a)+
+!     &                          gammagg(2,3,b)*gammagg(3,2,a)+
+!     &                          gammagg(2,4,b)*gammagg(4,2,a)+
+!     &                          gammagg(2,5,b)*gammagg(5,2,a)+
+!     &                          gammagg(3,1,b)*gammagg(1,3,a)+
+!     &                          gammagg(3,2,b)*gammagg(2,3,a)+
+!     &                          gammagg(3,3,b)*gammagg(3,3,a)+
+!     &                          gammagg(3,4,b)*gammagg(4,3,a)+
+!     &                          gammagg(3,5,b)*gammagg(5,3,a)+
+!     &                          gammagg(4,1,b)*gammagg(1,4,a)+
+!     &                          gammagg(4,2,b)*gammagg(2,4,a)+
+!     &                          gammagg(4,3,b)*gammagg(3,4,a)+
+!     &                          gammagg(4,4,b)*gammagg(4,4,a)+
+!     &                          gammagg(4,5,b)*gammagg(5,4,a)+
+!     &                          gammagg(5,1,b)*gammagg(1,5,a)+
+!     &                          gammagg(5,2,b)*gammagg(2,5,a)+
+!     &                          gammagg(5,3,b)*gammagg(3,5,a)+
+!     &                          gammagg(5,4,b)*gammagg(4,5,a)+
+!     &                          gammagg(5,5,b)*gammagg(5,5,a)
+!     &                            )
+!     &                       -2*lambda5*gads_ll(a,b)/3
+!                end do
+!              end do
 !              write(*,*) 'x0,tmp(1,1)=',x0,max(abs(tmp(1,1)),
 !     &                                         abs(tmp(1,2)),
 !     &                                         abs(tmp(1,3)),
