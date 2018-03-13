@@ -875,6 +875,7 @@ c----------------------------------------------------------------------
         ! give values to the ads gh source function derivatives
         Hads_l_x(2,2)=-3/x0**2 
      &               +(3-4*x0+4*x0**4)/(1-x0)**2/(1-2*(1-x0)*x0)**2
+        Hads_l_x(3,3)=-2.0d0              ! WARNING: from H_\theta1=2*cot(\theta1) at \theta1=\pi/2
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3
