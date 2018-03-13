@@ -139,6 +139,7 @@ c----------------------------------------------------------------------
         real*8 efe(5,5),efe_J(5,5)
         real*8 term1(5,5),term2(5,5),term3(5,5),term4(5,5)
         real*8 term5(5,5),term6(5,5),term7(5,5),term8(5,5)
+        real*8 term9(5,5)
         real*8 gammagg(5,5,5),gammahh(5,5,5)
         real*8 gammagh(5,5,5),gammahg(5,5,5) 
         real*8 cuuuu(5,5,5,5),dlll(5,5,5)
@@ -202,6 +203,7 @@ c----------------------------------------------------------------------
         data term3,term4/25*0.0,25*0.0/
         data term5,term6/25*0.0,25*0.0/
         data term7,term8/25*0.0,25*0.0/
+        data term9/25*0.0/
 
         data efe,efe_J/25*0.0,25*0.0/
         data cd_ll,cd_J_ll/25*0.0,25*0.0/
@@ -260,9 +262,9 @@ c----------------------------------------------------------------------
 
         ! AdS5D cosmological constant
         !(lambda5=-(n-1)(n-2)/L^2) for n=5 dimensional AdS
-        lambda5=-6/L/L
+!        lambda5=-6/L/L
         ! NOTE: TEMPORARY CHECK
-!        lambda5=0.0d0
+        lambda5=0.0d0
 
 
         ! initialize output variables
@@ -426,13 +428,6 @@ c----------------------------------------------------------------------
      &                     phi10_x(3)*phi10_x(5)*g0_uu(3,5)+
      &                     phi10_x(4)*phi10_x(5)*g0_uu(4,5))
          
-              do a=1,5
-                do b=1,5
-                  set_ll(a,b)=phi10_x(a)*phi10_x(b)
-     &                       -g0_ll(a,b)*(grad_phi1_sq/2)
-                end do
-              end do
-
               tr_set =set_ll(1,1)*g0_uu(1,1)+
      &                set_ll(2,2)*g0_uu(2,2)+
      &                set_ll(3,3)*g0_uu(3,3)+
@@ -453,7 +448,7 @@ c----------------------------------------------------------------------
               ! Included pure AdS terms in the EFEs,
               ! efe_ab =   term1_ab + term2_ab + term3_ab + term4_ab 
               !          + term5_ab + term6_ab + term7_ab + term8_ab 
-              !          - 8*PI*(se_ab-1/3*tr(se)*g_ab)
+              !          + term9_ab
               ! for
               ! 
               ! term1_ab = -1/2 g^cd g_ab,cd  
@@ -464,6 +459,7 @@ c----------------------------------------------------------------------
               ! term6_ab = H_c G^c_ab
               ! term7_ab = -G^c_db G^d_ca
               ! term8_ab = -2/3 lambda5 g_ab
+              ! term9_ab = -8*PI*(set_ab-tr_set*g0_ab/3)
               !
               ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
               !
@@ -585,15 +581,14 @@ c----------------------------------------------------------------------
      &                          gamma_ull(5,5,b)*gamma_ull(5,5,a)
      &                            )
                   term8(a,b)=-2*lambda5*g0_ll(a,b)/3
+                  term9(a,b)=-8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
      &
                   efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
-     &                    -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
+     &                    +term9(a,b)
 
                 end do
               end do
-
-!              write(*,*) 'x0,term1(1,1)=',x0,term1(1,1)
 
 !              write(*,*) 'x0,tmp(1,1)=',x0,max(abs(efe(1,1)),
 !     &                                         abs(efe(1,2)),

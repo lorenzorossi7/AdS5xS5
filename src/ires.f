@@ -121,9 +121,9 @@ c----------------------------------------------------------------------
 
         ! AdS5D cosmological constant
         !(lambda5=-(n-1)(n-2)/L^2) for n=5 dimensional AdS)
-        lambda5=-6/L/L
+!        lambda5=-6/L/L
         ! NOTE: TEMPORARY CHECK
-!        lambda5=0.0d0
+        lambda5=0.0d0
 
         ! initialize 
         do i=1,Nx
