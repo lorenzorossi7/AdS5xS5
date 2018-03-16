@@ -410,7 +410,7 @@ c----------------------------------------------------------------------
         real*8 f0_l(10),f0_ll(10,10),ff_ll(10,10) 
         real*8 f_lllll(10,10,10,10,10)
         real*8 fads_l(10),fads_ll(10,10)
-        real*8 levicivi(3,3,3),vol(3,3,3),sqrtdetg
+        real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
         real*8 g1_ll(5,5),g1_uu(5,5),set_tmp(5,5),r0,r_h,x_h,delta0
 
         !--------------------------------------------------------------
@@ -926,13 +926,13 @@ c----------------------------------------------------------------------
      &          .or.(a.eq.3.and.b.eq.1.and.c.eq.2)
      &          .or.(a.eq.2.and.b.eq.3.and.c.eq.1))
      &          then
-                  levicivi(a,b,c)=+1
+                  levicivi3(a,b,c)=+1
                 end if
                 if ((a.eq.2.and.b.eq.1.and.c.eq.3)
      &          .or.(a.eq.1.and.b.eq.3.and.c.eq.2)
      &          .or.(a.eq.3.and.b.eq.2.and.c.eq.1))
      &          then
-                  levicivi(a,b,c)=-1
+                  levicivi3(a,b,c)=-1
                 end if
             end do
           end do
@@ -950,7 +950,7 @@ c----------------------------------------------------------------------
         do a=1,3
           do b=1,3
             do c=1,3
-              vol(a,b,c)=levicivi(a,b,c)*sqrtdetg
+              vol(a,b,c)=levicivi3(a,b,c)*sqrtdetg
             end do
           end do
         end do
