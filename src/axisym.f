@@ -38,11 +38,11 @@ c
 c applies regularity conditions for the metric
 c----------------------------------------------------------------------
 
-        subroutine axi_reg_g(gb_tt,gb_tx,gb_xx,psi,chr,ex,L,x,Nx)
+        subroutine axi_reg_g(gb_tt,gb_tx,gb_xx,psi,omega,chr,ex,L,x,Nx)
         implicit none
         integer Nx
         integer regtype
-        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),psi(Nx)
+        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),psi(Nx),omega(Nx)
         real*8 chr(Nx),ex,L
         real*8 x(Nx)
 

@@ -1,8 +1,9 @@
 //============================================================================
 // in polar coordinates t,x,y for x in [0,1] and y in [0,1]
 // using r=x/(1-x) compactification and \chi=\pi y rescaling 
-// coordinate labels are (1:t),(2:x),(3:y),(4,5,6,:psi),(7,8,9,10:omega) 
-// for (t,x,psi) in the AdS_5 sector and (y,omega) in the S^5 sector
+// coordinate labels are (1:t),(2:x),(3:y),(4,5,6,:theta1,theta2,theta3),
+// (7,8,9,10:phi2,phi3,phi4,phi5) 
+// for (t,x,theta1,theta2,theta3) in the AdS_5 sector and (y,phi2,phi3,phi4,phi5) in the S^5 sector
 //
 // application interface functions for AdS5xS5
 //=============================================================================
@@ -71,10 +72,10 @@ real *gb_tt,*gb_tt_n,*gb_tt_np1,*gb_tt_nm1;
 real *gb_tx,*gb_tx_n,*gb_tx_np1,*gb_tx_nm1;
 real *gb_xx,*gb_xx_n,*gb_xx_np1,*gb_xx_nm1;
 real *psi,*psi_n,*psi_np1,*psi_nm1;
+real *omega,*omega_n,*omega_np1,*omega_nm1;
 real *gb_ty,*gb_ty_n,*gb_ty_np1,*gb_ty_nm1;
 real *gb_xy,*gb_xy_n,*gb_xy_np1,*gb_xy_nm1;
 real *gb_yy,*gb_yy_n,*gb_yy_np1,*gb_yy_nm1;
-real *omega,*omega_n,*omega_np1,*omega_nm1;
 real *fb_t,*fb_t_n,*fb_t_np1,*fb_t_nm1;
 real *fb_x,*fb_x_n,*fb_x_np1,*fb_x_nm1;
 real *fb_y,*fb_y_n,*fb_y_np1,*fb_y_nm1;
@@ -126,10 +127,10 @@ int gb_tt_gfn,gb_tt_n_gfn,gb_tt_np1_gfn,gb_tt_nm1_gfn;
 int gb_tx_gfn,gb_tx_n_gfn,gb_tx_np1_gfn,gb_tx_nm1_gfn;
 int gb_xx_gfn,gb_xx_n_gfn,gb_xx_np1_gfn,gb_xx_nm1_gfn;
 int psi_gfn,psi_n_gfn,psi_np1_gfn,psi_nm1_gfn;
+int omega_gfn,omega_n_gfn,omega_np1_gfn,omega_nm1_gfn;
 int gb_ty_gfn,gb_ty_n_gfn,gb_ty_np1_gfn,gb_ty_nm1_gfn;
 int gb_xy_gfn,gb_xy_n_gfn,gb_xy_np1_gfn,gb_xy_nm1_gfn;
 int gb_yy_gfn,gb_yy_n_gfn,gb_yy_np1_gfn,gb_yy_nm1_gfn;
-int omega_gfn,omega_n_gfn,omega_np1_gfn,omega_nm1_gfn;
 int fb_t_gfn,fb_t_n_gfn,fb_t_np1_gfn,fb_t_nm1_gfn;
 int fb_x_gfn,fb_x_n_gfn,fb_x_np1_gfn,fb_x_nm1_gfn;
 int fb_y_gfn,fb_y_n_gfn,fb_y_np1_gfn,fb_y_nm1_gfn;
@@ -195,6 +196,10 @@ void set_gfns(void)
     if ((psi_nm1_gfn   = PAMR_get_gfn("psi",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((psi_n_gfn     = PAMR_get_gfn("psi",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((psi_np1_gfn   = PAMR_get_gfn("psi",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((omega_gfn     = PAMR_get_gfn("omega",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
+    if ((omega_nm1_gfn = PAMR_get_gfn("omega",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
+    if ((omega_n_gfn   = PAMR_get_gfn("omega",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((omega_np1_gfn = PAMR_get_gfn("omega",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_ty_gfn     = PAMR_get_gfn("gb_ty",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_ty_nm1_gfn = PAMR_get_gfn("gb_ty",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_ty_n_gfn   = PAMR_get_gfn("gb_ty",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
@@ -207,10 +212,6 @@ void set_gfns(void)
     if ((gb_yy_nm1_gfn = PAMR_get_gfn("gb_yy",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yy_n_gfn   = PAMR_get_gfn("gb_yy",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yy_np1_gfn = PAMR_get_gfn("gb_yy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((omega_gfn     = PAMR_get_gfn("omega",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
-    if ((omega_nm1_gfn = PAMR_get_gfn("omega",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
-    if ((omega_n_gfn   = PAMR_get_gfn("omega",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((omega_np1_gfn = PAMR_get_gfn("omega",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((fb_t_gfn      = PAMR_get_gfn("fb_t",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((fb_t_nm1_gfn  = PAMR_get_gfn("fb_t",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((fb_t_n_gfn    = PAMR_get_gfn("fb_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
@@ -362,6 +363,10 @@ void ldptr(void)
    psi_n     = gfs[psi_n_gfn-1];
    psi_np1   = gfs[psi_np1_gfn-1];
    psi_nm1   = gfs[psi_nm1_gfn-1];
+   omega     = gfs[omega_gfn-1];
+   omega_n   = gfs[omega_n_gfn-1];
+   omega_np1 = gfs[omega_np1_gfn-1];
+   omega_nm1 = gfs[omega_nm1_gfn-1];
    gb_ty     = gfs[gb_ty_gfn-1];
    gb_ty_n   = gfs[gb_ty_n_gfn-1];
    gb_ty_np1 = gfs[gb_ty_np1_gfn-1];
@@ -374,10 +379,6 @@ void ldptr(void)
    gb_yy_n   = gfs[gb_yy_n_gfn-1];
    gb_yy_np1 = gfs[gb_yy_np1_gfn-1];
    gb_yy_nm1 = gfs[gb_yy_nm1_gfn-1];
-   omega     = gfs[psi_gfn-1];
-   omega_n   = gfs[psi_n_gfn-1];
-   omega_np1 = gfs[psi_np1_gfn-1];
-   omega_nm1 = gfs[psi_nm1_gfn-1];
    fb_t      = gfs[fb_t_gfn-1];
    fb_t_n    = gfs[fb_t_n_gfn-1];
    fb_t_np1  = gfs[fb_t_np1_gfn-1];
@@ -728,8 +729,8 @@ void AdS5xS5_t0_cnst_data(void)
    // initialize gbars
    if (ief_bh_r0==0 && skip_constraints==0)
    {
-     init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,&rhoa,&rhob,
-               &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
+     init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,psi,omega,
+               &rhoa,&rhob,&AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
    }
    else
    {
@@ -745,6 +746,7 @@ void AdS5xS5_t0_cnst_data(void)
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
               gb_xx_np1,gb_xx_n,gb_xx_nm1,
               psi_np1,psi_n,psi_nm1,
+              omega_np1,omega_n,omega_nm1,
               Hb_t_n,Hb_x_n,
               &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
 
@@ -752,6 +754,7 @@ void AdS5xS5_t0_cnst_data(void)
                gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
                gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
                psi_np1,psi_n,psi_nm1,psi_t_n,
+               omega_np1,omega_n,omega_nm1,omega_t_n,
                Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                phi1_np1,phi1_n,phi1_nm1,phi1_t_n,
@@ -763,12 +766,13 @@ void AdS5xS5_t0_cnst_data(void)
 //       gb_tx_np1[i]=gb_tx_nm1[i]=gb_tx[i];
 //       gb_xx_np1[i]=gb_xx_nm1[i]=gb_xx[i];
 //       psi_np1[i]=psi_nm1[i]=psi[i];
+//       omega_np1[i]=omega_nm1[i]=omega[i];
 //       phi1_np1[i]=phi1_nm1[i]=phi1[i];
 //     }
      axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
      axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
-     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,psi_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
-     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_xx_np1,psi_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
+     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
+     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_xx_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
 
      // store initial source functions, metric components
      for (i=0; i<size; i++)
@@ -807,6 +811,7 @@ void AdS5xS5_pre_io_calc(void)
         gb_tx_n,gb_tx_nm1,gb_tx_np1,
         gb_xx_n,gb_xx_nm1,gb_xx_np1,
         psi_n,psi_nm1,psi_np1,
+        omega_n,omega_nm1,omega_np1,
         phi1_n,phi1_nm1,phi1_np1,
         x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
    }
@@ -819,6 +824,7 @@ void AdS5xS5_pre_io_calc(void)
         gb_tx_np1,gb_tx_n,gb_tx_nm1,
         gb_xx_np1,gb_xx_n,gb_xx_nm1,
         psi_np1,psi_n,psi_nm1,
+        omega_np1,omega_n,omega_nm1,
         phi1_np1,phi1_n,phi1_nm1,
         x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
    }
@@ -914,6 +920,7 @@ void AdS5xS5_evolve(int iter)
              gb_tx_np1,gb_tx_n,gb_tx_nm1,
              gb_xx_np1,gb_xx_n,gb_xx_nm1,
              psi_np1,psi_n,psi_nm1,
+             omega_np1,omega_n,omega_nm1,
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              phi1_np1,phi1_n,phi1_nm1,
@@ -927,6 +934,7 @@ void AdS5xS5_evolve(int iter)
              gb_tx_np1,gb_tx_n,gb_tx_nm1,
              gb_xx_np1,gb_xx_n,gb_xx_nm1,
              psi_np1,psi_n,psi_nm1,
+             omega_np1,omega_n,omega_nm1,
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              phi1_np1,phi1_n,phi1_nm1,
@@ -940,6 +948,7 @@ void AdS5xS5_evolve(int iter)
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
               gb_xx_np1,gb_xx_n,gb_xx_nm1,
               psi_np1,psi_n,psi_nm1,
+              omega_np1,omega_n,omega_nm1,
               Hb_t_np1,Hb_t_n,Hb_t_nm1,
               Hb_x_np1,Hb_x_n,Hb_x_nm1,
               phi1_np1,phi1_n,phi1_nm1,
