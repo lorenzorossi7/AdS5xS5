@@ -359,7 +359,6 @@ c----------------------------------------------------------------------
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                  einstein_ll,set_ll,
      &                  phi10_x,phi10_xx,
-!     &                  ff_ll,
      &                  x,dt,chr,L,ex,Nx,i)
         implicit none
 
@@ -394,20 +393,20 @@ c----------------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,psi,omega)
         !--------------------------------------------------------------
-        real*8 g0_ll(5,5),g0_uu(5,5)
-        real*8 g0_ll_x(5,5,5),g0_uu_x(5,5,5),g0_ll_xx(5,5,5,5)
-        real*8 gads_ll(5,5),gads_uu(5,5)
-        real*8 gads_ll_x(5,5,5),gads_uu_x(5,5,5),gads_ll_xx(5,5,5,5)
-        real*8 h0_ll(5,5),h0_uu(5,5)
-        real*8 h0_ll_x(5,5,5),h0_uu_x(5,5,5),h0_ll_xx(5,5,5,5)
-        real*8 gamma_ull(5,5,5),gamma_ull_x(5,5,5,5)
-        real*8 riemann_ulll(5,5,5,5)
-        real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
-        real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
-        real*8 phi10_x(5),phi10_xx(5,5)
+        real*8 g0_ll(3,3),g0_uu(3,3)
+        real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
+        real*8 gads_ll(3,3),gads_uu(3,3)
+        real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 h0_ll(3,3),h0_uu(3,3)
+        real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
+        real*8 riemann_ulll(3,3,3,3)
+        real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
+        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
+        real*8 phi10_x(3),phi10_xx(3,3)
         !NOTE: below I have implemented direct calculation
-        real*8 f0_l(10),f0_ll(10,10),ff_ll(10,10) 
+        real*8 f0_l(10),f0_ll(10,10)
         real*8 f_lllll(10,10,10,10,10)
         real*8 fads_l(10),fads_ll(10,10)
         real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
@@ -528,36 +527,49 @@ c----------------------------------------------------------------------
         g0_ll(1,2)=           gb_tx0*(1-x0**2)**2
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
         g0_ll(3,3)=g0_psi_ads0+psi0*(1-x0**2)*x0**2
-        g0_ll(4,4)=g0_psi_ads0+psi0*(1-x0**2)*x0**2
-        g0_ll(5,5)=g0_psi_ads0+psi0*(1-x0**2)*x0**2
 
         g0_uu(1,1)=
-     &          (g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
+     &          (g0_ll(2,2)*g0_ll(3,3)-g0_ll(2,3)**2)
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
         g0_uu(1,2)=
-     &         (-g0_ll(1,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
+     &         (g0_ll(1,3)*g0_ll(2,3)-g0_ll(1,2)*g0_ll(3,3))
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+        g0_uu(1,3)=
+     &         (g0_ll(1,2)*g0_ll(2,3)-g0_ll(1,3)*g0_ll(2,2))
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
         g0_uu(2,2)=
-     &          (g0_ll(1,1)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
+     &         (g0_ll(1,1)*g0_ll(3,3)-g0_ll(1,3)**2)
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+        g0_uu(2,3)=
+     &         (g0_ll(1,2)*g0_ll(1,3)-g0_ll(1,1)*g0_ll(2,3))
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
         g0_uu(3,3)=
-     &          (g0_ll(1,1)*g0_ll(2,2)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(4,4)*g0_ll(5,5))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
-        g0_uu(4,4)=
-     &          (g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(5,5))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
-        g0_uu(5,5)=
-     &          (g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4))
-     &         /(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5)
-     &                  -g0_ll(1,2)**2*g0_ll(3,3)*g0_ll(4,4)*g0_ll(5,5))
+     &         (g0_ll(1,1)*g0_ll(2,2)-g0_ll(1,2)**2)
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
 
         g0_ll_x(1,1,1)   =0
      &                   +gb_tt_t*(1-x0**2)
@@ -622,58 +634,24 @@ c----------------------------------------------------------------------
      &                   +psi_x*(2*x0-4*x0**3)
      &                   +psi_x*(2*x0-4*x0**3)
      &                   +psi0*(2-12*x0**2)
+        ! WARNING: from sin^2chi factor in pure ads term
 
-        g0_ll_x(4,4,1)   =0
-     &                   +psi_t*(1-x0**2)*x0**2
-        g0_ll_x(4,4,2)   =g0_psi_ads_x
-     &                   +psi_x*(1-x0**2)*x0**2
-     &                   +psi0*(2*x0-4*x0**3)
-        g0_ll_xx(4,4,1,1)=0
-     &                   +psi_tt*(1-x0**2)*x0**2
-        g0_ll_xx(4,4,1,2)=0
-     &                   +psi_tx*(1-x0**2)*x0**2
-     &                   +psi_t*(2*x0-4*x0**3)
-        g0_ll_xx(4,4,2,2)=g0_psi_ads_xx
-     &                   +psi_xx*(1-x0**2)*x0**2
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi0*(2-12*x0**2)
-        g0_ll_xx(4,4,3,3)=-2*g0_psi_ads0          ! WARNING: from sin^2chi factor in pure ads term
-
-        g0_ll_x(5,5,1)   =0        
-     &                   +psi_t*(1-x0**2)*x0**2
-        g0_ll_x(5,5,2)   =g0_psi_ads_x
-     &                   +psi_x*(1-x0**2)*x0**2
-     &                   +psi0*(2*x0-4*x0**3)
-        g0_ll_xx(5,5,1,1)=0
-     &                   +psi_tt*(1-x0**2)*x0**2
-        g0_ll_xx(5,5,1,2)=0
-     &                   +psi_tx*(1-x0**2)*x0**2
-     &                   +psi_t*(2*x0-4*x0**3)
-        g0_ll_xx(5,5,2,2)=g0_psi_ads_xx
-     &                   +psi_xx*(1-x0**2)*x0**2
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi0*(2-12*x0**2)
-        g0_ll_xx(5,5,3,3)=-2*g0_psi_ads0          ! WARNING: from sin^2chi factor in pure ads term
-        g0_ll_xx(5,5,4,4)=-2*g0_psi_ads0          ! WARNING: from sin^2theta factor in pure ads term
-
-        do a=1,4
-          do b=a+1,5
+        do a=1,2
+          do b=a+1,3
             g0_ll(b,a)=g0_ll(a,b)
             g0_uu(b,a)=g0_uu(a,b) 
-            do c=1,5
+            do c=1,3
               g0_ll_x(b,a,c)=g0_ll_x(a,b,c)
             end do
           end do
         end do
 
-        do a=1,5
-          do b=1,5
-            do c=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
               g0_uu_x(a,b,c)=0
-              do d=1,5
-                do e=1,5
+              do d=1,3
+                do e=1,3
                   g0_uu_x(a,b,c)=g0_uu_x(a,b,c)
      &                          -g0_ll_x(d,e,c)
      &                           *g0_uu(a,d)*g0_uu(b,e)
@@ -684,10 +662,10 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        do a=1,5
-          do b=1,5
-            do c=1,5
-              do d=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
+              do d=1,3
                 g0_ll_xx(a,b,c,d)=
      &             g0_ll_xx(min(a,b),max(a,b),min(c,d),max(c,d))
               end do
@@ -695,11 +673,11 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        do a=1,5
-          do b=1,5
-            do c=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
               gamma_ull(a,b,c)=0
-              do d=1,5
+              do d=1,3
                 gamma_ull(a,b,c)=gamma_ull(a,b,c)
      &                          +0.5d0*g0_uu(a,d)
      &                                *(g0_ll_x(c,d,b)
@@ -715,14 +693,10 @@ c----------------------------------------------------------------------
         gads_ll(1,1)=g0_tt_ads0
         gads_ll(2,2)=g0_xx_ads0
         gads_ll(3,3)=g0_psi_ads0
-        gads_ll(4,4)=g0_psi_ads0
-        gads_ll(5,5)=g0_psi_ads0
 
         gads_uu(1,1)=1/g0_tt_ads0
         gads_uu(2,2)=1/g0_xx_ads0
         gads_uu(3,3)=1/g0_psi_ads0
-        gads_uu(4,4)=1/g0_psi_ads0
-        gads_uu(5,5)=1/g0_psi_ads0
 
         gads_ll_x(1,1,2)   =g0_tt_ads_x  
         gads_ll_xx(1,1,2,2)=g0_tt_ads_xx 
@@ -730,53 +704,31 @@ c----------------------------------------------------------------------
         gads_ll_xx(2,2,2,2)=g0_xx_ads_xx 
         gads_ll_x(3,3,2)   =g0_psi_ads_x 
         gads_ll_xx(3,3,2,2)=g0_psi_ads_xx
-        gads_ll_x(4,4,2)   =g0_psi_ads_x 
-        gads_ll_xx(4,4,2,2)=g0_psi_ads_xx
-        gads_ll_xx(4,4,3,3)=-2*g0_psi_ads0          ! WARNING: from sin^2chi factor in pure ads term
-        gads_ll_x(5,5,2)   =g0_psi_ads_x 
-        gads_ll_xx(5,5,2,2)=g0_psi_ads_xx
-        gads_ll_xx(5,5,3,3)=-2*g0_psi_ads0          ! WARNING: from sin^2chi factor in pure ads term
-        gads_ll_xx(5,5,4,4)=-2*g0_psi_ads0          ! WARNING: from sin^2theta factor in pure ads term
+        ! WARNING: from sin^2theta factor in pure ads term
                 
-        do a=1,4
-          do b=a+1,5
+        do a=1,2
+          do b=a+1,3
             gads_ll(b,a)=gads_ll(a,b)
             gads_uu(b,a)=gads_uu(a,b)
-            do c=1,5
+            do c=1,3
               gads_ll_x(b,a,c)=gads_ll_x(a,b,c)
             end do
           end do
         end do
 
-        do a=1,5
-          do b=1,5
-            do c=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
               gads_uu_x(a,b,c)=
      &              -gads_ll_x(1,1,c)*gads_uu(a,1)*gads_uu(b,1)
      &              -gads_ll_x(1,2,c)*(gads_uu(a,1)*gads_uu(b,2)
      &                               +gads_uu(a,2)*gads_uu(b,1))
      &              -gads_ll_x(1,3,c)*(gads_uu(a,1)*gads_uu(b,3)
      &                               +gads_uu(a,3)*gads_uu(b,1))
-     &              -gads_ll_x(1,4,c)*(gads_uu(a,1)*gads_uu(b,4)
-     &                               +gads_uu(a,4)*gads_uu(b,1))
-     &              -gads_ll_x(1,5,c)*(gads_uu(a,1)*gads_uu(b,5)
-     &                               +gads_uu(a,5)*gads_uu(b,1))
      &              -gads_ll_x(2,2,c)*gads_uu(a,2)*gads_uu(b,2)
      &              -gads_ll_x(2,3,c)*(gads_uu(a,2)*gads_uu(b,3)
      &                               +gads_uu(a,3)*gads_uu(b,2))
-     &              -gads_ll_x(2,4,c)*(gads_uu(a,2)*gads_uu(b,4)
-     &                               +gads_uu(a,4)*gads_uu(b,2))
-     &              -gads_ll_x(2,5,c)*(gads_uu(a,2)*gads_uu(b,5)
-     &                               +gads_uu(a,5)*gads_uu(b,2))
      &              -gads_ll_x(3,3,c)*gads_uu(a,3)*gads_uu(b,3)
-     &              -gads_ll_x(3,4,c)*(gads_uu(a,3)*gads_uu(b,4)
-     &                               +gads_uu(a,4)*gads_uu(b,3))
-     &              -gads_ll_x(3,5,c)*(gads_uu(a,3)*gads_uu(b,5)
-     &                               +gads_uu(a,5)*gads_uu(b,3))
-     &              -gads_ll_x(4,4,c)*gads_uu(a,4)*gads_uu(b,4)
-     &              -gads_ll_x(4,5,c)*(gads_uu(a,4)*gads_uu(b,5)
-     &                               +gads_uu(a,5)*gads_uu(b,4))
-     &              -gads_ll_x(5,5,c)*gads_uu(a,5)*gads_uu(b,5)
             end do
           end do
         end do
@@ -787,15 +739,11 @@ c----------------------------------------------------------------------
         h0_ll(1,2)=gb_tx0*(1-x0**2)**2
         h0_ll(2,2)=gb_xx0*(1-x0**2)
         h0_ll(3,3)=psi0*x0**2*(1-x0**2)
-        h0_ll(4,4)=psi0*x0**2*(1-x0**2)
-        h0_ll(5,5)=psi0*x0**2*(1-x0**2) 
         
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)
         h0_uu(2,2)=g0_uu(2,2)-gads_uu(2,2)
         h0_uu(3,3)=g0_uu(3,3)-gads_uu(3,3)
-        h0_uu(4,4)=g0_uu(4,4)-gads_uu(4,4)
-        h0_uu(5,5)=g0_uu(4,4)-gads_uu(4,4)
 
         h0_ll_x(1,1,1)   =g0_ll_x(1,1,1)-gads_ll_x(1,1,1)
         h0_ll_x(1,1,2)   =g0_ll_x(1,1,2)-gads_ll_x(1,1,2)
@@ -820,21 +768,7 @@ c----------------------------------------------------------------------
         h0_ll_xx(3,3,1,1)=g0_ll_xx(3,3,1,1)-gads_ll_xx(3,3,1,1)
         h0_ll_xx(3,3,1,2)=g0_ll_xx(3,3,1,2)-gads_ll_xx(3,3,1,2)
         h0_ll_xx(3,3,2,2)=g0_ll_xx(3,3,2,2)-gads_ll_xx(3,3,2,2)
-
-        h0_ll_x(4,4,1)   =g0_ll_x(4,4,1)-gads_ll_x(4,4,1)
-        h0_ll_x(4,4,2)   =g0_ll_x(4,4,2)-gads_ll_x(4,4,2)
-        h0_ll_xx(4,4,1,1)=g0_ll_xx(4,4,1,1)-gads_ll_xx(4,4,1,1)
-        h0_ll_xx(4,4,1,2)=g0_ll_xx(4,4,1,2)-gads_ll_xx(4,4,1,2)
-        h0_ll_xx(4,4,2,2)=g0_ll_xx(4,4,2,2)-gads_ll_xx(4,4,2,2)
-        h0_ll_xx(4,4,3,3)=g0_ll_xx(4,4,3,3)-gads_ll_xx(4,4,3,3)
-
-        h0_ll_x(5,5,1)   =g0_ll_x(5,5,1)-gads_ll_x(5,5,1)
-        h0_ll_x(5,5,2)   =g0_ll_x(5,5,2)-gads_ll_x(5,5,2)
-        h0_ll_xx(5,5,1,1)=g0_ll_xx(5,5,1,1)-gads_ll_xx(5,5,1,1)
-        h0_ll_xx(5,5,1,2)=g0_ll_xx(5,5,1,2)-gads_ll_xx(5,5,1,2)
-        h0_ll_xx(5,5,2,2)=g0_ll_xx(5,5,2,2)-gads_ll_xx(5,5,2,2)
-        h0_ll_xx(5,5,3,3)=g0_ll_xx(5,5,3,3)-gads_ll_xx(5,5,3,3)
-        h0_ll_xx(5,5,4,4)=g0_ll_xx(5,5,4,4)-gads_ll_xx(5,5,4,4)
+        ! WARNING: from sin^2theta factor in pure ads term
 
         h0_uu_x(1,1,1)=g0_uu_x(1,1,1)-gads_uu_x(1,1,1)
         h0_uu_x(1,1,2)=g0_uu_x(1,1,2)-gads_uu_x(1,1,2)
@@ -848,17 +782,11 @@ c----------------------------------------------------------------------
         h0_uu_x(3,3,1)=g0_uu_x(3,3,1)-gads_uu_x(3,3,1)
         h0_uu_x(3,3,2)=g0_uu_x(3,3,2)-gads_uu_x(3,3,2)
 
-        h0_uu_x(4,4,1)=g0_uu_x(4,4,1)-gads_uu_x(4,4,1)
-        h0_uu_x(4,4,2)=g0_uu_x(4,4,2)-gads_uu_x(4,4,2)
-
-        h0_uu_x(5,5,1)=g0_uu_x(5,5,1)-gads_uu_x(5,5,1)
-        h0_uu_x(5,5,2)=g0_uu_x(5,5,2)-gads_uu_x(5,5,2)
-
-        do a=1,4
-          do b=a+1,5
+        do a=1,2
+          do b=a+1,3
             h0_ll(b,a)=h0_ll(a,b)
             h0_uu(b,a)=h0_uu(a,b)
-            do c=1,5
+            do c=1,3
               h0_ll_x(b,a,c)=h0_ll_x(a,b,c)
               h0_uu_x(b,a,c)=h0_uu_x(a,b,c)
             end do
@@ -890,30 +818,19 @@ c----------------------------------------------------------------------
         phi10_x(2)=phi1_x*(1-x0**2)**3
      &            +phi10*(-6*x0)*(1-x0**2)**2
         phi10_x(3)=0
-        phi10_x(4)=0
-        phi10_x(5)=0
 
         phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
         phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
      &               +phi1_t*(-6*x0)*(1-x0**2)**2
         phi10_xx(1,3)=0
-        phi10_xx(1,4)=0
-        phi10_xx(1,5)=0
         phi10_xx(2,2)=phi1_xx*(1-x0**2)**3
      &               +phi1_x*(2)*(-6*x0)*(1-x0**2)**2
      &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
         phi10_xx(2,3)=0
-        phi10_xx(2,4)=0
-        phi10_xx(2,5)=0
         phi10_xx(3,3)=0                
-        phi10_xx(3,4)=0
-        phi10_xx(3,5)=0
-        phi10_xx(4,4)=0
-        phi10_xx(4,5)=0
-        phi10_xx(5,5)=0
 
-        do a=1,4
-          do b=a+1,5
+        do a=1,2
+          do b=a+1,3
             phi10_xx(b,a)=phi10_xx(a,b)
           end do
         end do
@@ -989,35 +906,6 @@ c----------------------------------------------------------------------
         ! NOTE: TEMPORARY CHECK
         f_lllll(1,2,3,4,5) =4.0d0/L*(-x0**3/(1-x0)**5)
 
-!        ! calculate contraction of field strength F_acemo*F_bdfmp*g^cd*g^ef*g^mn*g^op
-!        do a=1,10
-!          do b=1,10
-!            ff_ll(a,b)=0.0d0
-!            do c=1,10
-!              do d=1,10
-!                do e=1,10
-!                  do f=1,10
-!                    do m=1,10
-!                      do n=1,10
-!                        do o=1,10
-!                          do p=1,10
-!                            ff_ll(a,b)=ff_ll(a,b)
-!     &                                +f_lllll(a,c,e,m,o)
-!     &                                *f_lllll(b,d,f,n,p)
-!     &                                *g0_uu(c,d)*g0_uu(e,f)
-!     &                                *g0_uu(m,n)*g0_uu(o,p)
-!                          end do
-!                        end do
-!                      end do
-!                    end do
-!                  end do
-!                end do
-!              end do
-!            end do
-!          end do
-!        end do 
-!        write(*,*) 'ff_ll(1,2)=',ff_ll(1,1)
-
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
         !              +   1/2 g^ad(g_bd,ce + g_cd,be - g_bc,de))
@@ -1037,12 +925,12 @@ c----------------------------------------------------------------------
         ! gamma_ull(5,4,5)=cottheta
         ! gamma_ull(5,3,5)=cotchi
         ! are affected in this AdS5D case, so hardcoded these at the end)
-        do a=1,5
-          do b=1,5
-            do c=1,5
-              do e=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
+              do e=1,3
                 gamma_ull_x(a,b,c,e)=0
-                do d=1,5
+                do d=1,3
                   gamma_ull_x(a,b,c,e)=gamma_ull_x(a,b,c,e)
      &              +0.5d0*g0_uu_x(a,d,e)*(g0_ll_x(b,d,c)+
      &                     g0_ll_x(c,d,b)-g0_ll_x(b,c,d))
@@ -1053,30 +941,30 @@ c----------------------------------------------------------------------
             end do
           end do
         end do
-        gamma_ull_x(4,4,3,3)=-1 
-        gamma_ull_x(5,5,3,3)=-1 
-        gamma_ull_x(2,4,4,3)=0
-        gamma_ull_x(3,4,4,3)=1
-        gamma_ull_x(4,3,4,3)=-1
-        gamma_ull_x(5,5,4,4)=-1
-        gamma_ull_x(2,5,5,3)=0
-        gamma_ull_x(2,5,5,4)=0
-        gamma_ull_x(3,5,5,3)=1
-        gamma_ull_x(3,5,5,4)=0
-        gamma_ull_x(4,5,5,4)=1
-        gamma_ull_x(5,4,5,4)=-1
-        gamma_ull_x(5,3,5,3)=-1
+        !gamma_ull_x(4,4,3,3)=-1 
+        !gamma_ull_x(5,5,3,3)=-1 
+        !gamma_ull_x(2,4,4,3)=0
+        !gamma_ull_x(3,4,4,3)=1
+        !gamma_ull_x(4,3,4,3)=-1
+        !gamma_ull_x(5,5,4,4)=-1
+        !gamma_ull_x(2,5,5,3)=0
+        !gamma_ull_x(2,5,5,4)=0
+        !gamma_ull_x(3,5,5,3)=1
+        !gamma_ull_x(3,5,5,4)=0
+        !gamma_ull_x(4,5,5,4)=1
+        !gamma_ull_x(5,4,5,4)=-1
+        !gamma_ull_x(5,3,5,3)=-1
 
         ! calculate Riemann tensor at point i
         !(R^a_bcd =gamma^a_bd,c - gamma^a_bc,d
         !          +gamma^a_ce gamma^e_bd - gamma^a_de gamma^e_bc)
-        do a=1,5
-          do b=1,5
-            do c=1,5
-              do d=1,5
+        do a=1,3
+          do b=1,3
+            do c=1,3
+              do d=1,3
                 riemann_ulll(a,b,c,d)=
      &                gamma_ull_x(a,b,d,c)-gamma_ull_x(a,b,c,d)
-                do e=1,5
+                do e=1,3
                    riemann_ulll(a,b,c,d)=riemann_ulll(a,b,c,d)
      &               +gamma_ull(a,c,e)*gamma_ull(e,b,d)
      &               -gamma_ull(a,d,e)*gamma_ull(e,b,c)
@@ -1088,10 +976,10 @@ c----------------------------------------------------------------------
 
         ! calculate Ricci tensor at point i
         !(R_bd = R^a_bad)
-        do b=1,5
-          do d=1,5
+        do b=1,3
+          do d=1,3
             ricci_ll(b,d)=0
-            do a=1,5
+            do a=1,3
               ricci_ll(b,d)=ricci_ll(b,d)+riemann_ulll(a,b,a,d)
             end do
           end do
@@ -1099,10 +987,10 @@ c----------------------------------------------------------------------
 
         ! calculate raised Ricci tensor at point i
         !(R_a^b = R_ad g^db)
-        do a=1,5
-          do b=1,5
+        do a=1,3
+          do b=1,3
             ricci_lu(a,b)=0
-            do d=1,5
+            do d=1,3
               ricci_lu(a,b)=ricci_lu(a,b)+ricci_ll(a,d)*g0_uu(d,b)
             end do
           end do
@@ -1111,14 +999,14 @@ c----------------------------------------------------------------------
         ! calculate Ricci scalar
         !(R = R_a^a)
         ricci=0
-        do a=1,5
+        do a=1,3
           ricci=ricci+ricci_lu(a,a)
         end do
   
         ! calculates Einstein tensor at point i
         !(G_ab = R_ab - 1/2 R g_ab)
-        do a=1,5
-          do b=1,5
+        do a=1,3
+          do b=1,3
             einstein_ll(a,b)=ricci_ll(a,b)-0.5d0*ricci*g0_ll(a,b)
           end do
         end do
@@ -1126,15 +1014,15 @@ c----------------------------------------------------------------------
         ! calculates stress-energy tensor at point i 
         !(T_ab = 2*phi1,a phi1,b - (phi1,c phi1,d) g^cd g_ab + ...)
         grad_phi1_sq=0
-        do a=1,5
-          do b=1,5
+        do a=1,3
+          do b=1,3
             grad_phi1_sq=grad_phi1_sq
      &                  +phi10_x(a)*phi10_x(b)*g0_uu(a,b)
           end do
         end do
 
-        do a=1,5
-          do b=1,5
+        do a=1,3
+          do b=1,3
             set_ll(a,b)=
      &            phi10_x(a)*phi10_x(b)
      &           -g0_ll(a,b)*(grad_phi1_sq/2)
@@ -1199,25 +1087,6 @@ c----------------------------------------------------------------------
         set_ll(1,2)=-set_tmp(1,1)*delta0
         set_ll(2,2)=set_tmp(2,2)+set_tmp(1,1)*delta0**2
         set_ll(3,3)=set_tmp(3,3)
-        set_ll(4,4)=set_tmp(4,4)
-        set_ll(5,5)=set_tmp(5,5)
-
-!        ! NOTE: TEMPORARY CHECK
-!        set_ll(1,1)=set_ll(1,1)
-!     &  +g0_uu(2,2)*g0_uu(3,3)*g0_uu(4,4)*g0_uu(5,5)
-!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-!        set_ll(2,2)=set_ll(2,2)
-!     &  +g0_uu(1,1)*g0_uu(3,3)*g0_uu(4,4)*g0_uu(5,5)
-!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-!        set_ll(3,3)=set_ll(3,3)
-!     &  +g0_uu(1,1)*g0_uu(2,2)*g0_uu(4,4)*g0_uu(5,5)
-!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-!        set_ll(4,4)=set_ll(4,4)
-!     &  +g0_uu(1,1)*g0_uu(2,2)*g0_uu(3,3)*g0_uu(5,5)
-!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-!        set_ll(5,5)=set_ll(5,5)
-!     &  +g0_uu(1,1)*g0_uu(2,2)*g0_uu(3,3)*g0_uu(4,4)
-!     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
 
         return
         end

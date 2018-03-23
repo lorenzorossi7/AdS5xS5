@@ -35,8 +35,6 @@ c-----------------------------------------------------------------------
 
         real*8 phi10(Nx)
 
-        real*8 g_ll(5,5)
-
         integer relax,lop,residual,cdiff_method
         parameter (relax=1,lop=3,residual=2)
         real*8 x0

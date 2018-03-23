@@ -38,12 +38,12 @@ c----------------------------------------------------------------------
 
         real*8 dx
 
-        real*8 boxx_u(5)
+        real*8 boxx_u(3)
         real*8 sqrtdetmg0
 
         real*8 zeros(Nx)
 
-        real*8 efe_ires(5,5)
+        real*8 efe_ires(3,3)
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -60,19 +60,18 @@ c----------------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,theta,phi)
         !--------------------------------------------------------------
-        real*8 g0_ll(5,5),g0_uu(5,5)
-        real*8 g0_ll_x(5,5,5),g0_uu_x(5,5,5),g0_ll_xx(5,5,5,5)
-        real*8 gads_ll(5,5),gads_uu(5,5)
-        real*8 gads_ll_x(5,5,5),gads_uu_x(5,5,5),gads_ll_xx(5,5,5,5)
-        real*8 h0_ll(5,5),h0_uu(5,5)
-        real*8 h0_ll_x(5,5,5),h0_uu_x(5,5,5),h0_ll_xx(5,5,5,5)
-        real*8 gamma_ull(5,5,5),gamma_ull_x(5,5,5,5)
-        real*8 riemann_ulll(5,5,5,5)
-        real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
-        real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
-        real*8 phi10_x(5),phi10_xx(5,5)
-        real*8 ff_ll(10,10)
+        real*8 g0_ll(3,3),g0_uu(3,3)
+        real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
+        real*8 gads_ll(3,3),gads_uu(3,3)
+        real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 h0_ll(3,3),h0_uu(3,3)
+        real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
+        real*8 riemann_ulll(3,3,3,3)
+        real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
+        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
+        real*8 phi10_x(3),phi10_xx(3,3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -88,34 +87,32 @@ c----------------------------------------------------------------------
         data phi1_yy,phi1_yz/0.0,0.0/
         data phi1_zz/0.0/
 
-        data boxx_u/5*0.0/
+        data boxx_u/3*0.0/
 
-        data g0_ll,g0_uu/25*0.0,25*0.0/
-        data gads_ll,gads_uu/25*0.0,25*0.0/
-        data h0_ll,h0_uu/25*0.0,25*0.0/
-        data gamma_ull/125*0.0/
-        data gamma_ull_x/625*0.0/
+        data g0_ll,g0_uu/9*0.0,9*0.0/
+        data gads_ll,gads_uu/9*0.0,9*0.0/
+        data h0_ll,h0_uu/9*0.0,9*0.0/
+        data gamma_ull/27*0.0/
+        data gamma_ull_x/81*0.0/
 
-        data g0_ll_x,g0_uu_x/125*0.0,125*0.0/
-        data gads_ll_x,gads_uu_x/125*0.0,125*0.0/
-        data h0_ll_x,h0_uu_x/125*0.0,125*0.0/
+        data g0_ll_x,g0_uu_x/27*0.0,27*0.0/
+        data gads_ll_x,gads_uu_x/27*0.0,27*0.0/
+        data h0_ll_x,h0_uu_x/27*0.0,27*0.0/
 
-        data g0_ll_xx/625*0.0/
-        data gads_ll_xx/625*0.0/
-        data h0_ll_xx/625*0.0/
+        data g0_ll_xx/81*0.0/
+        data gads_ll_xx/81*0.0/
+        data h0_ll_xx/81*0.0/
 
         data ricci/0.0/
-        data ricci_ll,ricci_lu/25*0.0,25*0.0/
-        data einstein_ll,set_ll/25*0.0,25*0.0/
-        data riemann_ulll/625*0.0/
+        data ricci_ll,ricci_lu/9*0.0,9*0.0/
+        data einstein_ll,set_ll/9*0.0,9*0.0/
+        data riemann_ulll/81*0.0/
 
-        data A_l,Hads_l/5*0.0,5*0.0/
-        data A_l_x,Hads_l_x/25*0.0,25*0.0/
+        data A_l,Hads_l/3*0.0,3*0.0/
+        data A_l_x,Hads_l_x/9*0.0,9*0.0/
 
-        data phi10_x/5*0.0/
-        data phi10_xx/25*0.0/
-
-        data ff_ll/100*0.0/
+        data phi10_x/3*0.0/
+        data phi10_xx/9*0.0/
 
 !----------------------------------------------------------------------
         
@@ -162,13 +159,12 @@ c----------------------------------------------------------------------
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
      &              einstein_ll,set_ll,
      &              phi10_x,phi10_xx,
-!     &              ff_ll,
      &              x,dt,chr,L,ex,Nx,i)
 
               ! calculates efe_ires functions at point i,j
               !(efe_ires_ab=G_ab+lambda5*g_ab-8*PI*T_ab)
-              do a=1,5
-                do b=a,5
+              do a=1,3
+                do b=a,3
                   efe_ires(a,b)=einstein_ll(a,b)+lambda5*g0_ll(a,b)
      &                                          -8*PI*set_ll(a,b)
                 end do

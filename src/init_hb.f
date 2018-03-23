@@ -35,7 +35,7 @@ c----------------------------------------------------------------------
         logical ltrace,extrap_int_boundaries
         parameter (ltrace=.false.,extrap_int_boundaries=.true.)
 
-        real*8 boxx_u(5),boxx_l(5)
+        real*8 boxx_u(3),boxx_l(3)
 
         real*8 zeros(Nx)
 
@@ -43,53 +43,50 @@ c----------------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,theta,phi)
         !--------------------------------------------------------------
-        real*8 g0_ll(5,5),g0_uu(5,5)
-        real*8 g0_ll_x(5,5,5),g0_uu_x(5,5,5),g0_ll_xx(5,5,5,5)
-        real*8 gads_ll(5,5),gads_uu(5,5)
-        real*8 gads_ll_x(5,5,5),gads_uu_x(5,5,5),gads_ll_xx(5,5,5,5)
-        real*8 h0_ll(5,5),h0_uu(5,5)
-        real*8 h0_ll_x(5,5,5),h0_uu_x(5,5,5),h0_ll_xx(5,5,5,5)
-        real*8 gamma_ull(5,5,5),gamma_ull_x(5,5,5,5)
-        real*8 riemann_ulll(5,5,5,5)
-        real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
-        real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
-        real*8 phi10_x(5),phi10_xx(5,5)
-        real*8 ff_ll(10,10)
+        real*8 g0_ll(3,3),g0_uu(3,3)
+        real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
+        real*8 gads_ll(3,3),gads_uu(3,3)
+        real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 h0_ll(3,3),h0_uu(3,3)
+        real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
+        real*8 riemann_ulll(3,3,3,3)
+        real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
+        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
+        real*8 phi10_x(3),phi10_xx(3,3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
         data i,is,ie,a,b,c,d/0,0,0,0,0,0,0/
 
-        data boxx_u,boxx_l/5*0.0,5*0.0/
+        data boxx_u,boxx_l/3*0.0,3*0.0/
 
-        data g0_ll,g0_uu/25*0.0,25*0.0/
-        data gads_ll,gads_uu/25*0.0,25*0.0/
-        data h0_ll,h0_uu/25*0.0,25*0.0/
-        data gamma_ull/125*0.0/
-        data gamma_ull_x/625*0.0/
+        data g0_ll,g0_uu/9*0.0,9*0.0/
+        data gads_ll,gads_uu/9*0.0,9*0.0/
+        data h0_ll,h0_uu/9*0.0,9*0.0/
+        data gamma_ull/27*0.0/
+        data gamma_ull_x/81*0.0/
 
-        data g0_ll_x,g0_uu_x/125*0.0,125*0.0/
-        data gads_ll_x,gads_uu_x/125*0.0,125*0.0/
-        data h0_ll_x,h0_uu_x/125*0.0,125*0.0/
+        data g0_ll_x,g0_uu_x/27*0.0,27*0.0/
+        data gads_ll_x,gads_uu_x/27*0.0,27*0.0/
+        data h0_ll_x,h0_uu_x/27*0.0,27*0.0/
 
-        data g0_ll_xx/625*0.0/
-        data gads_ll_xx/625*0.0/
-        data h0_ll_xx/625*0.0/
+        data g0_ll_xx/81*0.0/
+        data gads_ll_xx/81*0.0/
+        data h0_ll_xx/81*0.0/
 
         data ricci/0.0/
-        data ricci_ll,ricci_lu/25*0.0,25*0.0/
-        data einstein_ll,set_ll/25*0.0,25*0.0/
-        data riemann_ulll/625*0.0/
+        data ricci_ll,ricci_lu/9*0.0,9*0.0/
+        data einstein_ll,set_ll/9*0.0,9*0.0/
+        data riemann_ulll/81*0.0/
 
-        data A_l,Hads_l/5*0.0,5*0.0/
-        data A_l_x,Hads_l_x/25*0.0,25*0.0/
+        data A_l,Hads_l/3*0.0,3*0.0/
+        data A_l_x,Hads_l_x/9*0.0,9*0.0/
 
-        data phi10_x/5*0.0/
-        data phi10_xx/25*0.0/
-
-        data ff_ll/100*0.0/
+        data phi10_x/3*0.0/
+        data phi10_xx/9*0.0/
 
         !---------------------------------------------------------------
 
@@ -131,37 +128,25 @@ c----------------------------------------------------------------------
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
      &              einstein_ll,set_ll,
      &              phi10_x,phi10_xx,
-!     &              ff_ll,
      &              x,dt,chr,L,ex,Nx,i)
 
             ! calculate boxx^c at point i 
             ! (boxx^c = -g^ab gamma^c_ab)
-            do c=1,5
+            do c=1,3
               boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
      &                     gamma_ull(c,2,2)*g0_uu(2,2)+
      &                     gamma_ull(c,3,3)*g0_uu(3,3)+
-     &                     gamma_ull(c,4,4)*g0_uu(4,4)+
-     &                     gamma_ull(c,5,5)*g0_uu(5,5)+
      &                  2*(gamma_ull(c,1,2)*g0_uu(1,2)+
      &                     gamma_ull(c,1,3)*g0_uu(1,3)+
-     &                     gamma_ull(c,1,4)*g0_uu(1,4)+
-     &                     gamma_ull(c,1,5)*g0_uu(1,5)+
-     &                     gamma_ull(c,2,3)*g0_uu(2,3)+
-     &                     gamma_ull(c,2,4)*g0_uu(2,4)+
-     &                     gamma_ull(c,2,5)*g0_uu(2,5)+
-     &                     gamma_ull(c,3,4)*g0_uu(3,4)+
-     &                     gamma_ull(c,3,5)*g0_uu(3,5)+
-     &                     gamma_ull(c,4,5)*g0_uu(4,5)) )
+     &                     gamma_ull(c,2,3)*g0_uu(2,3)) )
             end do
 
             ! calculate boxx_a at point i 
             ! (boxx_a = g_ab boxx^b)
-            do a=1,5
+            do a=1,3
               boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
      &                  boxx_u(2)*g0_ll(a,2)+
-     &                  boxx_u(3)*g0_ll(a,3)+
-     &                  boxx_u(4)*g0_ll(a,4)+
-     &                  boxx_u(5)*g0_ll(a,5)
+     &                  boxx_u(3)*g0_ll(a,3)
             end do
 
             ! here have \box{x}_a = Hads_a + e_a*H0_a, where

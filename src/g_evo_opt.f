@@ -44,7 +44,7 @@ c----------------------------------------------------------------------
 
         integer max_ghost_width
 
-        real*8 boxx_u(5),boxx_l(5)
+        real*8 boxx_u(3),boxx_l(3)
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -93,15 +93,6 @@ c----------------------------------------------------------------------
         ! h0_ll_xx(a,b,c,d)    = (z_ab*gb_ab)_,cd
         ! h0_uu_x(a,b,c)       = g^ab_,c - gads^ab_,c
         !
-        ! gammagg(a,b,c) = 0.5d0*gads_uu(a,d) 
-        !                  *(gads_ll_x(c,d,b)-gads_ll_x(b,c,d)+gads_ll_x(d,b,c))
-        ! gammahh(a,b,c) = 0.5d0*h0_uu(a,d) 
-        !                  *(h0_ll_x(c,d,b)-h0_ll_x(b,c,d)+h0_ll_x(d,b,c))
-        ! gammagh(a,b,c) = 0.5d0*gads_uu(a,d) 
-        !                  *(h0_ll_x(c,d,b)-h0_ll_x(b,c,d)+h0_ll_x(d,b,c))
-        ! gammahg(a,b,c) = 0.5d0*h0_uu(a,d) 
-        !                  *(gads_ll_x(c,d,b)-gads_ll_x(b,c,d)+gads_ll_x(d,b,c))
-        !
         ! cuuuu(a,b,c,d) = gads_uu(a,b)*gads_uu(c,d)
         !                   +h0_uu(a,b)*h0_uu(c,d) 
         !                   +gads_uu(a,b)*h0_uu(c,d) 
@@ -136,16 +127,14 @@ c----------------------------------------------------------------------
         !       do *NOT* symmetric components filled in
         !
         !--------------------------------------------------------------
-        real*8 efe(5,5),efe_J(5,5)
-        real*8 term1(5,5),term2(5,5),term3(5,5),term4(5,5)
-        real*8 term5(5,5),term6(5,5),term7(5,5),term8(5,5)
-        real*8 term9(5,5)
-        real*8 gammagg(5,5,5),gammahh(5,5,5)
-        real*8 gammagh(5,5,5),gammahg(5,5,5) 
-        real*8 cuuuu(5,5,5,5),dlll(5,5,5)
+        real*8 efe(3,3),efe_J(3,3)
+        real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
+        real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
+        real*8 term9(3,3)
+        real*8 cuuuu(3,3,3,3),dlll(3,3,3)
  
-        real*8 alpha,ndotc,n_l(5),n_u(5),c_l(5),c_J_l(5)
-        real*8 cd_ll(5,5),cd_J_ll(5,5)
+        real*8 alpha,ndotc,n_l(3),n_u(3),c_l(3)
+        real*8 cd_ll(3,3),cd_J_ll(3,3)
 
         real*8 tr_set,grad_phi1_sq
         
@@ -164,19 +153,18 @@ c----------------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,theta,phi)
         !--------------------------------------------------------------
-        real*8 g0_ll(5,5),g0_uu(5,5)
-        real*8 g0_ll_x(5,5,5),g0_uu_x(5,5,5),g0_ll_xx(5,5,5,5)
-        real*8 gads_ll(5,5),gads_uu(5,5)
-        real*8 gads_ll_x(5,5,5),gads_uu_x(5,5,5),gads_ll_xx(5,5,5,5)
-        real*8 h0_ll(5,5),h0_uu(5,5)
-        real*8 h0_ll_x(5,5,5),h0_uu_x(5,5,5),h0_ll_xx(5,5,5,5)
-        real*8 gamma_ull(5,5,5),gamma_ull_x(5,5,5,5)
-        real*8 riemann_ulll(5,5,5,5)
-        real*8 ricci_ll(5,5),ricci_lu(5,5),ricci
-        real*8 einstein_ll(5,5),set_ll(5,5)
-        real*8 Hads_l(5),Hads_l_x(5,5),A_l(5),A_l_x(5,5)
-        real*8 phi10_x(5),phi10_xx(5,5)
-        real*8 ff_ll(10,10)
+        real*8 g0_ll(3,3),g0_uu(3,3)
+        real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
+        real*8 gads_ll(3,3),gads_uu(3,3)
+        real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 h0_ll(3,3),h0_uu(3,3)
+        real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
+        real*8 riemann_ulll(3,3,3,3)
+        real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
+        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
+        real*8 phi10_x(3),phi10_xx(3,3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -196,17 +184,17 @@ c----------------------------------------------------------------------
         data dgb_J,ddgb_J,ddgb_J_tx/0.0,0.0,0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
 
-        data dlll/125*0.0/
-        data cuuuu/625*0.0/
+        data dlll/27*0.0/
+        data cuuuu/81*0.0/
 
-        data term1,term2/25*0.0,25*0.0/
-        data term3,term4/25*0.0,25*0.0/
-        data term5,term6/25*0.0,25*0.0/
-        data term7,term8/25*0.0,25*0.0/
-        data term9/25*0.0/
+        data term1,term2/9*0.0,9*0.0/
+        data term3,term4/9*0.0,9*0.0/
+        data term5,term6/9*0.0,9*0.0/
+        data term7,term8/9*0.0,9*0.0/
+        data term9/9*0.0/
 
-        data efe,efe_J/25*0.0,25*0.0/
-        data cd_ll,cd_J_ll/25*0.0,25*0.0/
+        data efe,efe_J/9*0.0,9*0.0/
+        data cd_ll,cd_J_ll/9*0.0,9*0.0/
 
         data phi1_t,phi1_x/0.0,0.0/
         data phi1_tt,phi1_tx/0.0,0.0/
@@ -216,42 +204,37 @@ c----------------------------------------------------------------------
 
         data dx/0.0/
 
-        data boxx_u,boxx_l/5*0.0,5*0.0/
+        data boxx_u,boxx_l/3*0.0,3*0.0/
 
         data phi1_res,phi1_J/0.0,0.0/
         data phi10_res,phi10_J/0.0,0.0/
 
-        data n_l,n_u,c_l,c_J_l/5*0.0,5*0.0,5*0.0,5*0.0/
+        data n_l,n_u,c_l/3*0.0,3*0.0,3*0.0/
 
-        data gammagg,gammahh/125*0.0,125*0.0/
-        data gammagh,gammahg/125*0.0,125*0.0/
+        data g0_ll,g0_uu/9*0.0,9*0.0/
+        data gads_ll,gads_uu/9*0.0,9*0.0/
+        data h0_ll,h0_uu/9*0.0,9*0.0/
+        data gamma_ull/27*0.0/
+        data gamma_ull_x/81*0.0/
 
-        data g0_ll,g0_uu/25*0.0,25*0.0/
-        data gads_ll,gads_uu/25*0.0,25*0.0/
-        data h0_ll,h0_uu/25*0.0,25*0.0/
-        data gamma_ull/125*0.0/
-        data gamma_ull_x/625*0.0/
+        data g0_ll_x,g0_uu_x/27*0.0,27*0.0/
+        data gads_ll_x,gads_uu_x/27*0.0,27*0.0/
+        data h0_ll_x,h0_uu_x/27*0.0,27*0.0/
 
-        data g0_ll_x,g0_uu_x/125*0.0,125*0.0/
-        data gads_ll_x,gads_uu_x/125*0.0,125*0.0/
-        data h0_ll_x,h0_uu_x/125*0.0,125*0.0/
-
-        data g0_ll_xx/625*0.0/
-        data gads_ll_xx/625*0.0/
-        data h0_ll_xx/625*0.0/
+        data g0_ll_xx/81*0.0/
+        data gads_ll_xx/81*0.0/
+        data h0_ll_xx/81*0.0/
 
         data ricci/0.0/
-        data ricci_ll,ricci_lu/25*0.0,25*0.0/
-        data einstein_ll,set_ll/25*0.0,25*0.0/
-        data riemann_ulll/625*0.0/
+        data ricci_ll,ricci_lu/9*0.0,9*0.0/
+        data einstein_ll,set_ll/9*0.0,9*0.0/
+        data riemann_ulll/81*0.0/
 
-        data A_l,Hads_l/5*0.0,5*0.0/
-        data A_l_x,Hads_l_x/25*0.0,25*0.0/
+        data A_l,Hads_l/3*0.0,3*0.0/
+        data A_l_x,Hads_l_x/9*0.0,9*0.0/
 
-        data phi10_x/5*0.0/
-        data phi10_xx/25*0.0/
-
-        data ff_ll/100*0.0/
+        data phi10_x/3*0.0/
+        data phi10_xx/9*0.0/
 
         !--------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
@@ -263,7 +246,6 @@ c----------------------------------------------------------------------
 !        lambda5=-6/L/L
         ! NOTE: TEMPORARY CHECK
         lambda5=0.0d0
-
 
         ! initialize output variables
         do i=1,Nx
@@ -311,40 +293,15 @@ c----------------------------------------------------------------------
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                einstein_ll,set_ll,
      &                phi10_x,phi10_xx,
-!     &                ff_ll,
      &                x,dt,chr,L,ex,Nx,i)
 
               ! computes auxiliary objects at point i
-              do a=1,5
-                do b=1,5
-                  do c=1,5
+              do a=1,3
+                do b=1,3
+                  do c=1,3
                     dlll(a,b,c)=
      &                  g0_ll_x(b,c,a)-g0_ll_x(a,b,c)+g0_ll_x(c,a,b)
-                    gammagg(a,b,c)=0
-                    gammahh(a,b,c)=0
-                    gammagh(a,b,c)=0
-                    gammahg(a,b,c)=0
-                    do d=1,5
-                      gammagg(a,b,c)=gammagg(a,b,c)
-     &                               +0.5d0*gads_uu(a,d)
-     &                                    *(gads_ll_x(c,d,b)
-     &                                     -gads_ll_x(b,c,d)
-     &                                     +gads_ll_x(d,b,c))
-                      gammahh(a,b,c)=gammahh(a,b,c)
-     &                               +0.5d0*h0_uu(a,d)
-     &                                    *(h0_ll_x(c,d,b)
-     &                                     -h0_ll_x(b,c,d)
-     &                                     +h0_ll_x(d,b,c))
-                      gammagh(a,b,c)=gammagh(a,b,c)
-     &                               +0.5d0*gads_uu(a,d)
-     &                                    *(h0_ll_x(c,d,b)
-     &                                     -h0_ll_x(b,c,d)
-     &                                     +h0_ll_x(d,b,c))
-                      gammahg(a,b,c)=gammahg(a,b,c)
-     &                               +0.5d0*h0_uu(a,d)
-     &                                    *(gads_ll_x(c,d,b)
-     &                                     -gads_ll_x(b,c,d)
-     &                                     +gads_ll_x(d,b,c))
+                    do d=1,3
                       cuuuu(a,b,c,d)=gads_uu(a,b)*gads_uu(c,d)+
      &                               h0_uu(a,b)*h0_uu(c,d)+
      &                               gads_uu(a,b)*h0_uu(c,d)+
@@ -354,93 +311,53 @@ c----------------------------------------------------------------------
                 end do
               end do
 
-              do c=1,5
+              do c=1,3
                 boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
      &                       gamma_ull(c,2,2)*g0_uu(2,2)+
      &                       gamma_ull(c,3,3)*g0_uu(3,3)+
-     &                       gamma_ull(c,4,4)*g0_uu(4,4)+
-     &                       gamma_ull(c,5,5)*g0_uu(5,5)+
      &                    2*(gamma_ull(c,1,2)*g0_uu(1,2)+
      &                       gamma_ull(c,1,3)*g0_uu(1,3)+
-     &                       gamma_ull(c,1,4)*g0_uu(1,4)+
-     &                       gamma_ull(c,1,5)*g0_uu(1,5)+
-     &                       gamma_ull(c,2,3)*g0_uu(2,3)+
-     &                       gamma_ull(c,2,4)*g0_uu(2,4)+
-     &                       gamma_ull(c,2,5)*g0_uu(2,5)+
-     &                       gamma_ull(c,3,4)*g0_uu(3,4)+
-     &                       gamma_ull(c,3,5)*g0_uu(3,5)+
-     &                       gamma_ull(c,4,5)*g0_uu(4,5)) )
+     &                       gamma_ull(c,2,3)*g0_uu(2,3)) )
               end do
 
-              do a=1,5
+              do a=1,3
                 boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
      &                    boxx_u(2)*g0_ll(a,2)+
-     &                    boxx_u(3)*g0_ll(a,3)+
-     &                    boxx_u(4)*g0_ll(a,4)+
-     &                    boxx_u(5)*g0_ll(a,5)
+     &                    boxx_u(3)*g0_ll(a,3)
               end do
     
-              do a=1,5
+              do a=1,3
                 c_l(a)=(Hads_l(a)+A_l(a))-boxx_l(a)
               end do
  
               alpha=1/sqrt(-g0_uu(1,1))
               n_l(1)=-alpha
-              do a=1,5
+              do a=1,3
                 n_u(a)=n_l(1)*g0_uu(a,1)+
      &                 n_l(2)*g0_uu(a,2)+
-     &                 n_l(3)*g0_uu(a,3)+
-     &                 n_l(4)*g0_uu(a,4)+
-     &                 n_l(5)*g0_uu(a,5)
+     &                 n_l(3)*g0_uu(a,3)
               end do
 
               ndotc  =n_l(1)*c_l(1)*g0_uu(1,1)+
      &                n_l(2)*c_l(2)*g0_uu(2,2)+
      &                n_l(3)*c_l(3)*g0_uu(3,3)+
-     &                n_l(4)*c_l(4)*g0_uu(4,4)+
-     &                n_l(5)*c_l(5)*g0_uu(5,5)+
      &             2*(n_l(1)*c_l(2)*g0_uu(1,2)+
      &                n_l(1)*c_l(3)*g0_uu(1,3)+
-     &                n_l(1)*c_l(4)*g0_uu(1,4)+
-     &                n_l(1)*c_l(5)*g0_uu(1,5)+
-     &                n_l(2)*c_l(3)*g0_uu(2,3)+
-     &                n_l(2)*c_l(4)*g0_uu(2,4)+
-     &                n_l(2)*c_l(5)*g0_uu(2,5)+
-     &                n_l(3)*c_l(4)*g0_uu(3,4)+
-     &                n_l(3)*c_l(5)*g0_uu(3,5)+
-     &                n_l(4)*c_l(5)*g0_uu(4,5))
+     &                n_l(2)*c_l(3)*g0_uu(2,3))
 
               grad_phi1_sq=phi10_x(1)*phi10_x(1)*g0_uu(1,1)+
      &                     phi10_x(2)*phi10_x(2)*g0_uu(2,2)+
      &                     phi10_x(3)*phi10_x(3)*g0_uu(3,3)+
-     &                     phi10_x(4)*phi10_x(4)*g0_uu(4,4)+
-     &                     phi10_x(5)*phi10_x(5)*g0_uu(5,5)+
      &                  2*(phi10_x(1)*phi10_x(2)*g0_uu(1,2)+
      &                     phi10_x(1)*phi10_x(3)*g0_uu(1,3)+
-     &                     phi10_x(1)*phi10_x(4)*g0_uu(1,4)+
-     &                     phi10_x(1)*phi10_x(5)*g0_uu(1,5)+
-     &                     phi10_x(2)*phi10_x(3)*g0_uu(2,3)+
-     &                     phi10_x(2)*phi10_x(4)*g0_uu(2,4)+
-     &                     phi10_x(2)*phi10_x(5)*g0_uu(2,5)+
-     &                     phi10_x(3)*phi10_x(4)*g0_uu(3,4)+
-     &                     phi10_x(3)*phi10_x(5)*g0_uu(3,5)+
-     &                     phi10_x(4)*phi10_x(5)*g0_uu(4,5))
+     &                     phi10_x(2)*phi10_x(3)*g0_uu(2,3))
          
               tr_set =set_ll(1,1)*g0_uu(1,1)+
      &                set_ll(2,2)*g0_uu(2,2)+
      &                set_ll(3,3)*g0_uu(3,3)+
-     &                set_ll(4,4)*g0_uu(4,4)+
-     &                set_ll(5,5)*g0_uu(5,5)+
      &             2*(set_ll(1,2)*g0_uu(1,2)+
      &                set_ll(1,3)*g0_uu(1,3)+
-     &                set_ll(1,4)*g0_uu(1,4)+
-     &                set_ll(1,5)*g0_uu(1,5)+
-     &                set_ll(2,3)*g0_uu(2,3)+
-     &                set_ll(2,4)*g0_uu(2,4)+
-     &                set_ll(2,5)*g0_uu(2,5)+
-     &                set_ll(3,4)*g0_uu(3,4)+
-     &                set_ll(3,5)*g0_uu(3,5)+
-     &                set_ll(4,5)*g0_uu(4,5))
+     &                set_ll(2,3)*g0_uu(2,3))
 
               !---------------------------------------------------------------- 
               ! Included pure AdS terms in the EFEs,
@@ -469,18 +386,9 @@ c----------------------------------------------------------------------
      &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
      &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
      &                          g0_uu(3,3)*g0_ll_xx(a,b,3,3)+
-     &                          g0_uu(4,4)*g0_ll_xx(a,b,4,4)+
-     &                          g0_uu(5,5)*g0_ll_xx(a,b,5,5)+
      &                       2*(g0_uu(1,2)*g0_ll_xx(a,b,1,2)+
      &                          g0_uu(1,3)*g0_ll_xx(a,b,1,3)+
-     &                          g0_uu(1,4)*g0_ll_xx(a,b,1,4)+
-     &                          g0_uu(1,5)*g0_ll_xx(a,b,1,5)+
-     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3)+
-     &                          g0_uu(2,4)*g0_ll_xx(a,b,2,4)+
-     &                          g0_uu(2,5)*g0_ll_xx(a,b,2,5)+
-     &                          g0_uu(3,4)*g0_ll_xx(a,b,3,4)+
-     &                          g0_uu(3,5)*g0_ll_xx(a,b,3,5)+
-     &                          g0_uu(4,5)*g0_ll_xx(a,b,4,5))
+     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3))
      &                              )
      &
                   term2(a,b)=-0.5d0*(                             
@@ -489,26 +397,10 @@ c----------------------------------------------------------------------
      &                                          g0_ll_x(b,2,1))+
      &                          g0_uu_x(1,3,a)*(g0_ll_x(b,1,3) +
      &                                          g0_ll_x(b,3,1))+
-     &                          g0_uu_x(1,4,a)*(g0_ll_x(b,1,4) +
-     &                                          g0_ll_x(b,4,1))+
-     &                          g0_uu_x(1,5,a)*(g0_ll_x(b,1,5) +
-     &                                          g0_ll_x(b,5,1))+
      &                          g0_uu_x(2,2,a)* g0_ll_x(b,2,2) +
      &                          g0_uu_x(2,3,a)*(g0_ll_x(b,2,3) +
      &                                          g0_ll_x(b,3,2))+
-     &                          g0_uu_x(2,4,a)*(g0_ll_x(b,2,4) +
-     &                                          g0_ll_x(b,4,2))+
-     &                          g0_uu_x(2,5,a)*(g0_ll_x(b,2,5) +
-     &                                          g0_ll_x(b,5,2))+
-     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3) +
-     &                          g0_uu_x(3,4,a)*(g0_ll_x(b,3,4) +
-     &                                          g0_ll_x(b,4,3))+
-     &                          g0_uu_x(3,5,a)*(g0_ll_x(b,3,5) +
-     &                                          g0_ll_x(b,5,3))+
-     &                          g0_uu_x(4,4,a)* g0_ll_x(b,4,4) +
-     &                          g0_uu_x(4,5,a)*(g0_ll_x(b,4,5) +
-     &                                          g0_ll_x(b,5,4))+
-     &                          g0_uu_x(5,5,a)* g0_ll_x(b,5,5)
+     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3) 
      &                            )
      &
                   term3(a,b)=-0.5d0*(                            
@@ -517,26 +409,10 @@ c----------------------------------------------------------------------
      &                                          g0_ll_x(a,2,1))+
      &                          g0_uu_x(1,3,b)*(g0_ll_x(a,1,3) +
      &                                          g0_ll_x(a,3,1))+
-     &                          g0_uu_x(1,4,b)*(g0_ll_x(a,1,4) +
-     &                                          g0_ll_x(a,4,1))+
-     &                          g0_uu_x(1,5,b)*(g0_ll_x(a,1,5) +
-     &                                          g0_ll_x(a,5,1))+
      &                          g0_uu_x(2,2,b)* g0_ll_x(a,2,2) +
      &                          g0_uu_x(2,3,b)*(g0_ll_x(a,2,3) +
      &                                          g0_ll_x(a,3,2))+
-     &                          g0_uu_x(2,4,b)*(g0_ll_x(a,2,4) +
-     &                                          g0_ll_x(a,4,2))+
-     &                          g0_uu_x(2,5,b)*(g0_ll_x(a,2,5) +
-     &                                          g0_ll_x(a,5,2))+
-     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3) +
-     &                          g0_uu_x(3,4,b)*(g0_ll_x(a,3,4) +
-     &                                          g0_ll_x(a,4,3))+
-     &                          g0_uu_x(3,5,b)*(g0_ll_x(a,3,5) +
-     &                                          g0_ll_x(a,5,3))+
-     &                          g0_uu_x(4,4,b)* g0_ll_x(a,4,4) +
-     &                          g0_uu_x(4,5,b)*(g0_ll_x(a,4,5) +
-     &                                          g0_ll_x(a,5,4))+
-     &                          g0_uu_x(5,5,b)* g0_ll_x(a,5,5)
+     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3) 
      &                            )
      &
                   term4(a,b)=-0.5d0*(Hads_l_x(a,b)+A_l_x(a,b))
@@ -546,37 +422,19 @@ c----------------------------------------------------------------------
                   term6(a,b)=     (           
      &                          (Hads_l(1)+A_l(1))*gamma_ull(1,a,b)+
      &                          (Hads_l(2)+A_l(2))*gamma_ull(2,a,b)+
-     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)+
-     &                          (Hads_l(4)+A_l(4))*gamma_ull(4,a,b)+
-     &                          (Hads_l(5)+A_l(5))*gamma_ull(5,a,b)
+     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)
      &                            ) 
      &                           
                   term7(a,b)=    -(
      &                          gamma_ull(1,1,b)*gamma_ull(1,1,a)+
      &                          gamma_ull(1,2,b)*gamma_ull(2,1,a)+
      &                          gamma_ull(1,3,b)*gamma_ull(3,1,a)+
-     &                          gamma_ull(1,4,b)*gamma_ull(4,1,a)+
-     &                          gamma_ull(1,5,b)*gamma_ull(5,1,a)+
      &                          gamma_ull(2,1,b)*gamma_ull(1,2,a)+
      &                          gamma_ull(2,2,b)*gamma_ull(2,2,a)+
      &                          gamma_ull(2,3,b)*gamma_ull(3,2,a)+
-     &                          gamma_ull(2,4,b)*gamma_ull(4,2,a)+
-     &                          gamma_ull(2,5,b)*gamma_ull(5,2,a)+
      &                          gamma_ull(3,1,b)*gamma_ull(1,3,a)+
      &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
-     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)+
-     &                          gamma_ull(3,4,b)*gamma_ull(4,3,a)+
-     &                          gamma_ull(3,5,b)*gamma_ull(5,3,a)+
-     &                          gamma_ull(4,1,b)*gamma_ull(1,4,a)+
-     &                          gamma_ull(4,2,b)*gamma_ull(2,4,a)+
-     &                          gamma_ull(4,3,b)*gamma_ull(3,4,a)+
-     &                          gamma_ull(4,4,b)*gamma_ull(4,4,a)+
-     &                          gamma_ull(4,5,b)*gamma_ull(5,4,a)+
-     &                          gamma_ull(5,1,b)*gamma_ull(1,5,a)+
-     &                          gamma_ull(5,2,b)*gamma_ull(2,5,a)+
-     &                          gamma_ull(5,3,b)*gamma_ull(3,5,a)+
-     &                          gamma_ull(5,4,b)*gamma_ull(4,5,a)+
-     &                          gamma_ull(5,5,b)*gamma_ull(5,5,a)
+     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
                   term8(a,b)=-2*lambda5*g0_ll(a,b)/3
                   term9(a,b)=-8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
@@ -595,170 +453,47 @@ c----------------------------------------------------------------------
               phi1_res= phi10_xx(1,1)*g0_uu(1,1)+
      &                  phi10_xx(2,2)*g0_uu(2,2)+
      &                  phi10_xx(3,3)*g0_uu(3,3)+
-     &                  phi10_xx(4,4)*g0_uu(4,4)+
-     &                  phi10_xx(5,5)*g0_uu(5,5)+
      &               2*(phi10_xx(1,2)*g0_uu(1,2)+
      &                  phi10_xx(1,3)*g0_uu(1,3)+
-     &                  phi10_xx(1,4)*g0_uu(1,4)+
-     &                  phi10_xx(1,5)*g0_uu(1,5)+
-     &                  phi10_xx(2,3)*g0_uu(2,3)+
-     &                  phi10_xx(2,4)*g0_uu(2,4)+
-     &                  phi10_xx(2,5)*g0_uu(2,5)+
-     &                  phi10_xx(3,4)*g0_uu(3,4)+
-     &                  phi10_xx(3,5)*g0_uu(3,5)+
-     &                  phi10_xx(4,5)*g0_uu(4,5))
+     &                  phi10_xx(2,3)*g0_uu(2,3))
      &              +
      &                  phi10_x(1)*g0_uu_x(1,1,1)+
      &                  phi10_x(1)*g0_uu_x(2,1,2)+
      &                  phi10_x(1)*g0_uu_x(3,1,3)+
-     &                  phi10_x(1)*g0_uu_x(4,1,4)+
-     &                  phi10_x(1)*g0_uu_x(5,1,5)+
      &                  phi10_x(2)*g0_uu_x(1,2,1)+
      &                  phi10_x(2)*g0_uu_x(2,2,2)+
      &                  phi10_x(2)*g0_uu_x(3,2,3)+
-     &                  phi10_x(2)*g0_uu_x(4,2,4)+
-     &                  phi10_x(2)*g0_uu_x(5,2,5)+
      &                  phi10_x(3)*g0_uu_x(1,3,1)+
      &                  phi10_x(3)*g0_uu_x(2,3,2)+
-     &                  phi10_x(3)*g0_uu_x(3,3,3)+
-     &                  phi10_x(3)*g0_uu_x(4,3,4)+
-     &                  phi10_x(3)*g0_uu_x(5,3,5)+
-     &                  phi10_x(4)*g0_uu_x(1,4,1)+
-     &                  phi10_x(4)*g0_uu_x(2,4,2)+
-     &                  phi10_x(4)*g0_uu_x(3,4,3)+
-     &                  phi10_x(4)*g0_uu_x(4,4,4)+
-     &                  phi10_x(4)*g0_uu_x(5,4,5)+
-     &                  phi10_x(5)*g0_uu_x(1,5,1)+
-     &                  phi10_x(5)*g0_uu_x(2,5,2)+
-     &                  phi10_x(5)*g0_uu_x(3,5,3)+
-     &                  phi10_x(5)*g0_uu_x(4,5,4)+
-     &                  phi10_x(5)*g0_uu_x(5,5,5)
+     &                  phi10_x(3)*g0_uu_x(3,3,3)
      &              +
      &                  phi10_x(1)*g0_uu(1,1)*gamma_ull(1,1,1)+
      &                  phi10_x(1)*g0_uu(1,1)*gamma_ull(2,2,1)+ 
      &                  phi10_x(1)*g0_uu(1,1)*gamma_ull(3,3,1)+
-     &                  phi10_x(1)*g0_uu(1,1)*gamma_ull(4,4,1)+
-     &                  phi10_x(1)*g0_uu(1,1)*gamma_ull(5,5,1)+
      &                  phi10_x(1)*g0_uu(1,2)*gamma_ull(1,1,2)+
      &                  phi10_x(1)*g0_uu(1,2)*gamma_ull(2,2,2)+
      &                  phi10_x(1)*g0_uu(1,2)*gamma_ull(3,3,2)+
-     &                  phi10_x(1)*g0_uu(1,2)*gamma_ull(4,4,2)+
-     &                  phi10_x(1)*g0_uu(1,2)*gamma_ull(5,5,2)+
      &                  phi10_x(1)*g0_uu(1,3)*gamma_ull(1,1,3)+
      &                  phi10_x(1)*g0_uu(1,3)*gamma_ull(2,2,3)+
      &                  phi10_x(1)*g0_uu(1,3)*gamma_ull(3,3,3)+
-     &                  phi10_x(1)*g0_uu(1,3)*gamma_ull(4,4,3)+
-     &                  phi10_x(1)*g0_uu(1,3)*gamma_ull(5,5,3)+
-     &                  phi10_x(1)*g0_uu(1,4)*gamma_ull(1,1,4)+
-     &                  phi10_x(1)*g0_uu(1,4)*gamma_ull(2,2,4)+
-     &                  phi10_x(1)*g0_uu(1,4)*gamma_ull(3,3,4)+
-     &                  phi10_x(1)*g0_uu(1,4)*gamma_ull(4,4,4)+
-     &                  phi10_x(1)*g0_uu(1,4)*gamma_ull(5,5,4)+
-     &                  phi10_x(1)*g0_uu(1,5)*gamma_ull(1,1,5)+
-     &                  phi10_x(1)*g0_uu(1,5)*gamma_ull(2,2,5)+
-     &                  phi10_x(1)*g0_uu(1,5)*gamma_ull(3,3,5)+
-     &                  phi10_x(1)*g0_uu(1,5)*gamma_ull(4,4,5)+
-     &                  phi10_x(1)*g0_uu(1,5)*gamma_ull(5,5,5)+
      &                  phi10_x(2)*g0_uu(2,1)*gamma_ull(1,1,1)+
      &                  phi10_x(2)*g0_uu(2,1)*gamma_ull(2,2,1)+ 
      &                  phi10_x(2)*g0_uu(2,1)*gamma_ull(3,3,1)+
-     &                  phi10_x(2)*g0_uu(2,1)*gamma_ull(4,4,1)+
-     &                  phi10_x(2)*g0_uu(2,1)*gamma_ull(5,5,1)+
      &                  phi10_x(2)*g0_uu(2,2)*gamma_ull(1,1,2)+
      &                  phi10_x(2)*g0_uu(2,2)*gamma_ull(2,2,2)+
      &                  phi10_x(2)*g0_uu(2,2)*gamma_ull(3,3,2)+
-     &                  phi10_x(2)*g0_uu(2,2)*gamma_ull(4,4,2)+
-     &                  phi10_x(2)*g0_uu(2,2)*gamma_ull(5,5,2)+
      &                  phi10_x(2)*g0_uu(2,3)*gamma_ull(1,1,3)+
      &                  phi10_x(2)*g0_uu(2,3)*gamma_ull(2,2,3)+
      &                  phi10_x(2)*g0_uu(2,3)*gamma_ull(3,3,3)+
-     &                  phi10_x(2)*g0_uu(2,3)*gamma_ull(4,4,3)+
-     &                  phi10_x(2)*g0_uu(2,3)*gamma_ull(5,5,3)+
-     &                  phi10_x(2)*g0_uu(2,4)*gamma_ull(1,1,4)+
-     &                  phi10_x(2)*g0_uu(2,4)*gamma_ull(2,2,4)+
-     &                  phi10_x(2)*g0_uu(2,4)*gamma_ull(3,3,4)+
-     &                  phi10_x(2)*g0_uu(2,4)*gamma_ull(4,4,4)+
-     &                  phi10_x(2)*g0_uu(2,4)*gamma_ull(5,5,4)+
-     &                  phi10_x(2)*g0_uu(2,5)*gamma_ull(1,1,5)+
-     &                  phi10_x(2)*g0_uu(2,5)*gamma_ull(2,2,5)+
-     &                  phi10_x(2)*g0_uu(2,5)*gamma_ull(3,3,5)+
-     &                  phi10_x(2)*g0_uu(2,5)*gamma_ull(4,4,5)+
-     &                  phi10_x(2)*g0_uu(2,5)*gamma_ull(5,5,5)+
      &                  phi10_x(3)*g0_uu(3,1)*gamma_ull(1,1,1)+
      &                  phi10_x(3)*g0_uu(3,1)*gamma_ull(2,2,1)+ 
      &                  phi10_x(3)*g0_uu(3,1)*gamma_ull(3,3,1)+
-     &                  phi10_x(3)*g0_uu(3,1)*gamma_ull(4,4,1)+
-     &                  phi10_x(3)*g0_uu(3,1)*gamma_ull(5,5,1)+
      &                  phi10_x(3)*g0_uu(3,2)*gamma_ull(1,1,2)+
      &                  phi10_x(3)*g0_uu(3,2)*gamma_ull(2,2,2)+
      &                  phi10_x(3)*g0_uu(3,2)*gamma_ull(3,3,2)+
-     &                  phi10_x(3)*g0_uu(3,2)*gamma_ull(4,4,2)+
-     &                  phi10_x(3)*g0_uu(3,2)*gamma_ull(5,5,2)+
      &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(1,1,3)+
      &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(2,2,3)+
-     &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(3,3,3)+
-     &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(4,4,3)+
-     &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(5,5,3)+
-     &                  phi10_x(3)*g0_uu(3,4)*gamma_ull(1,1,4)+
-     &                  phi10_x(3)*g0_uu(3,4)*gamma_ull(2,2,4)+
-     &                  phi10_x(3)*g0_uu(3,4)*gamma_ull(3,3,4)+
-     &                  phi10_x(3)*g0_uu(3,4)*gamma_ull(4,4,4)+
-     &                  phi10_x(3)*g0_uu(3,4)*gamma_ull(5,5,4)+
-     &                  phi10_x(3)*g0_uu(3,5)*gamma_ull(1,1,5)+
-     &                  phi10_x(3)*g0_uu(3,5)*gamma_ull(2,2,5)+
-     &                  phi10_x(3)*g0_uu(3,5)*gamma_ull(3,3,5)+
-     &                  phi10_x(3)*g0_uu(3,5)*gamma_ull(4,4,5)+
-     &                  phi10_x(3)*g0_uu(3,5)*gamma_ull(5,5,5)+
-     &                  phi10_x(4)*g0_uu(4,1)*gamma_ull(1,1,1)+
-     &                  phi10_x(4)*g0_uu(4,1)*gamma_ull(2,2,1)+ 
-     &                  phi10_x(4)*g0_uu(4,1)*gamma_ull(3,3,1)+
-     &                  phi10_x(4)*g0_uu(4,1)*gamma_ull(4,4,1)+
-     &                  phi10_x(4)*g0_uu(4,1)*gamma_ull(5,5,1)+
-     &                  phi10_x(4)*g0_uu(4,2)*gamma_ull(1,1,2)+
-     &                  phi10_x(4)*g0_uu(4,2)*gamma_ull(2,2,2)+
-     &                  phi10_x(4)*g0_uu(4,2)*gamma_ull(3,3,2)+
-     &                  phi10_x(4)*g0_uu(4,2)*gamma_ull(4,4,2)+
-     &                  phi10_x(4)*g0_uu(4,2)*gamma_ull(5,5,2)+
-     &                  phi10_x(4)*g0_uu(4,3)*gamma_ull(1,1,3)+
-     &                  phi10_x(4)*g0_uu(4,3)*gamma_ull(2,2,3)+
-     &                  phi10_x(4)*g0_uu(4,3)*gamma_ull(3,3,3)+
-     &                  phi10_x(4)*g0_uu(4,3)*gamma_ull(4,4,3)+
-     &                  phi10_x(4)*g0_uu(4,3)*gamma_ull(5,5,3)+
-     &                  phi10_x(4)*g0_uu(4,4)*gamma_ull(1,1,4)+
-     &                  phi10_x(4)*g0_uu(4,4)*gamma_ull(2,2,4)+
-     &                  phi10_x(4)*g0_uu(4,4)*gamma_ull(3,3,4)+
-     &                  phi10_x(4)*g0_uu(4,4)*gamma_ull(4,4,4)+
-     &                  phi10_x(4)*g0_uu(4,4)*gamma_ull(5,5,4)+
-     &                  phi10_x(4)*g0_uu(4,5)*gamma_ull(1,1,5)+
-     &                  phi10_x(4)*g0_uu(4,5)*gamma_ull(2,2,5)+
-     &                  phi10_x(4)*g0_uu(4,5)*gamma_ull(3,3,5)+
-     &                  phi10_x(4)*g0_uu(4,5)*gamma_ull(4,4,5)+
-     &                  phi10_x(4)*g0_uu(4,5)*gamma_ull(5,5,5)+
-     &                  phi10_x(5)*g0_uu(5,1)*gamma_ull(1,1,1)+
-     &                  phi10_x(5)*g0_uu(5,1)*gamma_ull(2,2,1)+ 
-     &                  phi10_x(5)*g0_uu(5,1)*gamma_ull(3,3,1)+
-     &                  phi10_x(5)*g0_uu(5,1)*gamma_ull(4,4,1)+
-     &                  phi10_x(5)*g0_uu(5,1)*gamma_ull(5,5,1)+
-     &                  phi10_x(5)*g0_uu(5,2)*gamma_ull(1,1,2)+
-     &                  phi10_x(5)*g0_uu(5,2)*gamma_ull(2,2,2)+
-     &                  phi10_x(5)*g0_uu(5,2)*gamma_ull(3,3,2)+
-     &                  phi10_x(5)*g0_uu(5,2)*gamma_ull(4,4,2)+
-     &                  phi10_x(5)*g0_uu(5,2)*gamma_ull(5,5,2)+
-     &                  phi10_x(5)*g0_uu(5,3)*gamma_ull(1,1,3)+
-     &                  phi10_x(5)*g0_uu(5,3)*gamma_ull(2,2,3)+
-     &                  phi10_x(5)*g0_uu(5,3)*gamma_ull(3,3,3)+
-     &                  phi10_x(5)*g0_uu(5,3)*gamma_ull(4,4,3)+
-     &                  phi10_x(5)*g0_uu(5,3)*gamma_ull(5,5,3)+
-     &                  phi10_x(5)*g0_uu(5,4)*gamma_ull(1,1,4)+
-     &                  phi10_x(5)*g0_uu(5,4)*gamma_ull(2,2,4)+
-     &                  phi10_x(5)*g0_uu(5,4)*gamma_ull(3,3,4)+
-     &                  phi10_x(5)*g0_uu(5,4)*gamma_ull(4,4,4)+
-     &                  phi10_x(5)*g0_uu(5,4)*gamma_ull(5,5,4)+
-     &                  phi10_x(5)*g0_uu(5,5)*gamma_ull(1,1,5)+
-     &                  phi10_x(5)*g0_uu(5,5)*gamma_ull(2,2,5)+
-     &                  phi10_x(5)*g0_uu(5,5)*gamma_ull(3,3,5)+
-     &                  phi10_x(5)*g0_uu(5,5)*gamma_ull(4,4,5)+
-     &                  phi10_x(5)*g0_uu(5,5)*gamma_ull(5,5,5)
+     &                  phi10_x(3)*g0_uu(3,3)*gamma_ull(3,3,3)
 
               !---------------------------------------------------------------- 
               ! computes diag. Jacobian of g_np1->L.g_np1 transformation
@@ -831,28 +566,12 @@ c----------------------------------------------------------------------
      &                          (g0_uu(1,1)*g0_uu(1,1)*g0_ll_x(1,1,1)+
      &                           g0_uu(1,1)*g0_uu(2,1)*g0_ll_x(1,1,2)+
      &                           g0_uu(1,1)*g0_uu(3,1)*g0_ll_x(1,1,3)+
-     &                           g0_uu(1,1)*g0_uu(4,1)*g0_ll_x(1,1,4)+
-     &                           g0_uu(1,1)*g0_uu(5,1)*g0_ll_x(1,1,5)+
      &                           g0_uu(2,1)*g0_uu(1,1)*g0_ll_x(1,2,1)+
      &                           g0_uu(2,1)*g0_uu(2,1)*g0_ll_x(1,2,2)+
      &                           g0_uu(2,1)*g0_uu(3,1)*g0_ll_x(1,2,3)+
-     &                           g0_uu(2,1)*g0_uu(4,1)*g0_ll_x(1,2,4)+
-     &                           g0_uu(2,1)*g0_uu(5,1)*g0_ll_x(1,2,5)+
      &                           g0_uu(3,1)*g0_uu(1,1)*g0_ll_x(1,3,1)+
      &                           g0_uu(3,1)*g0_uu(2,1)*g0_ll_x(1,3,2)+
-     &                           g0_uu(3,1)*g0_uu(3,1)*g0_ll_x(1,3,3)+
-     &                           g0_uu(3,1)*g0_uu(4,1)*g0_ll_x(1,3,4)+
-     &                           g0_uu(3,1)*g0_uu(5,1)*g0_ll_x(1,3,5)+
-     &                           g0_uu(4,1)*g0_uu(1,1)*g0_ll_x(1,4,1)+
-     &                           g0_uu(4,1)*g0_uu(2,1)*g0_ll_x(1,4,2)+
-     &                           g0_uu(4,1)*g0_uu(3,1)*g0_ll_x(1,4,3)+
-     &                           g0_uu(4,1)*g0_uu(4,1)*g0_ll_x(1,4,4)+
-     &                           g0_uu(4,1)*g0_uu(5,1)*g0_ll_x(1,4,5)+
-     &                           g0_uu(5,1)*g0_uu(1,1)*g0_ll_x(1,5,1)+
-     &                           g0_uu(5,1)*g0_uu(2,1)*g0_ll_x(1,5,2)+
-     &                           g0_uu(5,1)*g0_uu(3,1)*g0_ll_x(1,5,3)+
-     &                           g0_uu(5,1)*g0_uu(4,1)*g0_ll_x(1,5,4)+
-     &                           g0_uu(5,1)*g0_uu(5,1)*g0_ll_x(1,5,5))
+     &                           g0_uu(3,1)*g0_uu(3,1)*g0_ll_x(1,3,3))
      &                          +dgb_J*(1-x0**2)*
      &                          (g0_uu_x(1,1,1))
      &                              )*2
@@ -861,9 +580,7 @@ c----------------------------------------------------------------------
      &                          0.5d0*dgb_J*(1-x0**2)*
      &                          ((Hads_l(1)+A_l(1))*g0_uu(1,1)+
      &                           (Hads_l(2)+A_l(2))*g0_uu(2,1)+
-     &                           (Hads_l(3)+A_l(3))*g0_uu(3,1)+
-     &                           (Hads_l(4)+A_l(4))*g0_uu(4,1)+
-     &                           (Hads_l(5)+A_l(5))*g0_uu(5,1))
+     &                           (Hads_l(3)+A_l(3))*g0_uu(3,1))
      &                              )  
      &                    
      &                       -      (
@@ -871,54 +588,22 @@ c----------------------------------------------------------------------
      &                          (cuuuu(1,1,1,1)*dlll(1,1,1)+
      &                           cuuuu(1,1,1,2)*dlll(1,1,2)+
      &                           cuuuu(1,1,1,3)*dlll(1,1,3)+
-     &                           cuuuu(1,1,1,4)*dlll(1,1,4)+
-     &                           cuuuu(1,1,1,5)*dlll(1,1,5)+
      &                           cuuuu(2,1,1,1)*dlll(2,1,1)+
      &                           cuuuu(2,1,1,2)*dlll(2,1,2)+
      &                           cuuuu(2,1,1,3)*dlll(2,1,3)+
-     &                           cuuuu(2,1,1,4)*dlll(2,1,4)+
-     &                           cuuuu(2,1,1,5)*dlll(2,1,5)+
      &                           cuuuu(3,1,1,1)*dlll(3,1,1)+
      &                           cuuuu(3,1,1,2)*dlll(3,1,2)+
-     &                           cuuuu(3,1,1,3)*dlll(3,1,3)+
-     &                           cuuuu(3,1,1,4)*dlll(3,1,4)+
-     &                           cuuuu(3,1,1,5)*dlll(3,1,5)+
-     &                           cuuuu(4,1,1,1)*dlll(4,1,1)+
-     &                           cuuuu(4,1,1,2)*dlll(4,1,2)+
-     &                           cuuuu(4,1,1,3)*dlll(4,1,3)+
-     &                           cuuuu(4,1,1,4)*dlll(4,1,4)+
-     &                           cuuuu(4,1,1,5)*dlll(4,1,5)+
-     &                           cuuuu(5,1,1,1)*dlll(5,1,1)+
-     &                           cuuuu(5,1,1,2)*dlll(5,1,2)+
-     &                           cuuuu(5,1,1,3)*dlll(5,1,3)+
-     &                           cuuuu(5,1,1,4)*dlll(5,1,4)+
-     &                           cuuuu(5,1,1,5)*dlll(5,1,5)
+     &                           cuuuu(3,1,1,3)*dlll(3,1,3)
      &                         +
      &                           cuuuu(1,1,1,1)*dlll(1,1,1)+
      &                           cuuuu(1,1,2,1)*dlll(2,1,1)+
      &                           cuuuu(1,1,3,1)*dlll(3,1,1)+
-     &                           cuuuu(1,1,4,1)*dlll(4,1,1)+
-     &                           cuuuu(1,1,5,1)*dlll(5,1,1)+
      &                           cuuuu(1,2,1,1)*dlll(1,1,2)+
      &                           cuuuu(1,2,2,1)*dlll(2,1,2)+
      &                           cuuuu(1,2,3,1)*dlll(3,1,2)+
-     &                           cuuuu(1,2,4,1)*dlll(4,1,2)+
-     &                           cuuuu(1,2,5,1)*dlll(5,1,2)+
      &                           cuuuu(1,3,1,1)*dlll(1,1,3)+
      &                           cuuuu(1,3,2,1)*dlll(2,1,3)+
-     &                           cuuuu(1,3,3,1)*dlll(3,1,3)+
-     &                           cuuuu(1,3,4,1)*dlll(4,1,3)+
-     &                           cuuuu(1,3,5,1)*dlll(5,1,3)+
-     &                           cuuuu(1,4,1,1)*dlll(1,1,4)+
-     &                           cuuuu(1,4,2,1)*dlll(2,1,4)+
-     &                           cuuuu(1,4,3,1)*dlll(3,1,4)+
-     &                           cuuuu(1,4,4,1)*dlll(4,1,4)+
-     &                           cuuuu(1,4,5,1)*dlll(5,1,4)+
-     &                           cuuuu(1,5,1,1)*dlll(1,1,5)+
-     &                           cuuuu(1,5,2,1)*dlll(2,1,5)+
-     &                           cuuuu(1,5,3,1)*dlll(3,1,5)+
-     &                           cuuuu(1,5,4,1)*dlll(4,1,5)+
-     &                           cuuuu(1,5,5,1)*dlll(5,1,5))
+     &                           cuuuu(1,3,3,1)*dlll(3,1,3))
      &                              )
 
               efe_J(1,2)=  -0.5d0*(
@@ -935,28 +620,12 @@ c----------------------------------------------------------------------
      &                        (g0_uu(1,1)*g0_uu(1,2)*g0_ll_x(2,1,1)+
      &                         g0_uu(1,1)*g0_uu(2,2)*g0_ll_x(2,1,2)+
      &                         g0_uu(1,1)*g0_uu(3,2)*g0_ll_x(2,1,3)+
-     &                         g0_uu(1,1)*g0_uu(4,2)*g0_ll_x(2,1,4)+
-     &                         g0_uu(1,1)*g0_uu(5,2)*g0_ll_x(2,1,5)+
      &                         g0_uu(2,1)*g0_uu(1,2)*g0_ll_x(2,2,1)+
      &                         g0_uu(2,1)*g0_uu(2,2)*g0_ll_x(2,2,2)+
      &                         g0_uu(2,1)*g0_uu(3,2)*g0_ll_x(2,2,3)+
-     &                         g0_uu(2,1)*g0_uu(4,2)*g0_ll_x(2,2,4)+
-     &                         g0_uu(2,1)*g0_uu(5,2)*g0_ll_x(2,2,5)+
      &                         g0_uu(3,1)*g0_uu(1,2)*g0_ll_x(2,3,1)+
      &                         g0_uu(3,1)*g0_uu(2,2)*g0_ll_x(2,3,2)+
-     &                         g0_uu(3,1)*g0_uu(3,2)*g0_ll_x(2,3,3)+
-     &                         g0_uu(3,1)*g0_uu(4,2)*g0_ll_x(2,3,4)+
-     &                         g0_uu(3,1)*g0_uu(5,2)*g0_ll_x(2,3,5)+
-     &                         g0_uu(4,1)*g0_uu(1,2)*g0_ll_x(2,4,1)+
-     &                         g0_uu(4,1)*g0_uu(2,2)*g0_ll_x(2,4,2)+
-     &                         g0_uu(4,1)*g0_uu(3,2)*g0_ll_x(2,4,3)+
-     &                         g0_uu(4,1)*g0_uu(4,2)*g0_ll_x(2,4,4)+
-     &                         g0_uu(4,1)*g0_uu(5,2)*g0_ll_x(2,4,5)+
-     &                         g0_uu(5,1)*g0_uu(1,2)*g0_ll_x(2,5,1)+
-     &                         g0_uu(5,1)*g0_uu(2,2)*g0_ll_x(2,5,2)+
-     &                         g0_uu(5,1)*g0_uu(3,2)*g0_ll_x(2,5,3)+
-     &                         g0_uu(5,1)*g0_uu(4,2)*g0_ll_x(2,5,4)+
-     &                         g0_uu(5,1)*g0_uu(5,2)*g0_ll_x(2,5,5))
+     &                         g0_uu(3,1)*g0_uu(3,2)*g0_ll_x(2,3,3))
      &                        +dgb_J*(1-x0**2)**2*
      &                        (g0_uu_x(1,1,1))
      &                            )
@@ -971,28 +640,12 @@ c----------------------------------------------------------------------
      &                        (cuuuu(1,1,1,2)*dlll(1,2,1)+
      &                         cuuuu(1,1,2,2)*dlll(2,2,1)+
      &                         cuuuu(1,1,3,2)*dlll(3,2,1)+
-     &                         cuuuu(1,1,4,2)*dlll(4,2,1)+
-     &                         cuuuu(1,1,5,2)*dlll(5,2,1)+
      &                         cuuuu(1,2,1,2)*dlll(1,2,2)+
      &                         cuuuu(1,2,2,2)*dlll(2,2,2)+
      &                         cuuuu(1,2,3,2)*dlll(3,2,2)+
-     &                         cuuuu(1,2,4,2)*dlll(4,2,2)+
-     &                         cuuuu(1,2,5,2)*dlll(5,2,2)+
      &                         cuuuu(1,3,1,2)*dlll(1,2,3)+
      &                         cuuuu(1,3,2,2)*dlll(2,2,3)+
-     &                         cuuuu(1,3,3,2)*dlll(3,2,3)+
-     &                         cuuuu(1,3,4,2)*dlll(4,2,3)+
-     &                         cuuuu(1,3,5,2)*dlll(5,2,3)+
-     &                         cuuuu(1,4,1,2)*dlll(1,2,4)+
-     &                         cuuuu(1,4,2,2)*dlll(2,2,4)+
-     &                         cuuuu(1,4,3,2)*dlll(3,2,4)+
-     &                         cuuuu(1,4,4,2)*dlll(4,2,4)+
-     &                         cuuuu(1,4,5,2)*dlll(5,2,4)+
-     &                         cuuuu(1,5,1,2)*dlll(1,2,5)+
-     &                         cuuuu(1,5,2,2)*dlll(2,2,5)+
-     &                         cuuuu(1,5,3,2)*dlll(3,2,5)+
-     &                         cuuuu(1,5,4,2)*dlll(4,2,5)+
-     &                         cuuuu(1,5,5,2)*dlll(5,2,5))
+     &                         cuuuu(1,3,3,2)*dlll(3,2,3))
      &                            )
 
               efe_J(2,2)=-0.5d0*(
@@ -1017,9 +670,7 @@ c----------------------------------------------------------------------
      &                      -0.5d0*dgb_J*(1-x0**2)*
      &                      ((Hads_l(1)+A_l(1))*g0_uu(1,1)+
      &                       (Hads_l(2)+A_l(2))*g0_uu(2,1)+
-     &                       (Hads_l(3)+A_l(3))*g0_uu(3,1)+
-     &                       (Hads_l(4)+A_l(4))*g0_uu(4,1)+
-     &                       (Hads_l(5)+A_l(5))*g0_uu(5,1))
+     &                       (Hads_l(3)+A_l(3))*g0_uu(3,1))
      &                          )  
      &                
      &                   -      (
@@ -1027,104 +678,40 @@ c----------------------------------------------------------------------
      &                      (cuuuu(1,2,1,1)*dlll(1,2,1)+
      &                       cuuuu(1,2,1,2)*dlll(1,2,2)+
      &                       cuuuu(1,2,1,3)*dlll(1,2,3)+
-     &                       cuuuu(1,2,1,4)*dlll(1,2,4)+
-     &                       cuuuu(1,2,1,5)*dlll(1,2,5)+
      &                       cuuuu(2,2,1,1)*dlll(2,2,1)+
      &                       cuuuu(2,2,1,2)*dlll(2,2,2)+
      &                       cuuuu(2,2,1,3)*dlll(2,2,3)+
-     &                       cuuuu(2,2,1,4)*dlll(2,2,4)+
-     &                       cuuuu(2,2,1,5)*dlll(2,2,5)+
      &                       cuuuu(3,2,1,1)*dlll(3,2,1)+
      &                       cuuuu(3,2,1,2)*dlll(3,2,2)+
      &                       cuuuu(3,2,1,3)*dlll(3,2,3)+
-     &                       cuuuu(3,2,1,4)*dlll(3,2,4)+
-     &                       cuuuu(3,2,1,5)*dlll(3,2,5)+
-     &                       cuuuu(4,2,1,1)*dlll(4,2,1)+
-     &                       cuuuu(4,2,1,2)*dlll(4,2,2)+
-     &                       cuuuu(4,2,1,3)*dlll(4,2,3)+
-     &                       cuuuu(4,2,1,4)*dlll(4,2,4)+
-     &                       cuuuu(4,2,1,5)*dlll(4,2,5)+
-     &                       cuuuu(5,2,1,1)*dlll(5,2,1)+
-     &                       cuuuu(5,2,1,2)*dlll(5,2,2)+
-     &                       cuuuu(5,2,1,3)*dlll(5,2,3)+
-     &                       cuuuu(5,2,1,4)*dlll(5,2,4)+
-     &                       cuuuu(5,2,1,5)*dlll(5,2,5)-
      &                       cuuuu(1,1,2,1)*dlll(1,2,1)-
      &                       cuuuu(1,1,2,2)*dlll(1,2,2)-
      &                       cuuuu(1,1,2,3)*dlll(1,2,3)-
-     &                       cuuuu(1,1,2,4)*dlll(1,2,4)-
-     &                       cuuuu(1,1,2,5)*dlll(1,2,5)-
      &                       cuuuu(2,1,2,1)*dlll(2,2,1)-
      &                       cuuuu(2,1,2,2)*dlll(2,2,2)-
      &                       cuuuu(2,1,2,3)*dlll(2,2,3)-
-     &                       cuuuu(2,1,2,4)*dlll(2,2,4)-
-     &                       cuuuu(2,1,2,5)*dlll(2,2,5)-
      &                       cuuuu(3,1,2,1)*dlll(3,2,1)-
      &                       cuuuu(3,1,2,2)*dlll(3,2,2)-
-     &                       cuuuu(3,1,2,3)*dlll(3,2,3)-
-     &                       cuuuu(3,1,2,4)*dlll(3,2,4)-
-     &                       cuuuu(3,1,2,5)*dlll(3,2,5)-
-     &                       cuuuu(4,1,2,1)*dlll(4,2,1)-
-     &                       cuuuu(4,1,2,2)*dlll(4,2,2)-
-     &                       cuuuu(4,1,2,3)*dlll(4,2,3)-
-     &                       cuuuu(4,1,2,4)*dlll(4,2,4)-
-     &                       cuuuu(4,1,2,5)*dlll(4,2,5)-
-     &                       cuuuu(5,1,2,1)*dlll(5,2,1)-
-     &                       cuuuu(5,1,2,2)*dlll(5,2,2)-
-     &                       cuuuu(5,1,2,3)*dlll(5,2,3)-
-     &                       cuuuu(5,1,2,4)*dlll(5,2,4)-
-     &                       cuuuu(5,1,2,5)*dlll(5,2,5)
+     &                       cuuuu(3,1,2,3)*dlll(3,2,3)
      &                     +
      &                       cuuuu(1,1,1,2)*dlll(1,2,1)+
      &                       cuuuu(1,1,2,2)*dlll(2,2,1)+
      &                       cuuuu(1,1,3,2)*dlll(3,2,1)+
-     &                       cuuuu(1,1,4,2)*dlll(4,2,1)+
-     &                       cuuuu(1,1,5,2)*dlll(5,2,1)+
      &                       cuuuu(1,2,1,2)*dlll(1,2,2)+
      &                       cuuuu(1,2,2,2)*dlll(2,2,2)+
      &                       cuuuu(1,2,3,2)*dlll(3,2,2)+
-     &                       cuuuu(1,2,4,2)*dlll(4,2,2)+
-     &                       cuuuu(1,2,5,2)*dlll(5,2,2)+
      &                       cuuuu(1,3,1,2)*dlll(1,2,3)+
      &                       cuuuu(1,3,2,2)*dlll(2,2,3)+
      &                       cuuuu(1,3,3,2)*dlll(3,2,3)+
-     &                       cuuuu(1,3,4,2)*dlll(4,2,3)+
-     &                       cuuuu(1,3,5,2)*dlll(5,2,3)+
-     &                       cuuuu(1,4,1,2)*dlll(1,2,4)+
-     &                       cuuuu(1,4,2,2)*dlll(2,2,4)+
-     &                       cuuuu(1,4,3,2)*dlll(3,2,4)+
-     &                       cuuuu(1,4,4,2)*dlll(4,2,4)+
-     &                       cuuuu(1,4,5,2)*dlll(5,2,4)+
-     &                       cuuuu(1,5,1,2)*dlll(1,2,5)+
-     &                       cuuuu(1,5,2,2)*dlll(2,2,5)+
-     &                       cuuuu(1,5,3,2)*dlll(3,2,5)+
-     &                       cuuuu(1,5,4,2)*dlll(4,2,5)+
-     &                       cuuuu(1,5,5,2)*dlll(5,2,5)-
      &                       cuuuu(2,1,1,1)*dlll(1,2,1)-
      &                       cuuuu(2,1,2,1)*dlll(2,2,1)-
      &                       cuuuu(2,1,3,1)*dlll(3,2,1)-
-     &                       cuuuu(2,1,4,1)*dlll(4,2,1)-
-     &                       cuuuu(2,1,5,1)*dlll(5,2,1)-
      &                       cuuuu(2,2,1,1)*dlll(1,2,2)-
      &                       cuuuu(2,2,2,1)*dlll(2,2,2)-
      &                       cuuuu(2,2,3,1)*dlll(3,2,2)-
-     &                       cuuuu(2,2,4,1)*dlll(4,2,2)-
-     &                       cuuuu(2,2,5,1)*dlll(5,2,2)-
      &                       cuuuu(2,3,1,1)*dlll(1,2,3)-
      &                       cuuuu(2,3,2,1)*dlll(2,2,3)-
-     &                       cuuuu(2,3,3,1)*dlll(3,2,3)-
-     &                       cuuuu(2,3,4,1)*dlll(4,2,3)-
-     &                       cuuuu(2,3,5,1)*dlll(5,2,3)-
-     &                       cuuuu(2,4,1,1)*dlll(1,2,4)-
-     &                       cuuuu(2,4,2,1)*dlll(2,2,4)-
-     &                       cuuuu(2,4,3,1)*dlll(3,2,4)-
-     &                       cuuuu(2,4,4,1)*dlll(4,2,4)-
-     &                       cuuuu(2,4,5,1)*dlll(5,2,4)-
-     &                       cuuuu(2,5,1,1)*dlll(1,2,5)-
-     &                       cuuuu(2,5,2,1)*dlll(2,2,5)-
-     &                       cuuuu(2,5,3,1)*dlll(3,2,5)-
-     &                       cuuuu(2,5,4,1)*dlll(4,2,5)-
-     &                       cuuuu(2,5,5,1)*dlll(5,2,5))
+     &                       cuuuu(2,3,3,1)*dlll(3,2,3))
      &                          )
 
               efe_J(3,3)=    -0.5d0*(
@@ -1152,9 +739,7 @@ c----------------------------------------------------------------------
      &                                      *(1-x0**2)*
      &                          ((Hads_l(1)+A_l(1))*g0_uu(1,1)+
      &                           (Hads_l(2)+A_l(2))*g0_uu(2,1)+
-     &                           (Hads_l(3)+A_l(3))*g0_uu(3,1)+
-     &                           (Hads_l(4)+A_l(4))*g0_uu(4,1)+
-     &                           (Hads_l(5)+A_l(5))*g0_uu(5,1))
+     &                           (Hads_l(3)+A_l(3))*g0_uu(3,1))
      &                              )  
      &                    
      &                       -      (
@@ -1163,104 +748,40 @@ c----------------------------------------------------------------------
      &                          (cuuuu(1,3,1,1)*dlll(1,3,1)+
      &                           cuuuu(1,3,1,2)*dlll(1,3,2)+
      &                           cuuuu(1,3,1,3)*dlll(1,3,3)+
-     &                           cuuuu(1,3,1,4)*dlll(1,3,4)+
-     &                           cuuuu(1,3,1,5)*dlll(1,3,5)+
      &                           cuuuu(2,3,1,1)*dlll(2,3,1)+
      &                           cuuuu(2,3,1,2)*dlll(2,3,2)+
      &                           cuuuu(2,3,1,3)*dlll(2,3,3)+
-     &                           cuuuu(2,3,1,4)*dlll(2,3,4)+
-     &                           cuuuu(2,3,1,5)*dlll(2,3,5)+
      &                           cuuuu(3,3,1,1)*dlll(3,3,1)+
      &                           cuuuu(3,3,1,2)*dlll(3,3,2)+
      &                           cuuuu(3,3,1,3)*dlll(3,3,3)+
-     &                           cuuuu(3,3,1,4)*dlll(3,3,4)+
-     &                           cuuuu(3,3,1,5)*dlll(3,3,5)+
-     &                           cuuuu(4,3,1,1)*dlll(4,3,1)+
-     &                           cuuuu(4,3,1,2)*dlll(4,3,2)+
-     &                           cuuuu(4,3,1,3)*dlll(4,3,3)+
-     &                           cuuuu(4,3,1,4)*dlll(4,3,4)+
-     &                           cuuuu(4,3,1,5)*dlll(4,3,5)+
-     &                           cuuuu(5,3,1,1)*dlll(5,3,1)+
-     &                           cuuuu(5,3,1,2)*dlll(5,3,2)+
-     &                           cuuuu(5,3,1,3)*dlll(5,3,3)+
-     &                           cuuuu(5,3,1,4)*dlll(5,3,4)+
-     &                           cuuuu(5,3,1,5)*dlll(5,3,5)-
      &                           cuuuu(1,1,3,1)*dlll(1,3,1)-
      &                           cuuuu(1,1,3,2)*dlll(1,3,2)-
      &                           cuuuu(1,1,3,3)*dlll(1,3,3)-
-     &                           cuuuu(1,1,3,4)*dlll(1,3,4)-
-     &                           cuuuu(1,1,3,5)*dlll(1,3,5)-
      &                           cuuuu(2,1,3,1)*dlll(2,3,1)-
      &                           cuuuu(2,1,3,2)*dlll(2,3,2)-
      &                           cuuuu(2,1,3,3)*dlll(2,3,3)-
-     &                           cuuuu(2,1,3,4)*dlll(2,3,4)-
-     &                           cuuuu(2,1,3,5)*dlll(2,3,5)-
      &                           cuuuu(3,1,3,1)*dlll(3,3,1)-
      &                           cuuuu(3,1,3,2)*dlll(3,3,2)-
-     &                           cuuuu(3,1,3,3)*dlll(3,3,3)-
-     &                           cuuuu(3,1,3,4)*dlll(3,3,4)-
-     &                           cuuuu(3,1,3,5)*dlll(3,3,5)-
-     &                           cuuuu(4,1,3,1)*dlll(4,3,1)-
-     &                           cuuuu(4,1,3,2)*dlll(4,3,2)-
-     &                           cuuuu(4,1,3,3)*dlll(4,3,3)-
-     &                           cuuuu(4,1,3,4)*dlll(4,3,4)-
-     &                           cuuuu(4,1,3,5)*dlll(4,3,5)-
-     &                           cuuuu(5,1,3,1)*dlll(5,3,1)-
-     &                           cuuuu(5,1,3,2)*dlll(5,3,2)-
-     &                           cuuuu(5,1,3,3)*dlll(5,3,3)-
-     &                           cuuuu(5,1,3,4)*dlll(5,3,4)-
-     &                           cuuuu(5,1,3,5)*dlll(5,3,5)
+     &                           cuuuu(3,1,3,3)*dlll(3,3,3)
      &                         +
      &                           cuuuu(1,1,1,3)*dlll(1,3,1)+
      &                           cuuuu(1,1,2,3)*dlll(2,3,1)+
      &                           cuuuu(1,1,3,3)*dlll(3,3,1)+
-     &                           cuuuu(1,1,4,3)*dlll(4,3,1)+
-     &                           cuuuu(1,1,5,3)*dlll(5,3,1)+
      &                           cuuuu(1,2,1,3)*dlll(1,3,2)+
      &                           cuuuu(1,2,2,3)*dlll(2,3,2)+
      &                           cuuuu(1,2,3,3)*dlll(3,3,2)+
-     &                           cuuuu(1,2,4,3)*dlll(4,3,2)+
-     &                           cuuuu(1,2,5,3)*dlll(5,3,2)+
      &                           cuuuu(1,3,1,3)*dlll(1,3,3)+
      &                           cuuuu(1,3,2,3)*dlll(2,3,3)+
      &                           cuuuu(1,3,3,3)*dlll(3,3,3)+
-     &                           cuuuu(1,3,4,3)*dlll(4,3,3)+
-     &                           cuuuu(1,3,5,3)*dlll(5,3,3)+
-     &                           cuuuu(1,4,1,3)*dlll(1,3,4)+
-     &                           cuuuu(1,4,2,3)*dlll(2,3,4)+
-     &                           cuuuu(1,4,3,3)*dlll(3,3,4)+
-     &                           cuuuu(1,4,4,3)*dlll(4,3,4)+
-     &                           cuuuu(1,4,5,3)*dlll(5,3,4)+
-     &                           cuuuu(1,5,1,3)*dlll(1,3,5)+
-     &                           cuuuu(1,5,2,3)*dlll(2,3,5)+
-     &                           cuuuu(1,5,3,3)*dlll(3,3,5)+
-     &                           cuuuu(1,5,4,3)*dlll(4,3,5)+
-     &                           cuuuu(1,5,5,3)*dlll(5,3,5)-
      &                           cuuuu(3,1,1,1)*dlll(1,3,1)-
      &                           cuuuu(3,1,2,1)*dlll(2,3,1)-
      &                           cuuuu(3,1,3,1)*dlll(3,3,1)-
-     &                           cuuuu(3,1,4,1)*dlll(4,3,1)-
-     &                           cuuuu(3,1,5,1)*dlll(5,3,1)-
      &                           cuuuu(3,2,1,1)*dlll(1,3,2)-
      &                           cuuuu(3,2,2,1)*dlll(2,3,2)-
      &                           cuuuu(3,2,3,1)*dlll(3,3,2)-
-     &                           cuuuu(3,2,4,1)*dlll(4,3,2)-
-     &                           cuuuu(3,2,5,1)*dlll(5,3,2)-
      &                           cuuuu(3,3,1,1)*dlll(1,3,3)-
      &                           cuuuu(3,3,2,1)*dlll(2,3,3)-
-     &                           cuuuu(3,3,3,1)*dlll(3,3,3)-
-     &                           cuuuu(3,3,4,1)*dlll(4,3,3)-
-     &                           cuuuu(3,3,5,1)*dlll(5,3,3)-
-     &                           cuuuu(3,4,1,1)*dlll(1,3,4)-
-     &                           cuuuu(3,4,2,1)*dlll(2,3,4)-
-     &                           cuuuu(3,4,3,1)*dlll(3,3,4)-
-     &                           cuuuu(3,4,4,1)*dlll(4,3,4)-
-     &                           cuuuu(3,4,5,1)*dlll(5,3,4)-
-     &                           cuuuu(3,5,1,1)*dlll(1,3,5)-
-     &                           cuuuu(3,5,2,1)*dlll(2,3,5)-
-     &                           cuuuu(3,5,3,1)*dlll(3,3,5)-
-     &                           cuuuu(3,5,4,1)*dlll(4,3,5)-
-     &                           cuuuu(3,5,5,1)*dlll(5,3,5))
+     &                           cuuuu(3,3,3,1)*dlll(3,3,3))
      &                              )
 
 
@@ -1336,9 +857,7 @@ c----------------------------------------------------------------------
      &                *(
      &                  g0_uu_x(1,1,1)+
      &                  g0_uu_x(2,1,2)+
-     &                  g0_uu_x(3,1,3)+
-     &                  g0_uu_x(4,1,4)+
-     &                  g0_uu_x(5,1,5)
+     &                  g0_uu_x(3,1,3)
      &                 )
      &              +
      &                dphi1_J*(1-x0**2)**3
@@ -1346,33 +865,17 @@ c----------------------------------------------------------------------
      &                  g0_uu(1,1)*gamma_ull(1,1,1)+
      &                  g0_uu(1,1)*gamma_ull(2,2,1)+
      &                  g0_uu(1,1)*gamma_ull(3,3,1)+
-     &                  g0_uu(1,1)*gamma_ull(4,4,1)+
-     &                  g0_uu(1,1)*gamma_ull(5,5,1)+
      &                  g0_uu(1,2)*gamma_ull(1,1,2)+
      &                  g0_uu(1,2)*gamma_ull(2,2,2)+
      &                  g0_uu(1,2)*gamma_ull(3,3,2)+
-     &                  g0_uu(1,2)*gamma_ull(4,4,2)+
-     &                  g0_uu(1,2)*gamma_ull(5,5,2)+
      &                  g0_uu(1,3)*gamma_ull(1,1,3)+
      &                  g0_uu(1,3)*gamma_ull(2,2,3)+
-     &                  g0_uu(1,3)*gamma_ull(3,3,3)+
-     &                  g0_uu(1,3)*gamma_ull(4,4,3)+
-     &                  g0_uu(1,3)*gamma_ull(5,5,3)+
-     &                  g0_uu(1,4)*gamma_ull(1,1,4)+
-     &                  g0_uu(1,4)*gamma_ull(2,2,4)+
-     &                  g0_uu(1,4)*gamma_ull(3,3,4)+
-     &                  g0_uu(1,4)*gamma_ull(4,4,4)+
-     &                  g0_uu(1,4)*gamma_ull(5,5,4)+
-     &                  g0_uu(1,5)*gamma_ull(1,1,5)+
-     &                  g0_uu(1,5)*gamma_ull(2,2,5)+
-     &                  g0_uu(1,5)*gamma_ull(3,3,5)+
-     &                  g0_uu(1,5)*gamma_ull(4,4,5)+
-     &                  g0_uu(1,5)*gamma_ull(5,5,5)
+     &                  g0_uu(1,3)*gamma_ull(3,3,3)
      &                 )
 
               ! constraint damping terms added to efe,efe_J
-              do a=1,5
-                do b=1,5
+              do a=1,3
+                do b=1,3
                   cd_ll(a,b)=-kappa_cd*
      &                ( n_l(a)*c_l(a)+n_l(b)*c_l(a)-(1+rho_cd)*
      &                  g0_ll(a,b)*ndotc )
@@ -1440,12 +943,6 @@ c----------------------------------------------------------------------
                 phi1_np1(i)=phi1_np1(i)-phi1_res/phi1_J 
               end if
 
-              ! save residuals
-!              gb_res(i) =
-!     &          max(abs(efe(1,1)/efe_J(1,1)),
-!     &              abs(efe(1,2)/efe_J(1,2)),
-!     &              abs(efe(2,2)/efe_J(2,2)),
-!     &              abs(efe(3,3)/efe_J(3,3)))
               gb_res(i) =
      &          max(abs(efe(1,1)),
      &              abs(efe(1,2)),
@@ -1476,14 +973,10 @@ c----------------------------------------------------------------------
                 write(*,*) ' g0_12 :',g0_ll(1,2)
                 write(*,*) ' g0_22 :',g0_ll(2,2)
                 write(*,*) ' g0_33:',g0_ll(3,3)
-                write(*,*) ' g0_44:',g0_ll(4,4)
-                write(*,*) ' g0_55:',g0_ll(5,5)
                 write(*,*) ' g0u_11 :',g0_uu(1,1)
                 write(*,*) ' g0u_12 :',g0_uu(1,2)
                 write(*,*) ' g0u_22 :',g0_uu(2,2)
                 write(*,*) ' g0u_33:',g0_uu(3,3)
-                write(*,*) ' g0u_44:',g0_uu(4,4)
-                write(*,*) ' g0u_55:',g0_uu(5,5)
                 write(*,*) ' phi np1,n,nm1:',phi1_np1(i),
      &                   phi1_n(i),phi1_nm1(i)
                 write(*,*) ' phi1_t/x:',phi1_t,phi1_x
