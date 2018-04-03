@@ -353,6 +353,7 @@ c----------------------------------------------------------------------
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
+     &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
@@ -397,6 +398,8 @@ c----------------------------------------------------------------------
         real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
         real*8 gads_ll(3,3),gads_uu(3,3)
         real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 gA,gA_x(3),gA_xx(3,3),gAads,gAads_x(3),gAads_xx(3,3) 
+        real*8 gB,gB_x(3),gB_xx(3,3),gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
         real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
@@ -429,11 +432,16 @@ c----------------------------------------------------------------------
         real*8 phi1_tt,phi1_tx,phi1_xx
   
         real*8 gb_tt0,gb_tx0,gb_xx0,gb_yy0,phi10
-        real*8 g0_tt_ads0,g0_xx_ads0,g0_yy_ads0
 
+        real*8 g0_tt_ads0,g0_xx_ads0,g0_yy_ads0
         real*8 g0_tt_ads_x,g0_tt_ads_xx
         real*8 g0_xx_ads_x,g0_xx_ads_xx
         real*8 g0_yy_ads_x,g0_yy_ads_xx
+
+        real*8 gA_ads0,gB_ads0
+
+        real*8 gA_ads_x,gA_ads_xx        
+        real*8 gB_ads_yy
 
         real*8 Hb_t_t,Hb_t_x
         real*8 Hb_x_t,Hb_x_x
@@ -452,6 +460,7 @@ c----------------------------------------------------------------------
         dx=(x(2)-x(1))
 
         x0=x(i)
+        y0=L/2  !NOTE: change this to y0=y(j) when we add y-dependence
 
         ! set gads values using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
@@ -459,10 +468,16 @@ c----------------------------------------------------------------------
         g0_xx_ads0 =1/((1-x0)**2+x0**2)/(1-x0)**2
         g0_yy_ads0=PI**2
 
+        ! set gAads values
+        gA_ads0=x0**2/(1-x0)**2
+
+        ! set gBads values
+        gB_ads0=L**2*PI*sin(PI*y0/L)**2
+
         ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f1_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
-        f2_tx_ads0 = 4/L*(-x0**3/(1-x0)**5)
+        f1_y_ads0  = 4/L*PI*sin(PI*y0/L)**4
+        f2_tx_ads0 = 4/L/(1-x0)**2
 
         ! set gbar values
         gb_tt0=gb_tt_n(i)
@@ -491,6 +506,13 @@ c----------------------------------------------------------------------
      &                /((1-x0)**2+x0**2)**3/(1-x0)**4
         g0_yy_ads_x =0
         g0_yy_ads_xx=0
+
+        ! set gAads derivatives
+        gA_ads_x =2*x0/(1-x0)**3
+        gA_ads_xx=(2+4*x0)/(1-x0)**4
+ 
+        ! set gBads derivatives
+        gB_ads_yy=2*PI**2*cos(2*PI*y0/L)
  
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -528,7 +550,7 @@ c----------------------------------------------------------------------
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
         g0_ll(1,2)=           gb_tx0*(1-x0**2)
-        !g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  !add this when you add y-dependence
+        !g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
         g0_ll(3,3)=g0_yy_ads0+gb_yy0*(1-x0**2)*x0**2
 
@@ -607,7 +629,7 @@ c----------------------------------------------------------------------
      &                   +gb_tx_x*(-2*x0)
      &                   +gb_tx0*(-2)
 
-!        g0_ll_x(1,3,1)   =0                            !add this when you add y-dependence
+!        g0_ll_x(1,3,1)   =0                            !NOTE: add this when you add y-dependence
 !     &                   +gb_ty_t*(1-x0**2)**2
 !        g0_ll_x(1,3,2)   =0
 !     &                   +gb_ty_x*(1-x0**2)**2
@@ -725,7 +747,7 @@ c----------------------------------------------------------------------
         gads_ll_x(3,3,2)   =g0_yy_ads_x 
         gads_ll_xx(3,3,2,2)=g0_yy_ads_xx
         ! WARNING: from sin^2theta factor in pure ads term
-                
+
         do a=1,2
           do b=a+1,3
             gads_ll(b,a)=gads_ll(a,b)
@@ -753,11 +775,20 @@ c----------------------------------------------------------------------
           end do
         end do
 
+        gAads=gA_ads0
+
+        gAads_x(2)   =gA_ads_x 
+        gAads_xx(2,2)=gA_ads_xx
+
+        gBads=gB_ads0
+
+        gBads_xx(3,3)=gB_ads_yy
+
         ! give values to the metric deviation, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 will do)
         h0_ll(1,1)=gb_tt0*(1-x0**2)
         h0_ll(1,2)=gb_tx0*(1-x0**2)
-        !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !add this when you add y-dependence
+        !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
         h0_ll(2,2)=gb_xx0*(1-x0**2)
         h0_ll(3,3)=gb_yy0*x0**2*(1-x0**2)
         
@@ -815,7 +846,7 @@ c----------------------------------------------------------------------
         end do
 
         ! give values to the gh source functions
-        A_l(1)=Hb_t0*(1-x0**2)**2
+        A_l(1)=Hb_t0*(1-x0**2)**2 
         A_l(2)=Hb_x0*(1-x0**2)**2
 
         A_l_x(1,1)=Hb_t_t*(1-x0**2)**2
