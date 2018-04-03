@@ -347,7 +347,7 @@ c----------------------------------------------------------------------
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
-     &                  psi_np1,psi_n,psi_nm1,
+     &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
@@ -371,7 +371,7 @@ c----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
+        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
         real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
@@ -423,17 +423,17 @@ c----------------------------------------------------------------------
         real*8 gb_tx_tt,gb_tx_tx,gb_tx_xx
         real*8 gb_xx_t,gb_xx_x
         real*8 gb_xx_tt,gb_xx_tx,gb_xx_xx
-        real*8 psi_t,psi_x
-        real*8 psi_tt,psi_tx,psi_xx
+        real*8 gb_yy_t,gb_yy_x
+        real*8 gb_yy_tt,gb_yy_tx,gb_yy_xx
         real*8 phi1_t,phi1_x
         real*8 phi1_tt,phi1_tx,phi1_xx
   
-        real*8 gb_tt0,gb_tx0,gb_xx0,psi0,phi10
-        real*8 g0_tt_ads0,g0_xx_ads0,g0_psi_ads0
+        real*8 gb_tt0,gb_tx0,gb_xx0,gb_yy0,phi10
+        real*8 g0_tt_ads0,g0_xx_ads0,g0_yy_ads0
 
         real*8 g0_tt_ads_x,g0_tt_ads_xx
         real*8 g0_xx_ads_x,g0_xx_ads_xx
-        real*8 g0_psi_ads_x,g0_psi_ads_xx
+        real*8 g0_yy_ads_x,g0_yy_ads_xx
 
         real*8 Hb_t_t,Hb_t_x
         real*8 Hb_x_t,Hb_x_x
@@ -454,7 +454,7 @@ c----------------------------------------------------------------------
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_tt_ads0 =-((1-x0)**2+x0**2)/(1-x0)**2
         g0_xx_ads0 =1/((1-x0)**2+x0**2)/(1-x0)**2
-        g0_psi_ads0=x0**2/(1-x0)**2
+        g0_yy_ads0=PI**2
 
         ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
@@ -465,7 +465,7 @@ c----------------------------------------------------------------------
         gb_tt0=gb_tt_n(i)
         gb_tx0=gb_tx_n(i)
         gb_xx0=gb_xx_n(i)
-        psi0  =psi_n(i)
+        gb_yy0=gb_yy_n(i)
 
         ! set fbar values
         fb_t0=fb_t_n(i)
@@ -486,26 +486,26 @@ c----------------------------------------------------------------------
      &                /((1-x0)**2+x0**2)**2/(1-x0)**3
         g0_xx_ads_xx =(2*(3-10*(1-x0)*x0)*(3-6*x0+4*x0**2))
      &                /((1-x0)**2+x0**2)**3/(1-x0)**4
-        g0_psi_ads_x =2*x0/(1-x0)**3
-        g0_psi_ads_xx=(2+4*x0)/(1-x0)**4
+        g0_yy_ads_x =0
+        g0_yy_ads_xx=0
  
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &       gb_tt_t,gb_tt_x,
      &       gb_tt_tt,gb_tt_tx,gb_tt_xx,
-     &       dx,dt,i,chr,ex,Nx,'phi1')
+     &       dx,dt,i,chr,ex,Nx,'gb_tt')
         call df2_int(gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &       gb_tx_t,gb_tx_x,
      &       gb_tx_tt,gb_tx_tx,gb_tx_xx,
-     &       dx,dt,i,chr,ex,Nx,'phi1')
+     &       dx,dt,i,chr,ex,Nx,'gb_tx')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &       gb_xx_t,gb_xx_x,
      &       gb_xx_tt,gb_xx_tx,gb_xx_xx,
-     &       dx,dt,i,chr,ex,Nx,'phi1')
-        call df2_int(psi_np1,psi_n,psi_nm1,
-     &       psi_t,psi_x,
-     &       psi_tt,psi_tx,psi_xx,
-     &       dx,dt,i,chr,ex,Nx,'phi1')
+     &       dx,dt,i,chr,ex,Nx,'gb_xx')
+        call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &       gb_yy_t,gb_yy_x,
+     &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
+     &       dx,dt,i,chr,ex,Nx,'gb_yy')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -526,7 +526,7 @@ c----------------------------------------------------------------------
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
         g0_ll(1,2)=           gb_tx0*(1-x0**2)**2
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
-        g0_ll(3,3)=g0_psi_ads0+psi0*(1-x0**2)*x0**2
+        g0_ll(3,3)=g0_yy_ads0+gb_yy0*(1-x0**2)*x0**2
 
         g0_uu(1,1)=
      &          (g0_ll(2,2)*g0_ll(3,3)-g0_ll(2,3)**2)
@@ -620,20 +620,20 @@ c----------------------------------------------------------------------
      &                   +gb_xx0*(-2)
 
         g0_ll_x(3,3,1)   =0
-     &                   +psi_t*(1-x0**2)*x0**2
-        g0_ll_x(3,3,2)   =g0_psi_ads_x
-     &                   +psi_x*(1-x0**2)*x0**2
-     &                   +psi0*(2*x0-4*x0**3)
+     &                   +gb_yy_t*(1-x0**2)*x0**2
+        g0_ll_x(3,3,2)   =g0_yy_ads_x
+     &                   +gb_yy_x*(1-x0**2)*x0**2
+     &                   +gb_yy0*(2*x0-4*x0**3)
         g0_ll_xx(3,3,1,1)=0
-     &                   +psi_tt*(1-x0**2)*x0**2
+     &                   +gb_yy_tt*(1-x0**2)*x0**2
         g0_ll_xx(3,3,1,2)=0
-     &                   +psi_tx*(1-x0**2)*x0**2
-     &                   +psi_t*(2*x0-4*x0**3)
-        g0_ll_xx(3,3,2,2)=g0_psi_ads_xx
-     &                   +psi_xx*(1-x0**2)*x0**2
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi_x*(2*x0-4*x0**3)
-     &                   +psi0*(2-12*x0**2)
+     &                   +gb_yy_tx*(1-x0**2)*x0**2
+     &                   +gb_yy_t*(2*x0-4*x0**3)
+        g0_ll_xx(3,3,2,2)=g0_yy_ads_xx
+     &                   +gb_yy_xx*(1-x0**2)*x0**2
+     &                   +gb_yy_x*(2*x0-4*x0**3)
+     &                   +gb_yy_x*(2*x0-4*x0**3)
+     &                   +gb_yy0*(2-12*x0**2)
         ! WARNING: from sin^2chi factor in pure ads term
 
         do a=1,2
@@ -692,18 +692,18 @@ c----------------------------------------------------------------------
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         gads_ll(1,1)=g0_tt_ads0
         gads_ll(2,2)=g0_xx_ads0
-        gads_ll(3,3)=g0_psi_ads0
+        gads_ll(3,3)=g0_yy_ads0
 
         gads_uu(1,1)=1/g0_tt_ads0
         gads_uu(2,2)=1/g0_xx_ads0
-        gads_uu(3,3)=1/g0_psi_ads0
+        gads_uu(3,3)=1/g0_yy_ads0
 
         gads_ll_x(1,1,2)   =g0_tt_ads_x  
         gads_ll_xx(1,1,2,2)=g0_tt_ads_xx 
         gads_ll_x(2,2,2)   =g0_xx_ads_x  
         gads_ll_xx(2,2,2,2)=g0_xx_ads_xx 
-        gads_ll_x(3,3,2)   =g0_psi_ads_x 
-        gads_ll_xx(3,3,2,2)=g0_psi_ads_xx
+        gads_ll_x(3,3,2)   =g0_yy_ads_x 
+        gads_ll_xx(3,3,2,2)=g0_yy_ads_xx
         ! WARNING: from sin^2theta factor in pure ads term
                 
         do a=1,2
@@ -738,7 +738,7 @@ c----------------------------------------------------------------------
         h0_ll(1,1)=gb_tt0*(1-x0**2)
         h0_ll(1,2)=gb_tx0*(1-x0**2)**2
         h0_ll(2,2)=gb_xx0*(1-x0**2)
-        h0_ll(3,3)=psi0*x0**2*(1-x0**2)
+        h0_ll(3,3)=gb_yy0*x0**2*(1-x0**2)
         
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)
