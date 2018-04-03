@@ -524,7 +524,8 @@ c----------------------------------------------------------------------
         ! give values to the metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
-        g0_ll(1,2)=           gb_tx0*(1-x0**2)**2
+        g0_ll(1,2)=           gb_tx0*(1-x0**2)
+        !g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  !add this when you add y-dependence
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
         g0_ll(3,3)=g0_yy_ads0+gb_yy0*(1-x0**2)*x0**2
 
@@ -588,20 +589,36 @@ c----------------------------------------------------------------------
      &                   +gb_tt0*(-2)
 
         g0_ll_x(1,2,1)   =0
-     &                   +gb_tx_t*(1-x0**2)**2
+     &                   +gb_tx_t*(1-x0**2)
         g0_ll_x(1,2,2)   =0
-     &                   +gb_tx_x*(1-x0**2)**2
-     &                   +gb_tx0*2*(1-x0**2)*(-2*x0)
+     &                   +gb_tx_x*(1-x0**2)
+     &                   +gb_tx0*(-2*x0)
         g0_ll_xx(1,2,1,1)=0
-     &                   +gb_tx_tt*(1-x0**2)**2
+     &                   +gb_tx_tt*(1-x0**2)
         g0_ll_xx(1,2,1,2)=0
-     &                   +gb_tx_tx*(1-x0**2)**2
-     &                   +gb_tx_t*2*(1-x0**2)*(-2*x0)
+     &                   +gb_tx_tx*(1-x0**2)
+     &                   +gb_tx_t*(-2*x0)
         g0_ll_xx(1,2,2,2)=0
-     &                   +gb_tx_xx*(1-x0**2)**2
-     &                   +gb_tx_x*2*(1-x0**2)*(-2*x0)
-     &                   +gb_tx_x*2*(1-x0**2)*(-2*x0)
-     &                   +gb_tx0*2*(-2+6*x0**2)
+     &                   +gb_tx_xx*(1-x0**2)
+     &                   +gb_tx_x*(-2*x0)
+     &                   +gb_tx_x*(-2*x0)
+     &                   +gb_tx0*(-2)
+
+!        g0_ll_x(1,3,1)   =0                            !add this when you add y-dependence
+!     &                   +gb_ty_t*(1-x0**2)**2
+!        g0_ll_x(1,3,2)   =0
+!     &                   +gb_ty_x*(1-x0**2)**2
+!     &                   +gb_ty0*2*(1-x0**2)*(-2*x0)
+!        g0_ll_xx(1,3,1,1)=0
+!     &                   +gb_ty_tt*(1-x0**2)**2
+!        g0_ll_xx(1,3,1,2)=0
+!     &                   +gb_ty_tx*(1-x0**2)**2
+!     &                   +gb_ty_t*2*(1-x0**2)*(-2*x0)
+!        g0_ll_xx(1,3,2,2)=0
+!     &                   +gb_ty_xx*(1-x0**2)**2
+!     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
+!     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
+!     &                   +gb_ty0*2*(-2+6*x0**2)
 
         g0_ll_x(2,2,1)   =0
      &                   +gb_xx_t*(1-x0**2)
@@ -736,7 +753,8 @@ c----------------------------------------------------------------------
         ! give values to the metric deviation, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 will do)
         h0_ll(1,1)=gb_tt0*(1-x0**2)
-        h0_ll(1,2)=gb_tx0*(1-x0**2)**2
+        h0_ll(1,2)=gb_tx0*(1-x0**2)
+        !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !add this when you add y-dependence
         h0_ll(2,2)=gb_xx0*(1-x0**2)
         h0_ll(3,3)=gb_yy0*x0**2*(1-x0**2)
         
@@ -794,24 +812,22 @@ c----------------------------------------------------------------------
         end do
 
         ! give values to the gh source functions
-        A_l(1)=Hb_t0*(1-x0**2)**3
+        A_l(1)=Hb_t0*(1-x0**2)**2
         A_l(2)=Hb_x0*(1-x0**2)**2
 
-        A_l_x(1,1)=Hb_t_t*(1-x0**2)**3
-        A_l_x(1,2)=Hb_t_x*(1-x0**2)**3
-     &            -2*x0*3*(1-x0**2)**2*Hb_t0
+        A_l_x(1,1)=Hb_t_t*(1-x0**2)**2
+        A_l_x(1,2)=Hb_t_x*(1-x0**2)**2
+     &            -2*x0*2*(1-x0**2)*Hb_t0
 
         A_l_x(2,1)=Hb_x_t*(1-x0**2)**2
         A_l_x(2,2)=Hb_x_x*(1-x0**2)**2
      &            -2*x0*2*(1-x0**2)*Hb_x0
 
         ! give values to the ads gh source functions
-        Hads_l(2)=(3-4*x0*(2-x0)*(1-x0))/(x0*(1-x0)*(1-2*x0*(1-x0)))
+        Hads_l(2)=(-2+4*x0)/(1-2*x0*(1-x0))
 
         ! give values to the ads gh source function derivatives
-        Hads_l_x(2,2)=-3/x0**2 
-     &               +(3-4*x0+4*x0**4)/(1-x0)**2/(1-2*(1-x0)*x0)**2
-        Hads_l_x(3,3)=-2.0d0              ! WARNING: from H_\theta1=2*cot(\theta1) at \theta1=\pi/2
+        Hads_l_x(2,2)=8*x0*(1-x0)/(1-2*x0*(1-x0))**2
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3
