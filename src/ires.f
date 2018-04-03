@@ -70,6 +70,7 @@ c----------------------------------------------------------------------
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
         real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 f1_l(3),f2_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
 
@@ -106,6 +107,7 @@ c----------------------------------------------------------------------
         data ricci/0.0/
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
         data einstein_ll,set_ll/9*0.0,9*0.0/
+        data f1_l,f2_ll/3*0.0,9*0.0/
         data riemann_ulll/81*0.0/
 
         data A_l,Hads_l/3*0.0,3*0.0/
@@ -157,7 +159,7 @@ c----------------------------------------------------------------------
      &              A_l,A_l_x,Hads_l,Hads_l_x,
      &              gamma_ull,gamma_ull_x,
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &              einstein_ll,set_ll,
+     &              einstein_ll,set_ll,f1_l,f2_ll,
      &              phi10_x,phi10_xx,
      &              x,dt,chr,L,ex,Nx,i)
 

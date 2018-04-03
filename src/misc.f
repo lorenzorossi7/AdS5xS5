@@ -357,7 +357,7 @@ c----------------------------------------------------------------------
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &                  einstein_ll,set_ll,
+     &                  einstein_ll,set_ll,f1_l,f2_ll,
      &                  phi10_x,phi10_xx,
      &                  x,dt,chr,L,ex,Nx,i)
         implicit none
@@ -405,10 +405,10 @@ c----------------------------------------------------------------------
         real*8 einstein_ll(3,3),set_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
+        real*8 f1_l(3),f2_ll(3,3)
+        real*8 f1ads_l(3),f2ads_ll(3,3)
         !NOTE: below I have implemented direct calculation
-        real*8 f0_l(10),f0_ll(10,10)
         real*8 f_lllll(10,10,10,10,10)
-        real*8 fads_l(10),fads_ll(10,10)
         real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
         real*8 g1_ll(5,5),g1_uu(5,5),set_tmp(5,5),r0,r_h,x_h,delta0
 
@@ -441,7 +441,10 @@ c----------------------------------------------------------------------
         real*8 Hb_t0,Hb_x0
 
         real*8 fb_t0,fb_x0,fb_y0
-        real*8 f0_tx_ads0,f0_y_ads0
+        real*8 fb_tx0,fb_ty0,fb_xy0
+
+        real*8 f1_y_ads0
+        real*8 f2_tx_ads0
 
         real*8 tmp
 !----------------------------------------------------------------------
@@ -456,10 +459,10 @@ c----------------------------------------------------------------------
         g0_xx_ads0 =1/((1-x0)**2+x0**2)/(1-x0)**2
         g0_yy_ads0=PI**2
 
-        ! set fads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f0_tx_ads0 = 4/L*(-x0**3/(1-x0)**5)
-        f0_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
+        f1_y_ads0  = 4/L*(PI*L**4*sin(PI*y0/L)**4)
+        f2_tx_ads0 = 4/L*(-x0**3/(1-x0)**5)
 
         ! set gbar values
         gb_tt0=gb_tt_n(i)
@@ -890,37 +893,24 @@ c----------------------------------------------------------------------
 
         ! give values to the field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f0_l(1)   =          fb_t0
-        f0_l(2)   =          fb_x0
-        f0_l(3)   =f0_y_ads0+fb_y0
-        f0_ll(1,2)=0.0d0 
-        f0_ll(1,3)=0.0d0 
-        f0_ll(2,3)=0.0d0 
-        do a=1,3
-          do b=1,3
-            f0_ll(1,2)=-vol(1,2,a)*f0_l(b)*g0_uu(a,b)
-            f0_ll(1,3)=-vol(1,3,a)*f0_l(b)*g0_uu(a,b)
-            f0_ll(2,3)=-vol(2,3,a)*f0_l(b)*g0_uu(a,b)
-          end do
-        end do
+        f1_l(1)   =          fb_t0
+        f1_l(2)   =          fb_x0
+        f1_l(3)   =f1_y_ads0+fb_y0
+!        do a=1,3
+!          do b=1,3
+!            fb_tx0=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !check that this is zero for pure
+!            fb_ty0=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)
+!            fb_xy0=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)
+!          end do
+!        end do
+        f2_ll(1,2)=f2_tx_ads0+fb_tx0 
+        f2_ll(1,3)=           fb_ty0
+        f2_ll(2,3)=           fb_xy0
 
         ! give values to the ads field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do) 
-        fads_ll(1,2)=f0_tx_ads0
-        fads_l(3)   =f0_y_ads0
-
-        ! calculate field strength F_abcde 
-        f_lllll(1,2,4,5,6) =f0_ll(1,2)
-        f_lllll(1,3,4,5,6) =f0_ll(1,3)
-        f_lllll(2,3,4,5,6) =f0_ll(2,3)
-        f_lllll(1,7,8,9,10)=f0_l(1)
-        f_lllll(2,7,8,9,10)=f0_l(2)
-        f_lllll(3,7,8,9,10)=f0_l(3)
-
-        ! NOTE: need to antisymmetrize f_lllll
-
-        ! NOTE: TEMPORARY CHECK
-        f_lllll(1,2,3,4,5) =4.0d0/L*(-x0**3/(1-x0)**5)
+        f1ads_l(3)   =f1_y_ads0
+        f2ads_ll(1,2)=f2_tx_ads0
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
