@@ -431,6 +431,10 @@ c----------------------------------------------------------------------
         real*8 gb_xx_tt,gb_xx_tx,gb_xx_xx
         real*8 gb_yy_t,gb_yy_x
         real*8 gb_yy_tt,gb_yy_tx,gb_yy_xx
+        real*8 psi_t,psi_x
+        real*8 psi_tt,psi_tx,psi_xx
+        real*8 omega_t,omega_x
+        real*8 omega_tt,omega_tx,omega_xx
         real*8 phi1_t,phi1_x
         real*8 phi1_tt,phi1_tx,phi1_xx
   
@@ -441,7 +445,7 @@ c----------------------------------------------------------------------
         real*8 g0_xx_ads_x,g0_xx_ads_xx
         real*8 g0_yy_ads_x,g0_yy_ads_xx
 
-        real*8 gA_0,gB_0
+        real*8 psi0,omega0
 
         real*8 gA_ads0,gB_ads0
         real*8 gA_ads_x,gA_ads_xx        
@@ -488,6 +492,8 @@ c----------------------------------------------------------------------
         gb_tx0=gb_tx_n(i)
         gb_xx0=gb_xx_n(i)
         gb_yy0=gb_yy_n(i)
+        psi0  =0  !NOTE: add these when you add psi,omega to input arguments         
+        omega0=0
 
         ! set fbar values
         fb_t0=fb_t_n(i)
@@ -535,6 +541,17 @@ c----------------------------------------------------------------------
      &       gb_yy_t,gb_yy_x,
      &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
      &       dx,dt,i,chr,ex,Nx,'gb_yy')
+
+        psi_t=0  !NOTE: add these when you add psi,omega to input arguments
+        psi_x=0
+        psi_tt=0
+        psi_tx=0
+        psi_xx=0
+        omega_t=0
+        omega_x=0
+        omega_tt=0
+        omega_tx=0
+        omega_xx=0
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -733,6 +750,42 @@ c----------------------------------------------------------------------
             end do
           end do
         end do
+
+        gA=gA_ads0+psi0*(1-x0**2)
+        gB=gB_ads0+omega0*(1-x0**2)**3
+
+        gA_x(1)   =0
+     &            +psi_t*(1-x0**2)
+        gA_x(2)   =gA_ads_x
+     &            +psi_x*(1-x0**2)
+     &            +psi0*(-2*x0)
+        gA_xx(1,1)=0
+     &            +psi_tt*(1-x0**2)
+        gA_xx(1,2)=0
+     &            +psi_tx*(1-x0**2)
+     &            +psi_t*(-2*x0)
+        gA_xx(2,2)=gA_ads_xx
+     &            +psi_xx*(1-x0**2)
+     &            +psi_x*(-2*x0)
+     &            +psi_x*(-2*x0)
+     &            +psi0*(-2)
+
+        gB_x(1)   =0
+     &            +omega_t*(1-x0**2)**3
+        gB_x(2)   =0
+     &            +omega_x*(1-x0**2)**3
+     &            +omega0*3*(1-x0**2)**2*(-2*x0)
+        gB_xx(1,1)=0
+     &            +omega_tt*(1-x0**2)**3
+        gB_xx(1,2)=0
+     &            +omega_tx*(1-x0**2)**3
+     &            +omega_t*3*(1-x0**2)**2*(-2*x0)
+        gB_xx(2,2)=0
+     &            +omega_xx*(1-x0**2)**3
+     &            +omega_x*3*(1-x0**2)**2*(-2*x0)
+     &            +omega_x*3*(1-x0**2)**2*(-2*x0)
+     &            +omega0*6*(-1+6*x0**2-5*x0**4)
+        gB_xx(3,3)=gB_ads_yy  !NOTE: add the rest of the terms when you add y-dependence
 
         ! give values to the ads metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
