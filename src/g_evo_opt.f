@@ -149,8 +149,6 @@ c----------------------------------------------------------------------
         real*8 dgb_J,ddgb_J,ddgb_J_tx
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
 
-        real*8 lambda5
-
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,theta,phi)
@@ -180,8 +178,6 @@ c----------------------------------------------------------------------
         data rb,i/0,0/
         data max_ghost_width/0/
         data is,ie,js,je,ks,ke,is_a_nan/0,0,0,0,0,0,0/
-
-        data lambda5/0.0/
 
         data g0u_tt_ads0,g0u_xx_ads0/0.0,0.0/
         data g0u_xy_ads0,g0u_yy_ads0/0.0,0.0/
@@ -255,12 +251,6 @@ c----------------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
 
         dx=x(2)-x(1)
-
-        ! AdS5D cosmological constant
-        !(lambda5=-(n-1)(n-2)/L^2) for n=5 dimensional AdS
-!        lambda5=-6/L/L
-        ! NOTE: TEMPORARY CHECK
-        lambda5=0.0d0
 
         ! initialize output variables
         do i=1,Nx
@@ -392,10 +382,14 @@ c----------------------------------------------------------------------
               ! term5_ab = -1/2 H_b,a
               ! term6_ab = H_c G^c_ab
               ! term7_ab = -G^c_db G^d_ca
-              ! term8_ab = -2/3 lambda5 g_ab
-              ! term9_ab = -8*PI*(set_ab-tr_set*g0_ab/3)
+              ! term8_ab = -dimA*( (gA_,ab - G^c_ba gA_,c)/(2 gA) - (gA_,a gA_,b)/(4 gA^2) )
+              !            -dimB*( (gB_,ab - G^c_ba gB_,c)/(2 gB) - (gB_,a gB_,b)/(4 gB^2) )
+              ! term9_ab = -(f1_a f1_b + g^cd f2_ac f2_bd)/4
               !
               ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
+              !
+              ! and the indices are
+              ! a,b = (t,x,y)
               !
               !----------------------------------------------------------------
               do a=1,3
@@ -455,8 +449,8 @@ c----------------------------------------------------------------------
      &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
      &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
-                  term8(a,b)=-2*lambda5*g0_ll(a,b)/3
-                  term9(a,b)=-8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3)
+                  term8(a,b)=0
+                  term9(a,b)=0
      &
                   efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)

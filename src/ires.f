@@ -30,8 +30,6 @@ c----------------------------------------------------------------------
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
 
-        real*8 lambda5
-
         integer is,ie
         integer a,b,c,d,e,f,g,h
 
@@ -133,12 +131,6 @@ c----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
 
-        ! AdS5D cosmological constant
-        !(lambda5=-(n-1)(n-2)/L^2) for n=5 dimensional AdS)
-!        lambda5=-6/L/L
-        ! NOTE: TEMPORARY CHECK
-        lambda5=0.0d0
-
         ! initialize 
         do i=1,Nx
           zeros(i)=0
@@ -181,11 +173,10 @@ c----------------------------------------------------------------------
      &              x,dt,chr,L,ex,Nx,i)
 
               ! calculates efe_ires functions at point i,j
-              !(efe_ires_ab=G_ab+lambda5*g_ab-8*PI*T_ab)
+              !(efe_ires_ab=G_ab+fterm_ab)
               do a=1,3
                 do b=a,3
-                  efe_ires(a,b)=einstein_ll(a,b)+lambda5*g0_ll(a,b)
-     &                                          -8*PI*set_ll(a,b)
+                  efe_ires(a,b)=einstein_ll(a,b)+0
                 end do
               end do
 

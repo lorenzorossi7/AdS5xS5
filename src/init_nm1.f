@@ -36,7 +36,6 @@ c----------------------------------------------------------------------
 
         real*8 x(Nx)
 
-        real*8 lambda5
         real*8 tr_set
 
         logical is_nan
@@ -138,12 +137,6 @@ c----------------------------------------------------------------------
         !---------------------------------------------------------------
 
         dx=x(2)-x(1)
-
-        ! AdS5D cosmological constant
-        !(lambda5=-(n-1)(n-2)/L^2) for n=5 dimensional AdS)
-!        lambda5=-6/L/L
-        ! NOTE: TEMPORARY CHECK
-        lambda5=0.0d0
 
         do i=1,Nx
           phi1_nm1(i)=phi1_n(i)
@@ -293,9 +286,9 @@ c----------------------------------------------------------------------
      &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
      & 
-     &                       -2*lambda5*g0_ll(a,b)/3
+     &                       -0
      &
-     &                       -8*PI*(set_ll(a,b)-tr_set*g0_ll(a,b)/3) 
+     &                       -0
      &            )
             end do
           end do          
