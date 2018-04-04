@@ -157,6 +157,8 @@ c----------------------------------------------------------------------
         real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
         real*8 gads_ll(3,3),gads_uu(3,3)
         real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
+        real*8 gA,gA_x(3),gA_xx(3,3)
+        real*8 gB,gB_x(3),gB_xx(3,3)
         real*8 gAads,gAads_x(3),gAads_xx(3,3)
         real*8 gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
@@ -240,6 +242,9 @@ c----------------------------------------------------------------------
         data phi10_x/3*0.0/
         data phi10_xx/9*0.0/
 
+        data gA,gB/0.0,0.0/
+        data gA_x,gB_x/3*0.0,3*0.0/
+        data gA_xx,gB_xx/9*0.0,9*0.0/
         data gAads,gBads/0.0,0.0/
         data gAads_x,gBads_x/3*0.0,3*0.0/
         data gAads_xx,gBads_xx/9*0.0,9*0.0/
@@ -295,6 +300,7 @@ c----------------------------------------------------------------------
      &                phi1_np1,phi1_n,phi1_nm1,
      &                g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
+     &                gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                A_l,A_l_x,Hads_l,Hads_l_x,

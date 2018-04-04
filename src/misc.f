@@ -353,6 +353,7 @@ c----------------------------------------------------------------------
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
+     &                  gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
@@ -398,8 +399,10 @@ c----------------------------------------------------------------------
         real*8 g0_ll_x(3,3,3),g0_uu_x(3,3,3),g0_ll_xx(3,3,3,3)
         real*8 gads_ll(3,3),gads_uu(3,3)
         real*8 gads_ll_x(3,3,3),gads_uu_x(3,3,3),gads_ll_xx(3,3,3,3)
-        real*8 gA,gA_x(3),gA_xx(3,3),gAads,gAads_x(3),gAads_xx(3,3) 
-        real*8 gB,gB_x(3),gB_xx(3,3),gBads,gBads_x(3),gBads_xx(3,3)
+        real*8 gA,gA_x(3),gA_xx(3,3) 
+        real*8 gB,gB_x(3),gB_xx(3,3)
+        real*8 gAads,gAads_x(3),gAads_xx(3,3) 
+        real*8 gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
         real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
@@ -438,8 +441,9 @@ c----------------------------------------------------------------------
         real*8 g0_xx_ads_x,g0_xx_ads_xx
         real*8 g0_yy_ads_x,g0_yy_ads_xx
 
-        real*8 gA_ads0,gB_ads0
+        real*8 gA_0,gB_0
 
+        real*8 gA_ads0,gB_ads0
         real*8 gA_ads_x,gA_ads_xx        
         real*8 gB_ads_yy
 
