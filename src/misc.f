@@ -348,6 +348,8 @@ c----------------------------------------------------------------------
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                  psi_np1,psi_n,psi_nm1,
+     &                  omega_np1,omega_n,omega_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
@@ -374,6 +376,8 @@ c----------------------------------------------------------------------
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
         real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
+        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
+        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
         real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
@@ -492,8 +496,8 @@ c----------------------------------------------------------------------
         gb_tx0=gb_tx_n(i)
         gb_xx0=gb_xx_n(i)
         gb_yy0=gb_yy_n(i)
-        psi0  =0  !NOTE: add these when you add psi,omega to input arguments         
-        omega0=0
+        psi0  =psi_n(i) 
+        omega0=omega_n(i)
 
         ! set fbar values
         fb_t0=fb_t_n(i)
@@ -541,17 +545,14 @@ c----------------------------------------------------------------------
      &       gb_yy_t,gb_yy_x,
      &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
      &       dx,dt,i,chr,ex,Nx,'gb_yy')
-
-        psi_t=0  !NOTE: add these when you add psi,omega to input arguments
-        psi_x=0
-        psi_tt=0
-        psi_tx=0
-        psi_xx=0
-        omega_t=0
-        omega_x=0
-        omega_tt=0
-        omega_tx=0
-        omega_xx=0
+        call df2_int(psi_np1,psi_n,psi_nm1,
+     &       psi_t,psi_x,
+     &       psi_tt,psi_tx,psi_xx,
+     &       dx,dt,i,chr,ex,Nx,'psi')
+        call df2_int(omega_np1,omega_n,omega_nm1,
+     &       omega_t,omega_x,
+     &       omega_tt,omega_tx,omega_xx,
+     &       dx,dt,i,chr,ex,Nx,'omega')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -847,7 +848,7 @@ c----------------------------------------------------------------------
         h0_ll(1,2)=gb_tx0*(1-x0**2)
         !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
         h0_ll(2,2)=gb_xx0*(1-x0**2)
-        h0_ll(3,3)=gb_yy0*x0**2*(1-x0**2)
+        h0_ll(3,3)=gb_yy0*(1-x0**2)**3
         
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)

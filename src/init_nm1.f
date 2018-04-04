@@ -12,6 +12,7 @@ c----------------------------------------------------------------------
         subroutine init_nm1(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
      &                      gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
      &                      gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
+     &                      gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
      &                      psi_np1,psi_n,psi_nm1,psi_t_n,
      &                      omega_np1,omega_n,omega_nm1,omega_t_n,
      &                      Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
@@ -26,10 +27,11 @@ c----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx),gb_tt_t_n(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx),gb_tx_t_n(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx),gb_xx_t_n(Nx)
-        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx),Hb_t_t_n(Nx)
-        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx),Hb_x_t_n(Nx)
+        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx),gb_yy_t_n(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx),psi_t_n(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx),omega_t_n(Nx)
+        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx),Hb_t_t_n(Nx)
+        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx),Hb_x_t_n(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx),phi1_t_n(Nx)
 
         real*8 x(Nx)
@@ -47,7 +49,7 @@ c----------------------------------------------------------------------
         real*8 gb_tt_t,gb_tt_tt
         real*8 gb_tx_t,gb_tx_tt
         real*8 gb_xx_t,gb_xx_tt
-        real*8 psi_t,psi_tt
+        real*8 gb_yy_t,gb_yy_tt
         real*8 Hb_t_t
         real*8 Hb_x_t
         real*8 phi1_t,phi1_tt
@@ -167,7 +169,9 @@ c----------------------------------------------------------------------
      &            gb_tt_n,gb_tt_n,gb_tt_n,
      &            gb_tx_n,gb_tx_n,gb_tx_n,
      &            gb_xx_n,gb_xx_n,gb_xx_n,
+     &            gb_yy_n,gb_yy_n,gb_yy_n,
      &            psi_n,psi_n,psi_n,
+     &            omega_n,omega_n,omega_n,
      &            Hb_t_n,Hb_t_n,Hb_t_n,
      &            Hb_x_n,Hb_x_n,Hb_x_n,
      &            phi1_n,phi1_n,phi1_n,
@@ -197,7 +201,7 @@ c----------------------------------------------------------------------
           h0_ll_x(1,1,1)=gb_tt_t_n(i)*(1-x0**2)  
           h0_ll_x(1,2,1)=gb_tx_t_n(i)*(1-x0**2)**2
           h0_ll_x(2,2,1)=gb_xx_t_n(i)*(1-x0**2)  
-          h0_ll_x(3,3,1)=psi_t_n(i)*(1-x0**2)  
+          h0_ll_x(3,3,1)=gb_yy_t_n(i)*(1-x0**2)  
           A_l_x(1,1)    =Hb_t_t_n(i)*(1-x0**2)**3
           A_l_x(2,1)    =Hb_x_t_n(i)*(1-x0**2)**2
 
@@ -206,7 +210,7 @@ c----------------------------------------------------------------------
           gb_tt_t=gb_tt_t_n(i) 
           gb_tx_t=gb_tx_t_n(i) 
           gb_xx_t=gb_xx_t_n(i) 
-          psi_t  =psi_t_n(i) 
+          gb_yy_t=gb_yy_t_n(i) 
           Hb_t_t =Hb_t_t_n(i)
           Hb_x_t =Hb_x_t_n(i)
 
@@ -340,9 +344,9 @@ c----------------------------------------------------------------------
 
           ! initial second time derivatives
           gb_tt_tt=h0_ll_tt(1,1)/(1-x0**2) 
-          gb_tx_tt=h0_ll_tt(1,2)/(1-x0**2)**2
+          gb_tx_tt=h0_ll_tt(1,2)/(1-x0**2)
           gb_xx_tt=h0_ll_tt(2,2)/(1-x0**2) 
-          psi_tt  =h0_ll_tt(3,3)/x0**2/(1-x0**2) 
+          gb_yy_tt=h0_ll_tt(3,3)/(1-x0**2)**3 
           phi1_tt =phi10_tt/(1-x0**2)**3
 
           ! initialize past time level by O(h^3) expansion
@@ -352,8 +356,10 @@ c----------------------------------------------------------------------
      &                      + gb_tx_tt*dt**2/2
            gb_xx_nm1(i)=gb_xx_n(i) - gb_xx_t*dt
      &                      + gb_xx_tt*dt**2/2
-           psi_nm1(i)  =psi_n(i) - psi_t*dt
-     &                      + psi_tt*dt**2/2
+           gb_yy_nm1(i)=gb_yy_n(i) - gb_yy_t*dt
+     &                      + gb_yy_tt*dt**2/2
+!           psi_nm1(i)  =psi_n(i) - psi_t*dt  !NOTE: add these when you add psi subsector
+!     &                      + psi_tt*dt**2/2
            Hb_t_nm1(i) =Hb_t_n(i) - Hb_t_t*dt
            Hb_x_nm1(i) =Hb_x_n(i) - Hb_x_t*dt
            phi1_nm1(i) =phi1_n(i) - phi1_t*dt
@@ -366,8 +372,10 @@ c----------------------------------------------------------------------
      &                      + gb_tx_tt*dt**2/2
            gb_xx_np1(i)=gb_xx_n(i) + gb_xx_t*dt
      &                      + gb_xx_tt*dt**2/2
-           psi_np1(i)  =psi_n(i) + psi_t*dt
-     &                      + psi_tt*dt**2/2
+           gb_yy_np1(i)=gb_yy_n(i) + gb_yy_t*dt
+     &                      + gb_yy_tt*dt**2/2
+!           psi_np1(i)  =psi_n(i) + psi_t*dt  !NOTE: !NOTE: add these when you add psi subsector
+!     &                      + psi_tt*dt**2/2
            Hb_t_np1(i) =Hb_t_n(i) + Hb_t_t*dt
            Hb_x_np1(i) =Hb_x_n(i) + Hb_x_t*dt     
            phi1_np1(i) =phi1_n(i) + phi1_t*dt
