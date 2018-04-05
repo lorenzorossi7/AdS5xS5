@@ -588,22 +588,22 @@ c----------------------------------------------------------------------
 
 !              write(*,*) 'x0,term1(1,1)=',x0,term1(1,1)
 
-              write(*,*) 'x0,tmp(1,1)=',x0,max(abs(efe(1,1)),
-     &                                         abs(efe(1,2)),
-     &                                         abs(efe(1,3)),
-     &                                         abs(efe(1,4)),
-     &                                         abs(efe(1,5)),
-     &                                         abs(efe(2,2)),
-     &                                         abs(efe(2,3)),
-     &                                         abs(efe(2,4)),
-     &                                         abs(efe(2,5)),
-     &                                         abs(efe(3,3)),
-     &                                         abs(efe(3,4)),
-     &                                         abs(efe(3,5)),
-     &                                         abs(efe(4,4)),
-     &                                         abs(efe(4,5)),
-     &                                         abs(efe(5,5)))
-
+!              write(*,*) 'x0,tmp(1,1)=',x0,max(abs(efe(1,1)),
+!     &                                         abs(efe(1,2)),
+!     &                                         abs(efe(1,3)),
+!     &                                         abs(efe(1,4)),
+!     &                                         abs(efe(1,5)),
+!     &                                         abs(efe(2,2)),
+!     &                                         abs(efe(2,3)),
+!     &                                         abs(efe(2,4)),
+!     &                                         abs(efe(2,5)),
+!     &                                         abs(efe(3,3)),
+!     &                                         abs(efe(3,4)),
+!     &                                         abs(efe(3,5)),
+!     &                                         abs(efe(4,4)),
+!     &                                         abs(efe(4,5)),
+!     &                                         abs(efe(5,5)))
+!
 !              do a=1,3
 !                do b=a,3
 !                  tmp(a,b)=-0.5d0*(
