@@ -974,7 +974,7 @@ c----------------------------------------------------------------------
      &          efe_J(3,3).eq.0) then
                 dump=.true.
               else
-                psi_np1(i)=psi_np1(i)-efe(3,3)/efe_J(3,3)
+                gb_yy_np1(i)=gb_yy_np1(i)-efe(3,3)/efe_J(3,3)
               end if
 
               ! update phi1, phi4 
