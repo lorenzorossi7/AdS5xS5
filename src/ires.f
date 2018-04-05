@@ -197,7 +197,7 @@ c----------------------------------------------------------------------
      &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
      &                        )/4
 
-                  efe_ires(a,b)=einstein_ll(a,b)+fterm(a,b)
+                  efe_ires(a,b)=ricci_ll(a,b)+fterm(a,b)
                 end do
               end do
 
