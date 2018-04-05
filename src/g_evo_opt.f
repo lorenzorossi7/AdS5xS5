@@ -455,31 +455,31 @@ c----------------------------------------------------------------------
      &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
      &
-                  term8(a,b)=-dimA*( (gA_xx(a,b) 
-     &                               -gamma_ull(1,b,a)*gA_x(1)
-     &                               -gamma_ull(2,b,a)*gA_x(2)
-     &                               -gamma_ull(3,b,a)*gA_x(3)
-     &                               )/(2*gA) 
-     &                             - (gA_x(a)*gA_x(b))/(4*gA**2) )
-     &                       -dimB*( (gB_xx(a,b) 
-     &                               -gamma_ull(1,b,a)*gB_x(1)
-     &                               -gamma_ull(2,b,a)*gB_x(2)
-     &                               -gamma_ull(3,b,a)*gB_x(3)
-     &                               )/(2*gB)
-     &                             - (gB_x(a)*gB_x(b))/(4*gB**2) )
-     &
-                  fterm(a,b)=-(f1_l(a)*f1_l(b)
-     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
-     &                        )/4
-     &
+!                  term8(a,b)=-dimA*( (gA_xx(a,b) 
+!     &                               -gamma_ull(1,b,a)*gA_x(1)
+!     &                               -gamma_ull(2,b,a)*gA_x(2)
+!     &                               -gamma_ull(3,b,a)*gA_x(3)
+!     &                               )/(2*gA) 
+!     &                             - (gA_x(a)*gA_x(b))/(4*gA**2) )
+!     &                       -dimB*( (gB_xx(a,b) 
+!     &                               -gamma_ull(1,b,a)*gB_x(1)
+!     &                               -gamma_ull(2,b,a)*gB_x(2)
+!     &                               -gamma_ull(3,b,a)*gB_x(3)
+!     &                               )/(2*gB)
+!     &                             - (gB_x(a)*gB_x(b))/(4*gB**2) )
+!     &
+!                  fterm(a,b)=-(f1_l(a)*f1_l(b)
+!     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+!     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+!     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+!     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+!     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+!     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+!     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+!     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+!     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+!     &                        )/4
+!     &
                   efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
      &                    +fterm(a,b)
@@ -756,36 +756,37 @@ c----------------------------------------------------------------------
      &                          )
 
               efe_J(3,3)=    -0.5d0*(
-     &                          x0**2*g0_uu(1,1)*ddgb_J
-     &                                        *(1-x0**2)
-     &                          +2*(2*x0-4*x0**3)*g0_uu(1,2)*dgb_J
-     &                                        *(1-x0**2)
-     &                          +2*x0**2*(1-x0**2)*g0_uu(1,2)*ddgb_J_tx
+     &                          g0_uu(1,1)*ddgb_J
+     &                                        *(1-x0**2)**3
+     &                          +2*(3*(-2*x0))*g0_uu(1,2)*dgb_J
+     &                                        *(1-x0**2)**2
+     &                          +2*g0_uu(1,2)*ddgb_J_tx
+     &                                        *(1-x0**2)**3
      &                              )
      &                    
      &                       -0.5d0*(
-     &                          +x0**2*dgb_J
+     &                          +dgb_J
      &                                      *(g0_uu_x(3,1,3))
-     &                                      *(1-x0**2)
+     &                                      *(1-x0**2)**3
      &                              )
      &                    
      &                       -0.5d0*(
-     &                          +x0**2*dgb_J
+     &                          +dgb_J
      &                                      *(g0_uu_x(3,1,3))
-     &                                      *(1-x0**2)
+     &                                      *(1-x0**2)**3
      &                              )
      &
      &                       +      (
-     &                          -0.5d0*x0**2*dgb_J
-     &                                      *(1-x0**2)*
+     &                          -0.5d0*dgb_J
+     &                                      *(1-x0**2)**3*
      &                          ((Hads_l(1)+A_l(1))*g0_uu(1,1)+
      &                           (Hads_l(2)+A_l(2))*g0_uu(2,1)+
      &                           (Hads_l(3)+A_l(3))*g0_uu(3,1))
      &                              )  
      &                    
      &                       -      (
-     &                          0.25d0*x0**2*dgb_J
-     &                                      *(1-x0**2)*
+     &                          0.25d0*dgb_J
+     &                                      *(1-x0**2)**3*
      &                          (cuuuu(1,3,1,1)*dlll(1,3,1)+
      &                           cuuuu(1,3,1,2)*dlll(1,3,2)+
      &                           cuuuu(1,3,1,3)*dlll(1,3,3)+
