@@ -984,9 +984,9 @@ c----------------------------------------------------------------------
 
         ! give values to the field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f1_l(1)   =          fb_t0
-        f1_l(2)   =          fb_x0
-        f1_l(3)   =f1_y_ads0+fb_y0
+        f1_l(1)   =0        !+fb_t0
+        f1_l(2)   =0        !+fb_x0 !NOTE: add this when you add f evolution
+        f1_l(3)   =f1_y_ads0!+fb_y0
 !        do a=1,3
 !          do b=1,3
 !            fb_tx0=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !check that this is zero for pure
@@ -994,9 +994,9 @@ c----------------------------------------------------------------------
 !            fb_xy0=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)
 !          end do
 !        end do
-        f2_ll(1,2)=f2_tx_ads0+fb_tx0 
-        f2_ll(1,3)=           fb_ty0
-        f2_ll(2,3)=           fb_xy0
+        f2_ll(1,2)=f2_tx_ads0!+fb_tx0 
+        f2_ll(1,3)=0         !+fb_ty0 !NOTE: add this when you add f evolution
+        f2_ll(2,3)=0         !+fb_xy0
 
         ! give values to the ads field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do) 
