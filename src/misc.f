@@ -490,7 +490,7 @@ c----------------------------------------------------------------------
         gA_ads0=x0**2/(1-x0)**2
 
         ! set gBads values
-        gB_ads0=L**2*PI*sin(PI*y0/L)**2
+        gB_ads0=L**2*sin(PI*y0/L)**2
 
         ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
