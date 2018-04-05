@@ -789,6 +789,13 @@ c----------------------------------------------------------------------
      &            +omega0*6*(-1+6*x0**2-5*x0**4)
         gB_xx(3,3)=gB_ads_yy  !NOTE: add the rest of the terms when you add y-dependence
 
+        do a=1,2
+          do b=a+1,3
+            gA_xx(b,a)=gA_xx(a,b)
+            gB_xx(b,a)=gB_xx(a,b)
+          end do
+        end do
+
         ! give values to the ads metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         gads_ll(1,1)=g0_tt_ads0
