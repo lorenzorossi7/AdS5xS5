@@ -44,6 +44,7 @@ c----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0)
         real*8 dx
 
+        integer dimA,dimB
         integer max_ghost_width
 
         real*8 boxx_u(3),boxx_l(3)
@@ -132,7 +133,7 @@ c----------------------------------------------------------------------
         real*8 efe(3,3),efe_J(3,3)
         real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
         real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
-        real*8 term9(3,3)
+        real*8 fterm(3,3)
         real*8 cuuuu(3,3,3,3),dlll(3,3,3)
  
         real*8 alpha,ndotc,n_l(3),n_u(3),c_l(3)
@@ -194,7 +195,7 @@ c----------------------------------------------------------------------
         data term3,term4/9*0.0,9*0.0/
         data term5,term6/9*0.0,9*0.0/
         data term7,term8/9*0.0,9*0.0/
-        data term9/9*0.0/
+        data fterm/9*0.0/
 
         data efe,efe_J/9*0.0,9*0.0/
         data cd_ll,cd_J_ll/9*0.0,9*0.0/
@@ -251,6 +252,10 @@ c----------------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
 
         dx=x(2)-x(1)
+
+        ! set dimensions of S3 and S4 subspaces
+        dimA=3
+        dimB=4
 
         ! initialize output variables
         do i=1,Nx
@@ -372,7 +377,7 @@ c----------------------------------------------------------------------
               ! Included pure AdS terms in the EFEs,
               ! efe_ab =   term1_ab + term2_ab + term3_ab + term4_ab 
               !          + term5_ab + term6_ab + term7_ab + term8_ab 
-              !          + term9_ab
+              !          + fterm_ab
               ! for
               ! 
               ! term1_ab = -1/2 g^cd g_ab,cd  
@@ -384,7 +389,7 @@ c----------------------------------------------------------------------
               ! term7_ab = -G^c_db G^d_ca
               ! term8_ab = -dimA*( (gA_,ab - G^c_ba gA_,c)/(2 gA) - (gA_,a gA_,b)/(4 gA^2) )
               !            -dimB*( (gB_,ab - G^c_ba gB_,c)/(2 gB) - (gB_,a gB_,b)/(4 gB^2) )
-              ! term9_ab = -(f1_a f1_b + g^cd f2_ac f2_bd)/4
+              ! fterm_ab = -(f1_a f1_b + g^cd f2_ac f2_bd)/4
               !
               ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
               !
@@ -449,12 +454,35 @@ c----------------------------------------------------------------------
      &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
      &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
-                  term8(a,b)=0
-                  term9(a,b)=0
+     &
+                  term8(a,b)=-dimA*( (gA_xx(a,b) 
+     &                               -gamma_ull(1,b,a)*gA_x(1)
+     &                               -gamma_ull(2,b,a)*gA_x(2)
+     &                               -gamma_ull(3,b,a)*gA_x(3)
+     &                               )/(2*gA) 
+     &                             - (gA_x(a)*gA_x(b))/(4*gA**2) )
+     &                       -dimB*( (gB_xx(a,b) 
+     &                               -gamma_ull(1,b,a)*gB_x(1)
+     &                               -gamma_ull(2,b,a)*gB_x(2)
+     &                               -gamma_ull(3,b,a)*gB_x(3)
+     &                               )/(2*gB)
+     &                             - (gB_x(a)*gB_x(b))/(4*gB**2) )
+     &
+                  fterm(a,b)=-(f1_l(a)*f1_l(b)
+     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                        )/4
      &
                   efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
-     &                    +term9(a,b)
+     &                    +fterm(a,b)
 
                 end do
               end do

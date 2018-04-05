@@ -30,6 +30,7 @@ c----------------------------------------------------------------------
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
 
+        integer dimA,dimB
         integer is,ie
         integer a,b,c,d,e,f,g,h
 
@@ -44,6 +45,8 @@ c----------------------------------------------------------------------
         real*8 zeros(Nx)
 
         real*8 efe_ires(3,3)
+
+        real*8 fterm(3,3)
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -85,6 +88,8 @@ c----------------------------------------------------------------------
         data a,b,c,d,e,f,g,h/0,0,0,0,0,0,0,0/
 
         data dx/0.0/
+
+        data fterm/9*0.0/
 
         data phi1_t,phi1_x,phi1_y/0.0,0.0,0.0/
         data phi1_tt,phi1_tx,phi1_ty,phi1_tz/0.0,0.0,0.0,0.0/
@@ -131,6 +136,10 @@ c----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
 
+        ! set dimensions of S3 and S4 subspaces
+        dimA=3
+        dimB=4
+
         ! initialize 
         do i=1,Nx
           zeros(i)=0
@@ -176,7 +185,19 @@ c----------------------------------------------------------------------
               !(efe_ires_ab=G_ab+fterm_ab)
               do a=1,3
                 do b=a,3
-                  efe_ires(a,b)=einstein_ll(a,b)+0
+                  fterm(a,b)=-(f1_l(a)*f1_l(b)
+     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                        )/4
+
+                  efe_ires(a,b)=einstein_ll(a,b)+fterm(a,b)
                 end do
               end do
 
