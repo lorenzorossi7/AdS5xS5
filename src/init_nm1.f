@@ -36,8 +36,6 @@ c----------------------------------------------------------------------
 
         real*8 x(Nx)
 
-        real*8 tr_set
-
         logical is_nan
 
         !--------------------------------------------------------------
@@ -57,7 +55,6 @@ c----------------------------------------------------------------------
 
         real*8 x0
 
-        integer dimA,dimB
         integer i,is,ie
         integer a,b,c,d
 
@@ -88,7 +85,7 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
-        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 f1_l(3),f2_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
@@ -118,7 +115,7 @@ c----------------------------------------------------------------------
 
         data ricci/0.0/
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
-        data einstein_ll,set_ll/9*0.0,9*0.0/
+        data s0_ll,t0_ll/9*0.0,9*0.0/
         data f1_l,f2_ll/3*0.0,9*0.0/
         data riemann_ulll/81*0.0/
 
@@ -138,10 +135,6 @@ c----------------------------------------------------------------------
         !---------------------------------------------------------------
 
         dx=x(2)-x(1)
-
-        ! set dimensions of S3 and S4 subspaces
-        dimA=3
-        dimB=4
 
         do i=1,Nx
           phi1_nm1(i)=phi1_n(i)
@@ -181,16 +174,9 @@ c----------------------------------------------------------------------
      &            A_l,A_l_x,Hads_l,Hads_l_x,
      &            gamma_ull,gamma_ull_x,
      &            riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &            einstein_ll,set_ll,f1_l,f2_ll,
+     &            s0_ll,t0_ll,f1_l,f2_ll,
      &            phi10_x,phi10_xx,
      &            x,dt,chr,L,ex,Nx,i)
-
-          tr_set =set_ll(1,1)*g0_uu(1,1)+
-     &            set_ll(2,2)*g0_uu(2,2)+
-     &            set_ll(3,3)*g0_uu(3,3)+
-     &         2*(set_ll(1,2)*g0_uu(1,2)+
-     &            set_ll(1,3)*g0_uu(1,3)+
-     &            set_ll(2,3)*g0_uu(2,3))
 
           ! initial first time derivatives; gb_ii_t_n,Hb_i_t_n,phi1_t_n were set in AdS5xS5_free_data()
 
@@ -291,30 +277,9 @@ c----------------------------------------------------------------------
      &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                            )
      & 
-     &                       -dimA*( (gA_xx(a,b)
-     &                               -gamma_ull(1,b,a)*gA_x(1)
-     &                               -gamma_ull(2,b,a)*gA_x(2)
-     &                               -gamma_ull(3,b,a)*gA_x(3)
-     &                               )/(2*gA)
-     &                             - (gA_x(a)*gA_x(b))/(4*gA**2) )
-     &                       -dimB*( (gB_xx(a,b)
-     &                               -gamma_ull(1,b,a)*gB_x(1)
-     &                               -gamma_ull(2,b,a)*gB_x(2)
-     &                               -gamma_ull(3,b,a)*gB_x(3)
-     &                               )/(2*gB)
-     &                             - (gB_x(a)*gB_x(b))/(4*gB**2) )
+     &                       +s0_ll(a,b)
      &
-     &                       -(f1_l(a)*f1_l(b)
-     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
-     &                        )/4
+     &                       +t0_ll(a,b)
      &            )
             end do
           end do          

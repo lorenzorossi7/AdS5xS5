@@ -363,7 +363,7 @@ c----------------------------------------------------------------------
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &                  einstein_ll,set_ll,f1_l,f2_ll,
+     &                  s0_ll,t0_ll,f1_l,f2_ll,
      &                  phi10_x,phi10_xx,
      &                  x,dt,chr,L,ex,Nx,i)
         implicit none
@@ -397,6 +397,8 @@ c----------------------------------------------------------------------
 
         real*8 grad_phi1_sq
 
+        integer dimA,dimB
+
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
         !(indices are t,x,y,psi,omega)
@@ -414,14 +416,13 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
-        real*8 einstein_ll(3,3),set_ll(3,3)
+        real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
         real*8 f1_l(3),f2_ll(3,3)
         !NOTE: below I have implemented direct calculation
-        real*8 f_lllll(10,10,10,10,10)
         real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
-        real*8 g1_ll(5,5),g1_uu(5,5),set_tmp(5,5),r0,r_h,x_h,delta0
+        real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
 
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
@@ -474,6 +475,10 @@ c----------------------------------------------------------------------
 
         x0=x(i)
         y0=L/2  !NOTE: change this to y0=y(j) when we add y-dependence
+
+        ! set dimensions of S3 and S4 subspaces
+        dimA=3
+        dimB=4
 
         ! set gads values using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
@@ -1082,9 +1087,9 @@ c----------------------------------------------------------------------
         !(R_bd = R^a_bad)
         do b=1,3
           do d=1,3
-            ricci_ll(b,d)=0
+            riccibar_ll(b,d)=0
             do a=1,3
-              ricci_ll(b,d)=ricci_ll(b,d)+riemann_ulll(a,b,a,d)
+              riccibar_ll(b,d)=riccibar_ll(b,d)+riemann_ulll(a,b,a,d)
             end do
           end do
         end do
@@ -1093,28 +1098,21 @@ c----------------------------------------------------------------------
         !(R_a^b = R_ad g^db)
         do a=1,3
           do b=1,3
-            ricci_lu(a,b)=0
+            riccibar_lu(a,b)=0
             do d=1,3
-              ricci_lu(a,b)=ricci_lu(a,b)+ricci_ll(a,d)*g0_uu(d,b)
+              riccibar_lu(a,b)=riccibar_lu(a,b)
+     &                        +riccibar_ll(a,d)*g0_uu(d,b)
             end do
           end do
         end do
 
         ! calculate Ricci scalar
         !(R = R_a^a)
-        ricci=0
+        riccibar=0
         do a=1,3
-          ricci=ricci+ricci_lu(a,a)
+          riccibar=riccibar+riccibar_lu(a,a)
         end do
   
-        ! calculates Einstein tensor at point i
-        !(G_ab = R_ab - 1/2 R g_ab)
-        do a=1,3
-          do b=1,3
-            einstein_ll(a,b)=ricci_ll(a,b)-0.5d0*ricci*g0_ll(a,b)
-          end do
-        end do
-
         ! calculates stress-energy tensor at point i 
         !(T_ab = 2*phi1,a phi1,b - (phi1,c phi1,d) g^cd g_ab + ...)
         grad_phi1_sq=0
@@ -1125,72 +1123,37 @@ c----------------------------------------------------------------------
           end do
         end do
 
+        ! calculate s0_ll,t0_ll,ricci_ll
         do a=1,3
           do b=1,3
-            set_ll(a,b)=
-     &            phi10_x(a)*phi10_x(b)
-     &           -g0_ll(a,b)*(grad_phi1_sq/2)
+            s0_ll(a,b)=-dimA*( (gA_xx(a,b)
+     &                         -gamma_ull(1,b,a)*gA_x(1)
+     &                         -gamma_ull(2,b,a)*gA_x(2)
+     &                         -gamma_ull(3,b,a)*gA_x(3)
+     &                         )/(2*gA)
+     &                       - (gA_x(a)*gA_x(b))/(4*gA**2) )
+     &                 -dimB*( (gB_xx(a,b)
+     &                         -gamma_ull(1,b,a)*gB_x(1)
+     &                         -gamma_ull(2,b,a)*gB_x(2)
+     &                         -gamma_ull(3,b,a)*gB_x(3)
+     &                         )/(2*gB)
+     &                       - (gB_x(a)*gB_x(b))/(4*gB**2) )
+
+            t0_ll(a,b)=-(f1_l(a)*f1_l(b)
+     &                  +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                  +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                  +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                  +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                  +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                  +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                  +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                  +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                  +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                  )/4
+
+            ricci_ll(a,b)=riccibar_ll(a,b)+s0_ll(a,b)
           end do
         end do
-
-        ! NOTE: TEMPORARY CHECK FOR BH INITIAL DATA WITH r0=0.5
-        r0=0.5d0
-        r_h=L*sqrt(2*sqrt(1+4*(r0/L)**2)-2)/2
-        x_h=r_h/(1+r_h)
-        delta0=((1-x0)**5/(1-x_h)**5
-     &         /(1+x0**2/(1-x0)**2-r0**2*(1-x0)**2/x0**2)/(1-x0)**2)
-        g1_ll(1,1)=-((1-x0)**2+x0**2-r0**2*(1-x0)**4/x0**2)/(1-x0)**2 
-        g1_ll(1,2)=0
-        g1_ll(2,2)=1/((1-x0)**2+x0**2-r0**2*(1-x0)**4/x0**2)/(1-x0)**2 
-        g1_ll(3,3)=x0**2/(1-x0)**2 
-        g1_ll(4,4)=x0**2/(1-x0)**2
-        g1_ll(5,5)=x0**2/(1-x0)**2
-        g1_uu(1,1)=
-     &          (g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        g1_uu(1,2)=
-     &         (-g1_ll(1,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        g1_uu(2,2)=
-     &          (g1_ll(1,1)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        g1_uu(3,3)=
-     &          (g1_ll(1,1)*g1_ll(2,2)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(4,4)*g1_ll(5,5))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        g1_uu(4,4)=
-     &          (g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(5,5))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        g1_uu(5,5)=
-     &          (g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4))
-     &         /(g1_ll(1,1)*g1_ll(2,2)*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5)
-     &                  -g1_ll(1,2)**2*g1_ll(3,3)*g1_ll(4,4)*g1_ll(5,5))
-        set_tmp(1,1)=
-     &  g1_uu(2,2)*g1_uu(3,3)*g1_uu(4,4)*g1_uu(5,5)
-     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-        set_tmp(2,2)=
-     &  g1_uu(1,1)*g1_uu(3,3)*g1_uu(4,4)*g1_uu(5,5)
-     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-        set_tmp(3,3)=
-     &  g1_uu(1,1)*g1_uu(2,2)*g1_uu(4,4)*g1_uu(5,5)
-     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-        set_tmp(4,4)=
-     &  g1_uu(1,1)*g1_uu(2,2)*g1_uu(3,3)*g1_uu(5,5)
-     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-        set_tmp(5,5)=
-     &  g1_uu(1,1)*g1_uu(2,2)*g1_uu(3,3)*g1_uu(4,4)
-     &  *f_lllll(1,2,3,4,5)*f_lllll(1,2,3,4,5)/32.0d0/PI*(-3.0d0/2.0d0)
-        set_ll(1,1)=set_tmp(1,1)
-        set_ll(1,2)=-set_tmp(1,1)*delta0
-        set_ll(2,2)=set_tmp(2,2)+set_tmp(1,1)*delta0**2
-        set_ll(3,3)=set_tmp(3,3)
 
         return
         end
