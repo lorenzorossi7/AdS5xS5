@@ -1047,7 +1047,7 @@ c----------------------------------------------------------------------
 
         ! (REGION) x=0; impose regularity conditions 
         call axi_reg_Hb(Hb_t_np1,Hb_x_np1,chr,ex,L,x,Nx)
-        call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_xx_np1,
+        call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_xx_np1,gb_yy_np1,
      &                 omega_np1,psi_np1,chr,ex,L,x,Nx)
         call axi_reg_phi(phi1_np1,chr,ex,L,x,Nx)
 

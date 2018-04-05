@@ -38,11 +38,12 @@ c
 c applies regularity conditions for the metric
 c----------------------------------------------------------------------
 
-        subroutine axi_reg_g(gb_tt,gb_tx,gb_xx,psi,omega,chr,ex,L,x,Nx)
+        subroutine axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
+     &                       chr,ex,L,x,Nx)
         implicit none
         integer Nx
         integer regtype
-        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),psi(Nx),omega(Nx)
+        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),gb_yy(Nx),psi(Nx),omega(Nx)
         real*8 chr(Nx),ex,L
         real*8 x(Nx)
 
@@ -57,9 +58,13 @@ c----------------------------------------------------------------------
         if (chr(1).ne.ex) then
 
           if (chr(1).ne.ex .and. chr(2).ne.ex .and .chr(3).ne.ex) then
+!            gb_tt(1)=(4*gb_tt(2)-gb_tt(3))/3                            !gbtt,x=0 at x=0 
+!            gb_xx(1)=-(4*gb_xx(2)-gb_xx(3))/3 + 2*(4*psi(2)-psi(3))/3   !gbxx,x=2*psi,x at x=0, substituting in psi=gbxx at x=0
+!            psi(1)=gb_xx(1)                                             !psi=gbxx at x=0
+!            gb_tx(1)=0                                                  !gbtx=0 at x=0
             gb_tt(1)=(4*gb_tt(2)-gb_tt(3))/3                            !gbtt,x=0 at x=0 
-            gb_xx(1)=-(4*gb_xx(2)-gb_xx(3))/3 + 2*(4*psi(2)-psi(3))/3   !gbxx,x=2*psi,x at x=0, substituting in psi=gbxx at x=0
-            psi(1)=gb_xx(1)                                             !psi=gbxx at x=0
+            gb_xx(1)=(4*gb_xx(2)-gb_xx(3))/3                            !gbxx,x=0 at x=0
+            gb_yy(1)=(4*gb_yy(2)-gb_yy(3))/3                            !gbyy,x=0 at x=0
             gb_tx(1)=0                                                  !gbtx=0 at x=0
           else
             write(*,*) 'WARNING axi_reg_g, dx=',dx

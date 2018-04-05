@@ -272,10 +272,11 @@ c----------------------------------------------------------------------
 c initializes the metric to an exact black hole solution
 c with radius parameter r0
 c----------------------------------------------------------------------
-        subroutine init_schw(gb_tt,gb_tx,gb_xx,psi,r0,
-     &                       L,phys_bdy,chr,ex,x,Nx)
+        subroutine init_schw(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
+     &                       r0,L,phys_bdy,chr,ex,x,Nx)
         implicit none
-        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx),psi(Nx)
+        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx)
+        real*8 gb_yy(Nx),psi(Nx),omega(Nx)
         real*8 chr(Nx),x(Nx)
         real*8 r0,ex,L
         integer phys_bdy(2)
@@ -318,8 +319,9 @@ c----------------------------------------------------------------------
      &        ((1 + x0)*(L**2*(-1 + x0)**2 + x0**2)*
      &        (-x0**4 + L**2*(-1 + x0)**2*(r0**2*(-1 + x0)**2 - x0**2))*
      &        (-1 + x_h)**10)) 
-
-              psi(i)=0
+              gb_yy(i)=0
+              psi(i)  =0
+              omega(i)=0
 
 !              ! Schwarzschild coordinates (WARNING: not horizon-penetrating)
 !              gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
@@ -335,7 +337,7 @@ c----------------------------------------------------------------------
         end do
 
         ! (REGION) x=0; impose regularity conditions 
-        call axi_reg_g(gb_tt,gb_tx,gb_xx,psi,chr,ex,L,x,Nx)
+        call axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,chr,ex,L,x,Nx)
 
         return
         end

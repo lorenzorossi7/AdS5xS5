@@ -88,6 +88,7 @@ c----------------------------------------------------------------------
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -105,6 +106,7 @@ c----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
+        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
@@ -188,6 +190,7 @@ c-----------------------------------------------------------------------
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -206,6 +209,7 @@ c-----------------------------------------------------------------------
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
+        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)

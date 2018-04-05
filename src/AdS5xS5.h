@@ -160,6 +160,7 @@ void axi_reg_phi_(real *phi1, real *chr, real *ex, real *AdS_L, real *x, int *Nx
 void init_nm1_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1, real *gb_tt_t_n,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1, real *gb_tx_t_n,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1, real *gb_xx_t_n,
+               real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1, real *gb_yy_t_n,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1, real *Hb_t_t_n,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1, real *Hb_x_t_n,
                real *psi_np1, real *psi_n, real *psi_nm1, real *psi_t_n,
@@ -174,6 +175,7 @@ void ires_(real *efe_all_ires,real *kg_ires,
            real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
            real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
            real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
+           real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
            real *psi_np1, real *psi_n, real *psi_nm1,
            real *omega_np1, real *omega_n, real *omega_nm1,
            real *phi1_np1, real *phi1_n, real *phi1_nm1,
@@ -196,6 +198,7 @@ void hb_t_evo_(real *res,
                real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
+               real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *omega_np1, real *omega_n, real *omega_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
@@ -210,6 +213,7 @@ void hb_i_evo_(real *res,
                real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
+               real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *omega_np1, real *omega_n, real *omega_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
@@ -220,10 +224,10 @@ void hb_i_evo_(real *res,
                real *Hb_t_0, real *Hb_x_0,
                int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2);
 
-void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_xx, real *psi, real *omega, real* rhoa, real* rhob,
+void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_xx, real *gb_yy, real *psi, real *omega, real* rhoa, real* rhob,
                real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, int *Nx);
 
-void init_schw(real *gb_tt, real *gb_tx, real *gb_xx, real *psi, real *ief_bh_r0, 
-               real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, int *Nx);
+void init_schw(real *gb_tt, real *gb_tx, real *gb_xx, real *gb_yy, real *psi, real *omega,
+               real *ief_bh_r0, real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, int *Nx);
 
 #endif
