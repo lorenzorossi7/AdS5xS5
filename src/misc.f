@@ -418,7 +418,6 @@ c----------------------------------------------------------------------
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
         real*8 f1_l(3),f2_ll(3,3)
-        real*8 f1ads_l(3),f2ads_ll(3,3)
         !NOTE: below I have implemented direct calculation
         real*8 f_lllll(10,10,10,10,10)
         real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
@@ -491,7 +490,7 @@ c----------------------------------------------------------------------
         ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
         f1_y_ads0  = 4/L*PI*sin(PI*y0/L)**4
-        f2_tx_ads0 = 4/L/(1-x0)**2
+        f2_tx_ads0 = -4/L/(1-x0)**2
 
         ! set gbar values
         gb_tt0=gb_tt_n(i)
@@ -998,10 +997,11 @@ c----------------------------------------------------------------------
         f2_ll(1,3)=0         !+fb_ty0 !NOTE: add this when you add f evolution
         f2_ll(2,3)=0         !+fb_xy0
 
-        ! give values to the ads field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
-        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do) 
-        f1ads_l(3)   =f1_y_ads0
-        f2ads_ll(1,2)=f2_tx_ads0
+        do a=1,2
+          do b=a+1,3
+            f2_ll(b,a)=-h0_ll(a,b)
+          end do
+        end do
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
