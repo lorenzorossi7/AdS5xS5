@@ -185,19 +185,7 @@ c----------------------------------------------------------------------
               !(efe_ires_ab=G_ab+fterm_ab)
               do a=1,3
                 do b=a,3
-                  fterm(a,b)=-(f1_l(a)*f1_l(b)
-     &                        +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-     &                        +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-     &                        +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-     &                        +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-     &                        +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-     &                        +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-     &                        +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-     &                        +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-     &                        +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
-     &                        )/4
-
-                  efe_ires(a,b)=ricci_ll(a,b)+fterm(a,b)
+                  efe_ires(a,b)=ricci_ll(a,b)+t0_ll(a,b)
                 end do
               end do
 
