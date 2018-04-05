@@ -490,7 +490,7 @@ c----------------------------------------------------------------------
         ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
         f1_y_ads0  = 4/L*PI*sin(PI*y0/L)**4
-        f2_tx_ads0 = -4/L/(1-x0)**2
+        f2_tx_ads0 = 4/L/(1-x0)**2
 
         ! set gbar values
         gb_tt0=gb_tt_n(i)
