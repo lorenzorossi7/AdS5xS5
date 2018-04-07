@@ -413,6 +413,12 @@ c----------------------------------------------------------------------
         real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
         real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
 
+        real*8 efe(3,3),efest(3,3)
+        real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
+        real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
+        real*8 term9(3,3)
+        real*8 efe_norm,efest_norm
+
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
         ! level variables, and as these are the only derivatives we
@@ -1141,6 +1147,98 @@ c----------------------------------------------------------------------
             ricci_ll(a,b)=riccibar_ll(a,b)+s0_ll(a,b)
           end do
         end do
+
+!!TEST!
+!              do a=1,3
+!                do b=a,3
+!
+!                  term1(a,b)=-0.5d0*(
+!     &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
+!     &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
+!     &                          g0_uu(3,3)*g0_ll_xx(a,b,3,3)+
+!     &                       2*(g0_uu(1,2)*g0_ll_xx(a,b,1,2)+
+!     &                          g0_uu(1,3)*g0_ll_xx(a,b,1,3)+
+!     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3))
+!     &                              )
+!     &
+!                  term2(a,b)=-0.5d0*(
+!     &                          g0_uu_x(1,1,a)* g0_ll_x(b,1,1) +
+!     &                          g0_uu_x(1,2,a)*(g0_ll_x(b,1,2) +
+!     &                                          g0_ll_x(b,2,1))+
+!     &                          g0_uu_x(1,3,a)*(g0_ll_x(b,1,3) +
+!     &                                          g0_ll_x(b,3,1))+
+!     &                          g0_uu_x(2,2,a)* g0_ll_x(b,2,2) +
+!     &                          g0_uu_x(2,3,a)*(g0_ll_x(b,2,3) +
+!     &                                          g0_ll_x(b,3,2))+
+!     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3)
+!     &                            )
+!     &
+!                  term3(a,b)=-0.5d0*(
+!     &                          g0_uu_x(1,1,b)* g0_ll_x(a,1,1) +
+!     &                          g0_uu_x(1,2,b)*(g0_ll_x(a,1,2) +
+!     &                                          g0_ll_x(a,2,1))+
+!     &                          g0_uu_x(1,3,b)*(g0_ll_x(a,1,3) +
+!     &                                          g0_ll_x(a,3,1))+
+!     &                          g0_uu_x(2,2,b)* g0_ll_x(a,2,2) +
+!     &                          g0_uu_x(2,3,b)*(g0_ll_x(a,2,3) +
+!     &                                          g0_ll_x(a,3,2))+
+!     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3)
+!     &                            )
+!     &
+!                  term4(a,b)=-0.5d0*(Hads_l_x(a,b)+A_l_x(a,b))
+!     &
+!                  term5(a,b)=-0.5d0*(Hads_l_x(b,a)+A_l_x(b,a))
+!     &
+!                  term6(a,b)=     (
+!     &                          (Hads_l(1)+A_l(1))*gamma_ull(1,a,b)+
+!     &                          (Hads_l(2)+A_l(2))*gamma_ull(2,a,b)+
+!     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)
+!     &                            )
+!     &
+!                  term7(a,b)=    -(
+!     &                          gamma_ull(1,1,b)*gamma_ull(1,1,a)+
+!     &                          gamma_ull(1,2,b)*gamma_ull(2,1,a)+
+!     &                          gamma_ull(1,3,b)*gamma_ull(3,1,a)+
+!     &                          gamma_ull(2,1,b)*gamma_ull(1,2,a)+
+!     &                          gamma_ull(2,2,b)*gamma_ull(2,2,a)+
+!     &                          gamma_ull(2,3,b)*gamma_ull(3,2,a)+
+!     &                          gamma_ull(3,1,b)*gamma_ull(1,3,a)+
+!     &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
+!     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
+!     &                            )
+!     &
+!                  term8(a,b)=s0_ll(a,b)
+!     &
+!                  term9(a,b)=t0_ll(a,b)
+!     &
+!                  efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
+!     &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
+!     &                    +term9(a,b)
+!     &
+!                  efest(a,b)=riccibar_ll(a,b)+s0_ll(a,b)+t0_ll(a,b)
+!
+!                end do
+!              end do
+!
+!              efe_norm=
+!     &        max(abs(efe(1,1)),abs(efe(1,2)),
+!     &            abs(efe(2,2)),abs(efe(3,3)))
+!              efest_norm=
+!     &        max(abs(efest(1,1)),abs(efest(1,2)),
+!     &            abs(efest(2,2)),abs(efest(3,3)))
+!
+!!TEST!
+!        if (x0.eq.0.5d0) then
+!          write(*,*) 'efe_norm=',efe_norm
+!          write(*,*) 'efest_norm=',efest_norm
+!          write(*,*) 'g0_ll_x(2,2,1)=',g0_ll_x(2,2,1)
+!          write(*,*) 'g0_ll_xx(2,2,1,1)=',g0_ll_xx(2,2,1,1)
+!          write(*,*) 'riccibar_ll(1,1)=',riccibar_ll(1,1)
+!          write(*,*) 'riccibar_ll(1,2)=',riccibar_ll(1,2)
+!          write(*,*) 'riccibar_ll(2,2)=',riccibar_ll(2,2)
+!          write(*,*) 'riccibar_ll(3,3)=',riccibar_ll(3,3)
+!        end if
+!!TEST!
 
         return
         end

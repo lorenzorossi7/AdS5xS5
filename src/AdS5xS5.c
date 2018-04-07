@@ -751,27 +751,29 @@ void AdS5xS5_t0_cnst_data(void)
               Hb_t_n,Hb_x_n,
               &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
 
-//     init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
-//               gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
-//               gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
-//               gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
-//               psi_np1,psi_n,psi_nm1,psi_t_n,
-//               omega_np1,omega_n,omega_nm1,omega_t_n,
-//               Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
-//               Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
-//               phi1_np1,phi1_n,phi1_nm1,phi1_t_n,
-//               &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
-     // straight copies 
-     for (i=0; i<size; i++)
-     {
-       gb_tt_np1[i]=gb_tt_nm1[i]=gb_tt[i];
-       gb_tx_np1[i]=gb_tx_nm1[i]=gb_tx[i];
-       gb_xx_np1[i]=gb_xx_nm1[i]=gb_xx[i];
-       gb_yy_np1[i]=gb_yy_nm1[i]=gb_yy[i];
-       psi_np1[i]=psi_nm1[i]=psi[i];
-       omega_np1[i]=omega_nm1[i]=omega[i];
-       phi1_np1[i]=phi1_nm1[i]=phi1[i];
-     }
+     init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
+               gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
+               gb_xx_np1,gb_xx_n,gb_xx_nm1,gb_xx_t_n,
+               gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
+               psi_np1,psi_n,psi_nm1,psi_t_n,
+               omega_np1,omega_n,omega_nm1,omega_t_n,
+               Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
+               Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
+               phi1_np1,phi1_n,phi1_nm1,phi1_t_n,
+               &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
+//     // straight copies 
+//     for (i=0; i<size; i++)
+//     {
+//       gb_tt_np1[i]=gb_tt_nm1[i]=gb_tt[i];
+//       gb_tx_np1[i]=gb_tx_nm1[i]=gb_tx[i];
+//       gb_xx_np1[i]=gb_xx_nm1[i]=gb_xx[i];
+//       gb_yy_np1[i]=gb_yy_nm1[i]=gb_yy[i];
+//       psi_np1[i]=psi_nm1[i]=psi[i];
+//       omega_np1[i]=omega_nm1[i]=omega[i];
+//       Hb_t_np1[i]=Hb_t_nm1[i]=Hb_t_n[i];
+//       Hb_x_np1[i]=Hb_x_nm1[i]=Hb_x_n[i];
+//       phi1_np1[i]=phi1_nm1[i]=phi1[i];
+//     }
      axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
      axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
      axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);

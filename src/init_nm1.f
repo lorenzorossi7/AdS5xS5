@@ -183,10 +183,10 @@ c----------------------------------------------------------------------
           ! need this in h0_ll_tt,phi10_tt calculations
           phi10_x(1)    =phi1_t_n(i)*(1-x0**2)**3   
           h0_ll_x(1,1,1)=gb_tt_t_n(i)*(1-x0**2)  
-          h0_ll_x(1,2,1)=gb_tx_t_n(i)*(1-x0**2)**2
+          h0_ll_x(1,2,1)=gb_tx_t_n(i)*(1-x0**2)
           h0_ll_x(2,2,1)=gb_xx_t_n(i)*(1-x0**2)  
           h0_ll_x(3,3,1)=gb_yy_t_n(i)*(1-x0**2)  
-          A_l_x(1,1)    =Hb_t_t_n(i)*(1-x0**2)**3
+          A_l_x(1,1)    =Hb_t_t_n(i)*(1-x0**2)**2
           A_l_x(2,1)    =Hb_x_t_n(i)*(1-x0**2)**2
 
           ! need this in gb_ii_nm1/np1,Hb_i_nm1/np1,phi1_nm1/np1 updates
