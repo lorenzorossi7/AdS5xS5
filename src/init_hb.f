@@ -168,8 +168,7 @@ c----------------------------------------------------------------------
      &                  boxx_u(3)*g0_ll(a,3)
             end do
 
-            ! here have \box{x}_a = Hads_a + e_a*H0_a, where
-            ! e_t=(1-x0^2)^2, e_x=(1-x0^2)^2 
+            ! here have \box{x}_a = Hads_a + (1-x0**2)**2*H0_a
             Hb_t_n(i)=(boxx_l(1)-Hads_l(1))/(1-x0**2)**2
             Hb_x_n(i)=(boxx_l(2)-Hads_l(2))/(1-x0**2)**2
 
