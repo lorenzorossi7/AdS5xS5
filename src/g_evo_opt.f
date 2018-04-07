@@ -509,8 +509,8 @@ c----------------------------------------------------------------------
               ! at excision surfaces that affect the cross-derivative tx
               ! (this is the only contribution, since the diag Jacobian is diff wrt. g_ij_np1)
               !---------------------------------------------------------------- 
-              dgb_J=1/2/dt
-              ddgb_J=1/dt/dt
+              dgb_J=1d0/2d0/dt
+              ddgb_J=1d0/dt/dt
 
               if (i.eq.1.or.(chr(i-1).eq.ex)) then
                  if (i.le.(Nx-3)
@@ -800,8 +800,8 @@ c----------------------------------------------------------------------
               ! at excision surfaces that affect the cross-derivative tx 
               ! (these are the only contributions, since the diag Jacobian is diff wrt. phi1_np1)
               !----------------------------------------------------------------
-              dphi1_J=1/2/dt
-              ddphi1_J=1/dt/dt
+              dphi1_J=1d0/2d0/dt
+              ddphi1_J=1d0/dt/dt
 
               if (i.eq.1.or.(chr(i-1).eq.ex)) then
                  if (i.le.(Nx-3)
@@ -892,7 +892,7 @@ c----------------------------------------------------------------------
      &            ( n_l(1)*g0_uu(1,1)*dgb_J*(1-x0**2)-(1+rho_cd)*
      &              g0_ll(1,1)*n_u(1)*0.5d0*g0_uu(1,1)*dgb_J*(1-x0**2) )
               cd_J_ll(1,2)=-kappa_cd*
-     &            ( n_l(1)*0.5d0*g0_uu(1,1)*dgb_J*(1-x0**2)-(1+rho_cd)*
+     &            ( n_l(1)*g0_uu(1,1)*dgb_J*(1-x0**2)-(1+rho_cd)*
      &              g0_ll(1,2)*n_u(2)*g0_uu(1,1)*dgb_J*(1-x0**2) )
               cd_J_ll(2,2)=-kappa_cd*
      &            ( 2*n_l(2)*g0_uu(1,2)*dgb_J*(1-x0**2)-(1+rho_cd)*
