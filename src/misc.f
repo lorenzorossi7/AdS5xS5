@@ -303,11 +303,11 @@ c----------------------------------------------------------------------
               ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
               gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
               gb_tx(i)=1/(1+x0)/(1-x_h)**4*(1-x0)
-              gb_xx(i)=-((L**2*(-1 + x0)*((-1 + x0)**4*x0**4 + 
-     &        L**2*((-1 + x0)**6*x0**2 - r0**2*(-1 + x_h)**8)))/
+              gb_xx(i)=-((L**2*(-1 + x0)*((-1 + x0)**6*x0**4 + 
+     &        L**2*((-1 + x0)**8*x0**2 - r0**2*(-1 + x_h)**10)))/
      &        ((1 + x0)*(L**2*(-1 + x0)**2 + x0**2)*
      &        (-x0**4 + L**2*(-1 + x0)**2*(r0**2*(-1 + x0)**2 - x0**2))*
-     &        (-1 + x_h)**8)) 
+     &        (-1 + x_h)**10)) 
               gb_yy(i)=0
               psi(i)  =0
               omega(i)=0
@@ -570,7 +570,7 @@ c----------------------------------------------------------------------
         ! give values to the metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
-        g0_ll(1,2)=           gb_tx0*(1-x0**2)
+        g0_ll(1,2)=           gb_tx0*(1-x0**2)**2
         !g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
         g0_ll(3,3)=g0_yy_ads0+gb_yy0*(1-x0**2)*x0**2
@@ -635,20 +635,20 @@ c----------------------------------------------------------------------
      &                   +gb_tt0*(-2)
 
         g0_ll_x(1,2,1)   =0
-     &                   +gb_tx_t*(1-x0**2)
+     &                   +gb_tx_t*(1-x0**2)**2
         g0_ll_x(1,2,2)   =0
-     &                   +gb_tx_x*(1-x0**2)
-     &                   +gb_tx0*(-2*x0)
+     &                   +gb_tx_x*(1-x0**2)**2
+     &                   +gb_tx0*2*(1-x0**2)*(-2*x0)
         g0_ll_xx(1,2,1,1)=0
-     &                   +gb_tx_tt*(1-x0**2)
+     &                   +gb_tx_tt*(1-x0**2)**2
         g0_ll_xx(1,2,1,2)=0
-     &                   +gb_tx_tx*(1-x0**2)
-     &                   +gb_tx_t*(-2*x0)
+     &                   +gb_tx_tx*(1-x0**2)**2
+     &                   +gb_tx_t*2*(1-x0**2)*(-2*x0)
         g0_ll_xx(1,2,2,2)=0
-     &                   +gb_tx_xx*(1-x0**2)
-     &                   +gb_tx_x*(-2*x0)
-     &                   +gb_tx_x*(-2*x0)
-     &                   +gb_tx0*(-2)
+     &                   +gb_tx_xx*(1-x0**2)**2
+     &                   +gb_tx_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_tx_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_tx0*2*(-2+6*x0**2)
 
 !        g0_ll_x(1,3,1)   =0                            !NOTE: add this when you add y-dependence
 !     &                   +gb_ty_t*(1-x0**2)**2
@@ -851,7 +851,7 @@ c----------------------------------------------------------------------
         ! give values to the metric deviation, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 will do)
         h0_ll(1,1)=gb_tt0*(1-x0**2)
-        h0_ll(1,2)=gb_tx0*(1-x0**2)
+        h0_ll(1,2)=gb_tx0*(1-x0**2)**2
         !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
         h0_ll(2,2)=gb_xx0*(1-x0**2)
         h0_ll(3,3)=gb_yy0*(1-x0**2)**3
@@ -910,12 +910,12 @@ c----------------------------------------------------------------------
         end do
 
         ! give values to the gh source functions
-        A_l(1)=Hb_t0*(1-x0**2)**2 
+        A_l(1)=Hb_t0*(1-x0**2)**3
         A_l(2)=Hb_x0*(1-x0**2)**2
 
-        A_l_x(1,1)=Hb_t_t*(1-x0**2)**2
-        A_l_x(1,2)=Hb_t_x*(1-x0**2)**2
-     &            -2*x0*2*(1-x0**2)*Hb_t0
+        A_l_x(1,1)=Hb_t_t*(1-x0**2)**3
+        A_l_x(1,2)=Hb_t_x*(1-x0**2)**3
+     &            -2*x0*3*(1-x0**2)**2*Hb_t0
 
         A_l_x(2,1)=Hb_x_t*(1-x0**2)**2
         A_l_x(2,2)=Hb_x_x*(1-x0**2)**2
