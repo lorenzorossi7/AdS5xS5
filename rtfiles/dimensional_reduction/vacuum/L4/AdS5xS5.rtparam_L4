@@ -4,7 +4,7 @@ AdS_L := 1.0
 #------ Initial Data -------------------------------------------------------
 
 #scalar field ID#
-phi1_amp_1 := 1.0
+phi1_amp_1 := 0.0
 phi1_r0_1 := 0.0
 phi1_delta_1 := 0.1
 phi1_x0_1 := [0.0]
@@ -27,7 +27,7 @@ phi1_A_3 := 0.0
 
 #general#
  
-ief_bh_r0 := 0
+ief_bh_r0 := 0.0
 skip_constraints := 0
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
@@ -54,7 +54,7 @@ ID_DV_trace := 0
 
 #------ grid/parallel/AMR parameters ---------------------------------------
 
-base_shape := [257]
+base_shape := [513]
 max_lev := 1
 lambda := 0.1
 rho_sp := 2
@@ -130,7 +130,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 100
+steps := 1
 evo_max_iter := 10
 evo_min_iter := 1
 evo_tol := 1.0e-6
@@ -176,7 +176,7 @@ save_3_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "o
 calc_global_var_norms := 1
 global_var_norm_floor := 1
 
-save_tag := "AdS5xS5_L3_"
+save_tag := "AdS5xS5_L4_"
 
 save_ivec := 1-*/1
 

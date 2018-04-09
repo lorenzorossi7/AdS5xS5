@@ -92,7 +92,8 @@ cls_align_mode := 1
 
 #------ constraint damping -------------------------------------------------
 
-kappa_cd := -10.0
+kappa_cd := -100.0
+#kappa_cd := -0.0
 rho_cd := -1.0
 
 #------ gauge --------------------------------------------------------------
@@ -102,11 +103,11 @@ gauge_i := 1
 rho1_t := 0.0
 rho2_t := 0.95
 xi1_t := 0.1
-xi2_t := 0.0025
+xi2_t := 0.01
 rho1_i := 0.0
 rho2_i := 0.95
 xi1_i := 0.1
-xi2_i := 0.0025
+xi2_i := 0.01
 
 rhoa := 0.75
 rhob := 0.95
@@ -130,7 +131,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 100
+steps := 1000
 evo_max_iter := 10
 evo_min_iter := 1
 evo_tol := 1.0e-6
