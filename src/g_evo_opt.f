@@ -133,7 +133,7 @@ c----------------------------------------------------------------------
         real*8 term9(3,3)
         real*8 cuuuu(3,3,3,3),dlll(3,3,3)
  
-        real*8 alpha,ndotc,n_l(3),n_u(3),c_l(3)
+        real*8 ndotc,n_l(3),n_u(3),c_l(3)
         real*8 cd_ll(3,3),cd_J_ll(3,3)
 
         real*8 grad_phi1_sq
@@ -146,6 +146,7 @@ c----------------------------------------------------------------------
 
         real*8 dgb_J,ddgb_J,ddgb_J_tx
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
+        real*8 dc_J
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
@@ -184,6 +185,7 @@ c----------------------------------------------------------------------
 
         data dgb_J,ddgb_J,ddgb_J_tx/0.0,0.0,0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
+        data dc_J/0.0/
 
         data dlll/27*0.0/
         data cuuuu/81*0.0/
@@ -337,8 +339,7 @@ c----------------------------------------------------------------------
                 c_l(a)=(Hads_l(a)+A_l(a))-boxx_l(a)
               end do
  
-              alpha=1/sqrt(-g0_uu(1,1))
-              n_l(1)=-alpha
+              n_l(1)=-1/sqrt(-g0_uu(1,1))
               do a=1,3
                 n_u(a)=n_l(1)*g0_uu(a,1)+
      &                 n_l(2)*g0_uu(a,2)+
@@ -521,9 +522,9 @@ c----------------------------------------------------------------------
                  else if (i.le.(Nx-2)
      &                    .and.((chr(i+1).ne.ex
      &                    .and.chr(i+2).ne.ex))) then
-                    ddgb_J_tx=-3/4/dt/dx
+                    ddgb_J_tx=-3d0/4d0/dt/dx
                  else if (i.le.(Nx-1).and.chr(i+1).ne.ex) then
-                    ddgb_J_tx=-1/2/dt/dx
+                    ddgb_J_tx=-1d0/2d0/dt/dx
                  else
                     write(*,*) 'g_evo_opt: error in chr stencil (A)'
                     write(*,*) '    i,Nx,dx=',i,Nx,dx
@@ -535,13 +536,13 @@ c----------------------------------------------------------------------
      &               .and.((chr(i-1).ne.ex
      &               .and.chr(i-2).ne.ex
      &               .and.chr(i-3).ne.ex))) then
-                    ddgb_J_tx=1/dt/dx
+                    ddgb_J_tx=1d0/dt/dx
                  else if (i.ge.3
      &                    .and.((chr(i-1).ne.ex
      &                    .and.chr(i-2).ne.ex))) then
-                    ddgb_J_tx=3/4/dt/dx
+                    ddgb_J_tx=3d0/4d0/dt/dx
                  else if (i.ge.2.and.chr(i-1).ne.ex) then
-                    ddgb_J_tx=1/2/dt/dx
+                    ddgb_J_tx=1d0/2d0/dt/dx
                  else
                     write(*,*) 'g_evo_opt: error in chr stencil (B)'
                     write(*,*) '    i,Nx,dx=',i,Nx,dx
@@ -808,13 +809,13 @@ c----------------------------------------------------------------------
      &               .and.((chr(i+1).ne.ex
      &               .and.chr(i+2).ne.ex
      &               .and.chr(i+3).ne.ex))) then
-                    ddphi1_J_tx=-1/dt/dx
+                    ddphi1_J_tx=-1d0/dt/dx
                  else if (i.le.(Nx-2)
      &                    .and.((chr(i+1).ne.ex
      &                    .and.chr(i+2).ne.ex))) then
-                    ddphi1_J_tx=-3/4/dt/dx
+                    ddphi1_J_tx=-3d0/4d0/dt/dx
                  else if (i.le.(Nx-1).and.chr(i+1).ne.ex) then
-                    ddphi1_J_tx=-1/2/dt/dx
+                    ddphi1_J_tx=-1d0/2d0/dt/dx
                  else
                     write(*,*) 'g_evo_opt: error in chr stencil (A)'
                     write(*,*) '    i,Nx,dx=',i,Nx,dx
@@ -826,13 +827,13 @@ c----------------------------------------------------------------------
      &               .and.((chr(i-1).ne.ex
      &               .and.chr(i-2).ne.ex
      &               .and.chr(i-3).ne.ex))) then
-                    ddphi1_J_tx=1/dt/dx
+                    ddphi1_J_tx=1d0/dt/dx
                  else if (i.ge.3
      &                    .and.((chr(i-1).ne.ex
      &                    .and.chr(i-2).ne.ex))) then
-                    ddphi1_J_tx=3/4/dt/dx
+                    ddphi1_J_tx=3d0/4d0/dt/dx
                  else if (i.ge.2.and.chr(i-1).ne.ex) then
-                    ddphi1_J_tx=1/2/dt/dx
+                    ddphi1_J_tx=1d0/2d0/dt/dx
                  else
                     write(*,*) 'g_evo_opt: error in chr stencil (B)'
                     write(*,*) '    i,Nx,dx=',i,Nx,dx
@@ -883,24 +884,28 @@ c----------------------------------------------------------------------
               do a=1,3
                 do b=1,3
                   cd_ll(a,b)=-kappa_cd*
-     &                ( n_l(a)*c_l(a)+n_l(b)*c_l(a)-(1+rho_cd)*
-     &                  g0_ll(a,b)*ndotc )
+     &                ( n_l(a)*c_l(b)+n_l(b)*c_l(a)
+     &                  -(1+rho_cd)*g0_ll(a,b)*ndotc )
                 end do
               end do
 
+              dc_J=1d0/2d0/dt
+
               cd_J_ll(1,1)=-kappa_cd*
-     &            ( n_l(1)*g0_uu(1,1)*dgb_J*(1-x0**2)-(1+rho_cd)*
-     &              g0_ll(1,1)*n_u(1)*0.5d0*g0_uu(1,1)*dgb_J*(1-x0**2) )
+     &            ( n_l(1)*g0_uu(1,1)*dc_J*(1-x0**2)
+     &              -(1+rho_cd)*g0_ll(1,1)*n_u(1)*0.5d0*
+     &                          g0_uu(1,1)*dc_J*(1-x0**2) )
               cd_J_ll(1,2)=-kappa_cd*
-     &            ( n_l(1)*g0_uu(1,1)*dgb_J*(1-x0**2)-(1+rho_cd)*
-     &              g0_ll(1,2)*n_u(2)*g0_uu(1,1)*dgb_J*(1-x0**2) )
+     &            ( n_l(1)*g0_uu(1,1)*dc_J*(1-x0**2)
+     &              -(1+rho_cd)*g0_ll(1,2)*n_u(2)*g0_uu(1,1)*
+     &                          dc_J*(1-x0**2) )
               cd_J_ll(2,2)=-kappa_cd*
-     &            ( 2*n_l(2)*g0_uu(1,2)*dgb_J*(1-x0**2)-(1+rho_cd)*
-     &              g0_ll(2,2)*
-     &              (-n_u(1)*0.5d0*g0_uu(2,2)*dgb_J*(1-x0**2)
-     &               +n_u(2)*g0_uu(1,2)*dgb_J*(1-x0**2)) ) 
+     &            ( 2*n_l(2)*g0_uu(1,2)*dc_J*(1-x0**2)
+     &              -(1+rho_cd)*g0_ll(2,2)*
+     &              (-n_u(1)*0.5d0*g0_uu(2,2)*dc_J*(1-x0**2)
+     &               +n_u(2)*g0_uu(1,2)*dc_J*(1-x0**2)) ) 
               cd_J_ll(3,3)=-kappa_cd*(1+rho_cd)*
-     &              ( n_u(1)*0.5d0*g0_uu(3,3)*dgb_J*(1-x0**2)**3 )
+     &              ( n_u(1)*0.5d0*g0_uu(3,3)*dc_J*(1-x0**2)**3 )
  
               if (kappa_cd.ne.0) then
                 efe(1,1)=efe(1,1)+cd_ll(1,1)
@@ -950,10 +955,10 @@ c----------------------------------------------------------------------
               end if
 
               gb_res(i) =
-     &          max(abs(efe(1,1)),
-     &              abs(efe(1,2)),
-     &              abs(efe(2,2)),
-     &              abs(efe(3,3)))
+     &          max(abs(efe(1,1)/efe_J(1,1)),
+     &              abs(efe(1,2)/efe_J(1,2)),
+     &              abs(efe(2,2)/efe_J(2,2)),
+     &              abs(efe(3,3)/efe_J(3,3)))
               kg_res(i)=abs(phi1_res/phi1_J)
 
               ! check for NaNs
