@@ -914,6 +914,10 @@ c----------------------------------------------------------------------
                 efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
               end if
 
+!TEST!
+              phi1_np1(i)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
+!TEST!
+
               ! update gbars 
               if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
      &          efe_J(1,1).eq.0) then
@@ -955,7 +959,7 @@ c----------------------------------------------------------------------
      &              abs(efe(1,2)),
      &              abs(efe(2,2)),
      &              abs(efe(3,3)))
-              kg_res(i)=abs(phi1_res/phi1_J)
+              !kg_res(i)=abs(phi1_res/phi1_J)  !NOTE: change to fb_res when fbar evolution added
 
               ! check for NaNs
               if (dump.and.first_nan.or.ltrace) then
