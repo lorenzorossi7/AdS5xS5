@@ -100,20 +100,20 @@ rho_cd := -1.0
 gauge_t := 1
 gauge_i := 1
 rho1_t := 0.0
-rho2_t := 0.95
-xi1_t := 0.1
-xi2_t := 0.0025
+rho2_t := 1.0
+xi1_t := 0.01
+xi2_t := 0.001
 rho1_i := 0.0
-rho2_i := 0.95
-xi1_i := 0.1
-xi2_i := 0.0025
+rho2_i := 1.0
+xi1_i := 0.01
+xi2_i := 0.001
 
-rhoa := 0.75
+rhoa := 0.85
 rhob := 0.95
 
 #------ dissipation --------------------------------------------------------
 
-tn_eps_diss := 0.35
+tn_eps_diss := 0.15
 tnp1_eps_diss := 0.0
 diss_bdy := 1
 repop_diss_bdy := 1
@@ -130,10 +130,10 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 200
+steps := 400
 evo_max_iter := 10
 evo_min_iter := 1
-evo_tol := 1.0e-6
+evo_tol := 1.0e-9
 
 #TEST#
 MG_max_iter := 10
@@ -164,8 +164,8 @@ which_gb_ii_res := 0
 
 #------- IO ---------------------------------------------------------------
 
-num_save_1_vars := 17
-save_1_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "Hb_t" "Hb_x" "chr" "iresall" "gb_res" ]
+num_save_1_vars := 18
+save_1_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "Hb_t" "Hb_x" "chr" "iresall" "gb_res" "cl_res" ]
 
 num_save_2_vars := 14
 save_2_vars := [ "phi1" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "Hb_t" "Hb_x" ]

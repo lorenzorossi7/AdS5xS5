@@ -91,6 +91,7 @@ real *fb_t_t,*fb_t_t_n;
 real *fb_x_t,*fb_x_t_n;
 real *fb_y_t,*fb_y_t_n;
 real *gb_res;
+real *cl_res;
 
 real *Hb_t,*Hb_t_n,*Hb_t_np1,*Hb_t_nm1;
 real *Hb_x,*Hb_x_n,*Hb_x_np1,*Hb_x_nm1;
@@ -146,6 +147,7 @@ int fb_t_t_gfn,fb_t_t_n_gfn;
 int fb_x_t_gfn,fb_x_t_n_gfn;
 int fb_y_t_gfn,fb_y_t_n_gfn;
 int gb_res_gfn;
+int cl_res_gfn;
 
 int Hb_t_gfn,Hb_t_n_gfn,Hb_t_np1_gfn,Hb_t_nm1_gfn;
 int Hb_x_gfn,Hb_x_n_gfn,Hb_x_np1_gfn,Hb_x_nm1_gfn;
@@ -247,6 +249,7 @@ void set_gfns(void)
     if ((fb_y_t_gfn    = PAMR_get_gfn("fb_y_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((fb_y_t_n_gfn  = PAMR_get_gfn("fb_y_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_res_gfn    = PAMR_get_gfn("gb_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((cl_res_gfn    = PAMR_get_gfn("cl_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((Hb_t_gfn      = PAMR_get_gfn("Hb_t",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_nm1_gfn  = PAMR_get_gfn("Hb_t",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
@@ -414,6 +417,7 @@ void ldptr(void)
    fb_y_t    = gfs[fb_y_t_gfn-1];
    fb_y_t_n  = gfs[fb_y_t_n_gfn-1];
    gb_res    = gfs[gb_res_gfn-1];
+   cl_res    = gfs[cl_res_gfn-1];
 
    Hb_t      = gfs[Hb_t_gfn-1];
    Hb_t_n    = gfs[Hb_t_n_gfn-1];
@@ -952,7 +956,7 @@ void AdS5xS5_evolve(int iter)
              Hb_t_0,Hb_x_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
 
-   g_evo_opt_(gb_res,kg_res,
+   g_evo_opt_(gb_res,kg_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
               gb_xx_np1,gb_xx_n,gb_xx_nm1,
