@@ -37,14 +37,14 @@ elliptic_vars_t0 := ["zetab"]
 # "work" variables ... residuals, inverse metric components, etc.
 #==============================================================================
 
-num_AMRH_work_vars := 14
-AMRH_work_vars := [ "w1" "w2" "w3" "w4" "gb_res" "hb_t_res" "hb_i_res" "Hb_t_0" "Hb_x_0" "kg_res" "efe_all_ires" "kg_ires" "iresphi1" "iresall" ]
+num_AMRH_work_vars := 15
+AMRH_work_vars := [ "w1" "w2" "w3" "w4" "gb_res" "cl_res" "hb_t_res" "hb_i_res" "Hb_t_0" "Hb_x_0" "kg_res" "efe_all_ires" "kg_ires" "iresphi1" "iresall" ]
 
 num_MGH_work_vars := 4
 MGH_work_vars := [ "mg_w1" "mg_w2" "mg_w3" "mg_w4" ]
 
-num_AMRH_work_in_MGH_vars := 12
-AMRH_work_in_MGH_vars := [ "w1" "w2" "w3" "w4" "gb_res" "hb_t_res" "hb_i_res" "Hb_t_0" "Hb_x_0" "kg_res" "efe_all_ires" "kg_ires" ]
+num_AMRH_work_in_MGH_vars := 13
+AMRH_work_in_MGH_vars := [ "w1" "w2" "w3" "w4" "gb_res" "cl_res" "hb_t_res" "hb_i_res" "Hb_t_0" "Hb_x_0" "kg_res" "efe_all_ires" "kg_ires" ]
 
 num_amr_inject   := 28
 amr_inject       := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
