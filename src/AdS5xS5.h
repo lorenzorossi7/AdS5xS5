@@ -56,6 +56,7 @@ extern real *fb_t_t,*fb_t_t_n;
 extern real *fb_x_t,*fb_x_t_n;
 extern real *fb_y_t,*fb_y_t_n;
 extern real *gb_res;
+extern real *cl_res;
 
 extern real *Hb_t,*Hb_t_n,*Hb_t_np1,*Hb_t_nm1;
 extern real *Hb_x,*Hb_x_n,*Hb_x_np1,*Hb_x_nm1;
@@ -104,6 +105,7 @@ extern int fb_t_t_gfn,fb_t_t_n_gfn;
 extern int fb_x_t_gfn,fb_x_t_n_gfn;
 extern int fb_y_t_gfn,fb_y_t_n_gfn;
 extern int gb_res_gfn;
+extern int cl_res_gfn;
 
 extern int Hb_t_gfn,Hb_t_n_gfn,Hb_t_np1_gfn,Hb_t_nm1_gfn;
 extern int Hb_x_gfn,Hb_x_n_gfn,Hb_x_np1_gfn,Hb_x_nm1_gfn;
@@ -134,7 +136,7 @@ void calc_gbu(void);
 void calc_gbu_nm1(void);
 
 /* prototypes for the various fortran functions we use: */
-void g_evo_opt_(real *gb_res, real *kg_res, 
+void g_evo_opt_(real *gb_res, real *kg_res, real *cl_res, 
                 real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                 real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                 real *gb_xx_np1, real *gb_xx_n, real *gb_xx_nm1,
