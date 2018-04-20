@@ -97,8 +97,8 @@ rho_cd := -1.0
 
 #------ gauge --------------------------------------------------------------
 
-gauge_t := 1
-gauge_i := 1
+gauge_t := 0 
+gauge_i := 0
 rho1_t := 0.0
 rho2_t := 1.0
 xi1_t := 0.01
@@ -130,7 +130,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 200
+steps := 45
 evo_max_iter := 10
 evo_min_iter := 1
 evo_tol := 1.0e-9
