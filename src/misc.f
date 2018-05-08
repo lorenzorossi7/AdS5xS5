@@ -1000,14 +1000,14 @@ c----------------------------------------------------------------------
             fb_tx0=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   
             fb_ty0=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)
             fb_xy0=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)
-!            phi1_np1(i)=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !TEST!
-            phi1_np1(i)=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)              !TEST!
-!            phi1_np1(i)=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)              !TEST!
+            phi1_np1(i)=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !TEST!
+!            phi1_np1(i)=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)              !this is zero for fbar=0!
+!            phi1_np1(i)=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)              !this is zero for fbar=0!
           end do
         end do
-        f2_ll(1,2)=f2_tx_ads0!+fb_tx0 
-        f2_ll(1,3)=0         !+fb_ty0 !NOTE: add this when you add fbar evolution
-        f2_ll(2,3)=0         !+fb_xy0
+        f2_ll(1,2)=f2_tx_ads0+fb_tx0 
+        f2_ll(1,3)=0         +fb_ty0 !NOTE: add this when you add fbar evolution
+        f2_ll(2,3)=0         +fb_xy0
 
         do a=1,2
           do b=a+1,3
