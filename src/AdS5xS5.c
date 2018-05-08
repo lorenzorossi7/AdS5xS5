@@ -761,6 +761,9 @@ void AdS5xS5_t0_cnst_data(void)
                gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
                psi_np1,psi_n,psi_nm1,psi_t_n,
                omega_np1,omega_n,omega_nm1,omega_t_n,
+               fb_t_np1,fb_t_n,fb_t_nm1,
+               fb_x_np1,fb_x_n,fb_x_nm1,
+               fb_y_np1,fb_y_n,fb_y_nm1,
                Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                phi1_np1,phi1_n,phi1_nm1,phi1_t_n,
@@ -822,6 +825,9 @@ void AdS5xS5_pre_io_calc(void)
         gb_yy_n,gb_yy_nm1,gb_yy_np1,
         psi_n,psi_nm1,psi_np1,
         omega_n,omega_nm1,omega_np1,
+        fb_t_np1,fb_t_n,fb_t_nm1,
+        fb_x_np1,fb_x_n,fb_x_nm1,
+        fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_n,phi1_nm1,phi1_np1,
         x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
    }
@@ -836,6 +842,9 @@ void AdS5xS5_pre_io_calc(void)
         gb_yy_np1,gb_yy_n,gb_yy_nm1,
         psi_np1,psi_n,psi_nm1,
         omega_np1,omega_n,omega_nm1,
+        fb_t_np1,fb_t_n,fb_t_nm1,
+        fb_x_np1,fb_x_n,fb_x_nm1,
+        fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_np1,phi1_n,phi1_nm1,
         x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
    }
@@ -963,6 +972,9 @@ void AdS5xS5_evolve(int iter)
               gb_yy_np1,gb_yy_n,gb_yy_nm1,
               psi_np1,psi_n,psi_nm1,
               omega_np1,omega_n,omega_nm1,
+              fb_t_np1,fb_t_n,fb_t_nm1,
+              fb_x_np1,fb_x_n,fb_x_nm1,
+              fb_y_np1,fb_y_n,fb_y_nm1,
               Hb_t_np1,Hb_t_n,Hb_t_nm1,
               Hb_x_np1,Hb_x_n,Hb_x_nm1,
               phi1_np1,phi1_n,phi1_nm1,

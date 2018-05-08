@@ -13,6 +13,9 @@ c----------------------------------------------------------------------
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  omega_np1,omega_n,omega_nm1,
+     &                  fb_t_np1,fb_t_n,fb_t_nm1,
+     &                  fb_x_np1,fb_x_n,fb_x_nm1,
+     &                  fb_y_np1,fb_y_n,fb_y_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  x,dt,chr,L,ex,Nx,phys_bdy,ghost_width)
         implicit none
@@ -28,6 +31,9 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
+        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
+        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
+        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
 
         integer dimA,dimB
@@ -166,6 +172,9 @@ c----------------------------------------------------------------------
      &              gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &              psi_np1,psi_n,psi_nm1,
      &              omega_np1,omega_n,omega_nm1,
+     &              fb_t_np1,fb_t_n,fb_t_nm1,
+     &              fb_x_np1,fb_x_n,fb_x_nm1,
+     &              fb_y_np1,fb_y_n,fb_y_nm1,
      &              zeros,zeros,zeros,
      &              zeros,zeros,zeros,
      &              phi1_np1,phi1_n,phi1_nm1,
