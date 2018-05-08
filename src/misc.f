@@ -961,12 +961,13 @@ c----------------------------------------------------------------------
      &          .or.(a.eq.2.and.b.eq.3.and.c.eq.1))
      &          then
                   levicivi3(a,b,c)=+1
-                end if
-                if ((a.eq.2.and.b.eq.1.and.c.eq.3)
+                else if ((a.eq.2.and.b.eq.1.and.c.eq.3)
      &          .or.(a.eq.1.and.b.eq.3.and.c.eq.2)
      &          .or.(a.eq.3.and.b.eq.2.and.c.eq.1))
      &          then
                   levicivi3(a,b,c)=-1
+                else 
+                  levicivi3(a,b,c)=0
                 end if
             end do
           end do
@@ -999,8 +1000,8 @@ c----------------------------------------------------------------------
             fb_tx0=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   
             fb_ty0=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)
             fb_xy0=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)
-            phi1_np1(i)=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !TEST!
-!            phi1_np1(i)=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)              !TEST!
+!            phi1_np1(i)=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !TEST!
+            phi1_np1(i)=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)              !TEST!
 !            phi1_np1(i)=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)              !TEST!
           end do
         end do
