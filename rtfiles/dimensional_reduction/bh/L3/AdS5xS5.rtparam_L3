@@ -97,8 +97,8 @@ rho_cd := -1.0
 
 #------ gauge --------------------------------------------------------------
 
-gauge_t := 0 
-gauge_i := 0
+gauge_t := 1
+gauge_i := 1
 rho1_t := 0.0
 rho2_t := 1.0
 xi1_t := 0.01
@@ -113,7 +113,7 @@ rhob := 0.95
 
 #------ dissipation --------------------------------------------------------
 
-tn_eps_diss := 0.15
+tn_eps_diss := 0.35
 tnp1_eps_diss := 0.0
 diss_bdy := 1
 repop_diss_bdy := 1
@@ -130,7 +130,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 45
+steps := 1000
 evo_max_iter := 10
 evo_min_iter := 1
 evo_tol := 1.0e-9
