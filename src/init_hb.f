@@ -58,10 +58,13 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
-        real*8 s0_ll(3,3),t0_ll(3,3)
-        real*8 f1_l(3),f2_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
+
+        real*8 s0_ll(3,3),t0_ll(3,3)
+        real*8 f1_l(3),f1_l_x(3,3)
+        real*8 f2_ll(3,3),f2_ll_x(3,3,3)
+        real*8 sqrtdetg,sqrtdetg_x(3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -86,9 +89,12 @@ c----------------------------------------------------------------------
 
         data ricci/0.0/
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
-        data s0_ll,t0_ll/9*0.0,9*0.0/
-        data f1_l,f2_ll/3*0.0,9*0.0/
         data riemann_ulll/81*0.0/
+
+        data s0_ll,t0_ll/9*0.0,9*0.0/
+        data f1_l,f1_l_x/3*0.0,9*0.0/
+        data f2_ll,f2_ll_x/9*0.0,27*0.0/
+        data sqrtdetg,sqrtdetg_x/0.0,3*0.0/
 
         data A_l,Hads_l/3*0.0,3*0.0/
         data A_l_x,Hads_l_x/9*0.0,9*0.0/

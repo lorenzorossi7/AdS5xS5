@@ -408,12 +408,14 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
-        real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
-        real*8 f1_l(3),f2_ll(3,3)
-        !NOTE: below I have implemented direct calculation
-        real*8 levicivi3(3,3,3),vol(3,3,3),sqrtdetg
+
+        real*8 s0_ll(3,3),t0_ll(3,3)
+        real*8 f1_l(3),f1_l_x(3,3)
+        real*8 f2_ll(3,3),f2_ll_x(3,3,3)
+        real*8 levicivi3(3,3,3),vol(3,3,3),vol_x(3,3,3,3)
+        real*8 sqrtdetg,sqrtdetg_x(3)
         real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
 
         real*8 efe(3,3),efest(3,3)
@@ -455,6 +457,10 @@ c----------------------------------------------------------------------
         real*8 gA_ads_x,gA_ads_xx        
         real*8 gB_ads_yy
 
+        real*8 fb_t_t,fb_t_x
+        real*8 fb_x_t,fb_x_x
+        real*8 fb_y_t,fb_y_x
+
         real*8 Hb_t_t,Hb_t_x
         real*8 Hb_x_t,Hb_x_x
 
@@ -463,8 +469,8 @@ c----------------------------------------------------------------------
         real*8 fb_t0,fb_x0,fb_y0
         real*8 fb_tx0,fb_ty0,fb_xy0
 
-        real*8 f2_tx_ads0
-        real*8 f1_y_ads0
+        real*8 f2_tx_ads0,f1_y_ads0
+        real*8 f2_tx_ads_x
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -529,6 +535,9 @@ c----------------------------------------------------------------------
  
         ! set gBads derivatives
         gB_ads_yy=2*PI**2*cos(2*PI*y0/L)
+
+        ! set f2ads derivatives
+        f2_tx_ads_x=-8/L/(1-x0)**3
  
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -555,6 +564,17 @@ c----------------------------------------------------------------------
      &       omega_t,omega_x,
      &       omega_tt,omega_tx,omega_xx,
      &       dx,dt,i,chr,ex,Nx,'omega')
+
+        ! calculate fbar derivatives
+        call df1_int(fb_t_np1,fb_t_n,fb_t_nm1,
+     &       fb_t_t,fb_t_x,
+     &       dx,dt,i,chr,ex,Nx,'fb_t')
+        call df1_int(fb_x_np1,fb_x_n,fb_x_nm1,
+     &       fb_x_t,fb_x_x,
+     &       dx,dt,i,chr,ex,Nx,'fb_x')
+        call df1_int(fb_y_np1,fb_y_n,fb_y_nm1,
+     &       fb_y_t,fb_y_x,
+     &       dx,dt,i,chr,ex,Nx,'fb_y')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -973,7 +993,7 @@ c----------------------------------------------------------------------
           end do
         end do
 
-       ! define square root of determinant of metric in (t,x,y) subsector
+       ! define sqrt(|detg|) of metric in (t,x,y) subsector
        sqrtdetg=sqrt(abs(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)
      &                  +g0_ll(1,2)*g0_ll(2,3)*g0_ll(3,1)
      &                  +g0_ll(1,3)*g0_ll(2,1)*g0_ll(3,2)
@@ -981,11 +1001,49 @@ c----------------------------------------------------------------------
      &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
      &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2)))
 
+       ! define derivatives sqrt(|detg|),x = 1/2/sqrt(|detg|) (detg/|detg|) detg,x
+       do a=1,3
+         sqrtdetg_x(a)= (g0_ll_x(1,1,a)*g0_ll(2,2)*g0_ll(3,3)
+     &                  +g0_ll_x(1,2,a)*g0_ll(2,3)*g0_ll(3,1)
+     &                  +g0_ll_x(1,3,a)*g0_ll(2,1)*g0_ll(3,2)
+     &                  -g0_ll_x(1,3,a)*g0_ll(2,2)*g0_ll(3,1)
+     &                  -g0_ll_x(1,2,a)*g0_ll(2,1)*g0_ll(3,3)
+     &                  -g0_ll_x(1,1,a)*g0_ll(2,3)*g0_ll(3,2)
+     &                  +g0_ll(1,1)*g0_ll_x(2,2,a)*g0_ll(3,3)
+     &                  +g0_ll(1,2)*g0_ll_x(2,3,a)*g0_ll(3,1)
+     &                  +g0_ll(1,3)*g0_ll_x(2,1,a)*g0_ll(3,2)
+     &                  -g0_ll(1,3)*g0_ll_x(2,2,a)*g0_ll(3,1)
+     &                  -g0_ll(1,2)*g0_ll_x(2,1,a)*g0_ll(3,3)
+     &                  -g0_ll(1,1)*g0_ll_x(2,3,a)*g0_ll(3,2)
+     &                  +g0_ll(1,1)*g0_ll(2,2)*g0_ll_x(3,3,a)
+     &                  +g0_ll(1,2)*g0_ll(2,3)*g0_ll_x(3,1,a)
+     &                  +g0_ll(1,3)*g0_ll(2,1)*g0_ll_x(3,2,a)
+     &                  -g0_ll(1,3)*g0_ll(2,2)*g0_ll_x(3,1,a)
+     &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll_x(3,3,a)
+     &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll_x(3,2,a))
+     &                 *(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)
+     &                  +g0_ll(1,2)*g0_ll(2,3)*g0_ll(3,1)
+     &                  +g0_ll(1,3)*g0_ll(2,1)*g0_ll(3,2)
+     &                  -g0_ll(1,3)*g0_ll(2,2)*g0_ll(3,1)
+     &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
+     &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2))
+     &              /abs(g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3)
+     &                  +g0_ll(1,2)*g0_ll(2,3)*g0_ll(3,1)
+     &                  +g0_ll(1,3)*g0_ll(2,1)*g0_ll(3,2)
+     &                  -g0_ll(1,3)*g0_ll(2,2)*g0_ll(3,1)
+     &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
+     &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2))
+     &              /2.0d0/sqrtdetg
+       end do
+
        ! define volume form in in (t,x,y) subsector
         do a=1,3
           do b=1,3
             do c=1,3
               vol(a,b,c)=levicivi3(a,b,c)*sqrtdetg
+              do d=1,3
+                vol_x(a,b,c,d)=levicivi3(a,b,c)*sqrtdetg_x(d)
+              end do
             end do
           end do
         end do
@@ -993,20 +1051,24 @@ c----------------------------------------------------------------------
         ! give values to the field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
         f1_l(1)   =0        +fb_t0
-        f1_l(2)   =0        +fb_x0 !NOTE: add this when you add fbar evolution
+        f1_l(2)   =0        +fb_x0 
         f1_l(3)   =f1_y_ads0+fb_y0
         do a=1,3
           do b=1,3
-            fb_tx0=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   
-            fb_ty0=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)
-            fb_xy0=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)
-            phi1_np1(i)=-vol(1,2,a)*f1_l(b)*g0_uu(a,b)-f2_tx_ads0   !TEST!
-!            phi1_np1(i)=-vol(1,3,a)*f1_l(b)*g0_uu(a,b)              !this is zero for fbar=0!
-!            phi1_np1(i)=-vol(2,3,a)*f1_l(b)*g0_uu(a,b)              !this is zero for fbar=0!
+            fb_tx0=-vol(1,2,3)*f1_l(1)*g0_uu(3,1)
+     &             -vol(1,2,3)*f1_l(2)*g0_uu(3,2)
+     &             -vol(1,2,3)*f1_l(3)*g0_uu(3,3)
+     &             -f2_tx_ads0   
+            fb_ty0=-vol(1,3,2)*f1_l(1)*g0_uu(2,1)
+     &             -vol(1,3,2)*f1_l(2)*g0_uu(2,2)
+     &             -vol(1,3,2)*f1_l(3)*g0_uu(2,3)
+            fb_xy0=-vol(2,3,1)*f1_l(1)*g0_uu(1,1)
+     &             -vol(2,3,1)*f1_l(2)*g0_uu(1,2)
+     &             -vol(2,3,1)*f1_l(3)*g0_uu(1,3)
           end do
         end do
         f2_ll(1,2)=f2_tx_ads0+fb_tx0 
-        f2_ll(1,3)=0         +fb_ty0 !NOTE: add this when you add fbar evolution
+        f2_ll(1,3)=0         +fb_ty0 
         f2_ll(2,3)=0         +fb_xy0
 
         do a=1,2
@@ -1015,7 +1077,12 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        !NOTE: will need f2_ll_x, f1_l_x
+        f1_l_x(1,1)=fb_t_t
+        f1_l_x(1,2)=fb_t_x
+        f1_l_x(2,1)=fb_x_t
+        f1_l_x(2,2)=fb_x_x
+        f1_l_x(3,1)=fb_y_t
+        f1_l_x(3,2)=fb_y_x
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)

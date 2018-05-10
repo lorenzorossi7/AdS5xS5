@@ -171,10 +171,13 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
-        real*8 s0_ll(3,3),t0_ll(3,3)
-        real*8 f1_l(3),f2_ll(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
+
+        real*8 s0_ll(3,3),t0_ll(3,3)
+        real*8 f1_l(3),f1_l_x(3,3)
+        real*8 f2_ll(3,3),f2_ll_x(3,3,3)
+        real*8 sqrtdetg,sqrtdetg_x(3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -236,9 +239,12 @@ c----------------------------------------------------------------------
 
         data ricci/0.0/
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
-        data s0_ll,t0_ll/9*0.0,9*0.0/
-        data f1_l,f2_ll/3*0.0,9*0.0/
         data riemann_ulll/81*0.0/
+
+        data s0_ll,t0_ll/9*0.0,9*0.0/
+        data f1_l,f1_l_x/3*0.0,9*0.0/
+        data f2_ll,f2_ll_x/9*0.0,27*0.0/
+        data sqrtdetg,sqrtdetg_x/0.0,3*0.0/
 
         data A_l,Hads_l/3*0.0,3*0.0/
         data A_l_x,Hads_l_x/9*0.0,9*0.0/
@@ -368,6 +374,18 @@ c----------------------------------------------------------------------
      &                  2*(phi10_x(1)*phi10_x(2)*g0_uu(1,2)+
      &                     phi10_x(1)*phi10_x(3)*g0_uu(1,3)+
      &                     phi10_x(2)*phi10_x(3)*g0_uu(2,3))
+
+              !---------------------------------------------------------------- 
+              ! eom_ft = -sqrtdetg g^tt f_t,t 
+              !          -sqrtdetg g^tx (f_t,x + 2 f_t gB^{-1} gB_,x - 2 f_x gB^{-1} gB_,t)
+              !          -sqrtdetg g^ty (f_t,y + 2 f_t gB^{-1} gB_,y - 2 f_y gB^{-1} gB_,t)
+              !          -sqrtdetg g^ta_,t f_a 
+              !          -sqrtdetg_,t g^ta f_a - f_ty,x + f_tx,y 
+              !          +1.5d0 (f_xy gA_,t/gA - f_ty gA_,x/gA + f_tx gA_,y/gA)
+              ! eom_fx = -f_x,t + f_t,x + 2 f_t gB^{-1} gB_,x - 2 f_x gB^{-1} gB_,t
+              ! eom_fy = -f_y,t + f_t,y + 2 f_t gB^{-1} gB_,y - 2 f_y gB^{-1} gB_,t 
+              !
+              !---------------------------------------------------------------- 
          
               !---------------------------------------------------------------- 
               ! Included pure AdS terms in the EFEs,
