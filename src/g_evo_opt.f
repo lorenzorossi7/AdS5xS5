@@ -6,7 +6,7 @@ c the residual at the time just prior to updated
 c
 c L below is AdS_L (the length scale)
 c----------------------------------------------------------------------
-        subroutine g_evo_opt(gb_res,kg_res,cl_res,
+        subroutine g_evo_opt(gb_res,fb_res,cl_res,
      &                       gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                       gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                       gb_xx_np1,gb_xx_n,gb_xx_nm1,
@@ -27,7 +27,7 @@ c----------------------------------------------------------------------
         integer phys_bdy(2),ghost_width(2)
         integer background
         real*8 kappa_cd,rho_cd
-        real*8 gb_res(Nx),kg_res(Nx),cl_res(Nx)
+        real*8 gb_res(Nx),fb_res(Nx),cl_res(Nx)
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
@@ -266,7 +266,6 @@ c----------------------------------------------------------------------
 
         ! initialize output variables
         do i=1,Nx
-          kg_res(i)=0
           if (chr(i).eq.ex) then
             phi1_np1(i) = 0
           end if
@@ -987,7 +986,7 @@ c----------------------------------------------------------------------
      &              abs(efe(1,2)/efe_J(1,2)),
      &              abs(efe(2,2)/efe_J(2,2)),
      &              abs(efe(3,3)/efe_J(3,3)))
-              !kg_res(i)=abs(phi1_res/phi1_J)  !NOTE: change to fb_res when fbar evolution added
+              fb_res(i)=abs(phi1_res/phi1_J)  !NOTE: change to fb_res when fbar evolution added
               cl_res(i)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
               ! check for NaNs

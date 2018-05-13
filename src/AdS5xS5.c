@@ -66,7 +66,7 @@ int cp_version;
 
 real *phi1,*phi1_n,*phi1_np1,*phi1_nm1; // MGH, AMRH n/np1/nm1
 real *phi1_t,*phi1_t_n;
-real *kg_res;
+real *fb_res;
 
 real *gb_tt,*gb_tt_n,*gb_tt_np1,*gb_tt_nm1;
 real *gb_tx,*gb_tx_n,*gb_tx_np1,*gb_tx_nm1;
@@ -122,7 +122,7 @@ int g_L;
 
 int phi1_gfn,phi1_n_gfn,phi1_np1_gfn,phi1_nm1_gfn; 
 int phi1_t_gfn,phi1_t_n_gfn;
-int kg_res_gfn;
+int fb_res_gfn;
 
 int gb_tt_gfn,gb_tt_n_gfn,gb_tt_np1_gfn,gb_tt_nm1_gfn;
 int gb_tx_gfn,gb_tx_n_gfn,gb_tx_np1_gfn,gb_tx_nm1_gfn;
@@ -180,7 +180,7 @@ void set_gfns(void)
     if ((phi1_np1_gfn = PAMR_get_gfn("phi1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_t_gfn   = PAMR_get_gfn("phi1_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_t_n_gfn = PAMR_get_gfn("phi1_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((kg_res_gfn   = PAMR_get_gfn("kg_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((fb_res_gfn   = PAMR_get_gfn("fb_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((gb_tt_gfn     = PAMR_get_gfn("gb_tt",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tt_nm1_gfn = PAMR_get_gfn("gb_tt",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
@@ -348,7 +348,7 @@ void ldptr(void)
    phi1_nm1 = gfs[phi1_nm1_gfn-1];
    phi1_t   = gfs[phi1_t_gfn-1];
    phi1_t_n = gfs[phi1_t_n_gfn-1];
-   kg_res   = gfs[kg_res_gfn-1];
+   fb_res   = gfs[fb_res_gfn-1];
 
    gb_tt     = gfs[gb_tt_gfn-1];
    gb_tt_n   = gfs[gb_tt_n_gfn-1];
@@ -893,13 +893,13 @@ real AdS5xS5_evo_residual(void)
       lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx);
       lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx);
       lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx);
-      lin_zero_bnd_res_(kg_res,phys_bdy,&lin_zero_bnd_all,&Nx);
+      lin_zero_bnd_res_(fb_res,phys_bdy,&lin_zero_bnd_all,&Nx);
    }
 
    l2norm_gb  =norm_l2(gb_res,mask,chr);
    l2norm_hb_t=norm_l2(hb_t_res,mask,chr);
    l2norm_hb_i=norm_l2(hb_i_res,mask,chr);
-   l2norm_phi1=norm_l2(kg_res,mask,chr);
+   l2norm_phi1=norm_l2(fb_res,mask,chr);
 
    l2norm=l2norm_gb+l2norm_hb_t+l2norm_hb_i+l2norm_phi1;
 
@@ -965,7 +965,7 @@ void AdS5xS5_evolve(int iter)
              Hb_t_0,Hb_x_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
 
-   g_evo_opt_(gb_res,kg_res,cl_res,
+   g_evo_opt_(gb_res,fb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
               gb_xx_np1,gb_xx_n,gb_xx_nm1,
