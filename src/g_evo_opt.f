@@ -311,6 +311,7 @@ c----------------------------------------------------------------------
      &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &                gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
+     &                sqrtdetg,sqrtdetg_x,f1_l_x,f2_ll_x,
      &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                A_l,A_l_x,Hads_l,Hads_l_x,
      &                gamma_ull,gamma_ull_x,

@@ -351,6 +351,7 @@ c----------------------------------------------------------------------
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &                  gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
+     &                  sqrtdetg,sqrtdetg_x,f1_l_x,f2_ll_x,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
@@ -1063,6 +1064,36 @@ c----------------------------------------------------------------------
         f1_l_x(2,2)=fb_x_x
         f1_l_x(3,1)=fb_y_t
         f1_l_x(3,2)=fb_y_x
+
+        do c=1,3
+          f2_ll_x(1,2,c)=-vol_x(1,2,3,c)*f1_l(1)*g0_uu(3,1)
+     &                   -vol_x(1,2,3,c)*f1_l(2)*g0_uu(3,2)
+     &                   -vol_x(1,2,3,c)*f1_l(3)*g0_uu(3,3)
+     &                   -vol(1,2,3)*f1_l_x(1,c)*g0_uu(3,1)
+     &                   -vol(1,2,3)*f1_l_x(2,c)*g0_uu(3,2)
+     &                   -vol(1,2,3)*f1_l_x(3,c)*g0_uu(3,3)
+     &                   -vol(1,2,3)*f1_l(1)*g0_uu_x(3,1,c)
+     &                   -vol(1,2,3)*f1_l(2)*g0_uu_x(3,2,c)
+     &                   -vol(1,2,3)*f1_l(3)*g0_uu_x(3,3,c)
+          f2_ll_x(1,3,c)=-vol_x(1,3,2,c)*f1_l(1)*g0_uu(2,1)
+     &                   -vol_x(1,3,2,c)*f1_l(2)*g0_uu(2,2)
+     &                   -vol_x(1,3,2,c)*f1_l(3)*g0_uu(2,3)
+     &                   -vol(1,3,2)*f1_l_x(1,c)*g0_uu(2,1)
+     &                   -vol(1,3,2)*f1_l_x(2,c)*g0_uu(2,2)
+     &                   -vol(1,3,2)*f1_l_x(3,c)*g0_uu(2,3)
+     &                   -vol(1,3,2)*f1_l(1)*g0_uu_x(2,1,c)
+     &                   -vol(1,3,2)*f1_l(2)*g0_uu_x(2,2,c)
+     &                   -vol(1,3,2)*f1_l(3)*g0_uu_x(2,3,c)
+          f2_ll_x(2,3,c)=-vol_x(2,3,1,c)*f1_l(1)*g0_uu(1,1)
+     &                   -vol_x(2,3,1,c)*f1_l(2)*g0_uu(1,2)
+     &                   -vol_x(2,3,1,c)*f1_l(3)*g0_uu(1,3)
+     &                   -vol(2,3,1)*f1_l_x(1,c)*g0_uu(1,1)
+     &                   -vol(2,3,1)*f1_l_x(2,c)*g0_uu(1,2)
+     &                   -vol(2,3,1)*f1_l_x(3,c)*g0_uu(1,3)
+     &                   -vol(2,3,1)*f1_l(1)*g0_uu_x(1,1,c)
+     &                   -vol(2,3,1)*f1_l(2)*g0_uu_x(1,2,c)
+     &                   -vol(2,3,1)*f1_l(3)*g0_uu_x(1,3,c)
+        end do
 
         do a=1,2
           do b=a+1,3
