@@ -467,10 +467,8 @@ c----------------------------------------------------------------------
         real*8 Hb_t0,Hb_x0
 
         real*8 fb_t0,fb_x0,fb_y0
-        real*8 fb_tx0,fb_ty0,fb_xy0
 
-        real*8 f2_tx_ads0,f1_y_ads0
-        real*8 f2_tx_ads_x
+        real*8 f1_y_ads0
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -494,9 +492,8 @@ c----------------------------------------------------------------------
         ! set gBads values
         gB_ads0=L**2*sin(PI*y0/L)**2
 
-        ! set f1ads, f2ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
+        ! set f1ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f2_tx_ads0 = -4/L/(1-x0)**2
         f1_y_ads0  = 4/L*PI
 
         ! set gbar values
@@ -536,9 +533,6 @@ c----------------------------------------------------------------------
         ! set gBads derivatives
         gB_ads_yy=2*PI**2*cos(2*PI*y0/L)
 
-        ! set f2ads derivatives
-        f2_tx_ads_x=-8/L/(1-x0)**3
- 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &       gb_tt_t,gb_tt_x,
@@ -1053,29 +1047,15 @@ c----------------------------------------------------------------------
         f1_l(1)   =0        +fb_t0
         f1_l(2)   =0        +fb_x0 
         f1_l(3)   =f1_y_ads0+fb_y0
-        do a=1,3
-          do b=1,3
-            fb_tx0=-vol(1,2,3)*f1_l(1)*g0_uu(3,1)
+        f2_ll(1,2)=-vol(1,2,3)*f1_l(1)*g0_uu(3,1)
      &             -vol(1,2,3)*f1_l(2)*g0_uu(3,2)
-     &             -vol(1,2,3)*f1_l(3)*g0_uu(3,3)
-     &             -f2_tx_ads0   
-            fb_ty0=-vol(1,3,2)*f1_l(1)*g0_uu(2,1)
+     &             -vol(1,2,3)*f1_l(3)*g0_uu(3,3) 
+        f2_ll(1,3)=-vol(1,3,2)*f1_l(1)*g0_uu(2,1)
      &             -vol(1,3,2)*f1_l(2)*g0_uu(2,2)
      &             -vol(1,3,2)*f1_l(3)*g0_uu(2,3)
-            fb_xy0=-vol(2,3,1)*f1_l(1)*g0_uu(1,1)
+        f2_ll(2,3)=-vol(2,3,1)*f1_l(1)*g0_uu(1,1)
      &             -vol(2,3,1)*f1_l(2)*g0_uu(1,2)
      &             -vol(2,3,1)*f1_l(3)*g0_uu(1,3)
-          end do
-        end do
-        f2_ll(1,2)=f2_tx_ads0+fb_tx0 
-        f2_ll(1,3)=0         +fb_ty0 
-        f2_ll(2,3)=0         +fb_xy0
-
-        do a=1,2
-          do b=a+1,3
-            f2_ll(b,a)=-f2_ll(a,b)
-          end do
-        end do
 
         f1_l_x(1,1)=fb_t_t
         f1_l_x(1,2)=fb_t_x
@@ -1083,6 +1063,15 @@ c----------------------------------------------------------------------
         f1_l_x(2,2)=fb_x_x
         f1_l_x(3,1)=fb_y_t
         f1_l_x(3,2)=fb_y_x
+
+        do a=1,2
+          do b=a+1,3
+            f2_ll(b,a)=-f2_ll(a,b)
+            do c=1,3
+              f2_ll_x(b,a,c)=f2_ll_x(a,b,c)
+            end do
+          end do
+        end do
 
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
