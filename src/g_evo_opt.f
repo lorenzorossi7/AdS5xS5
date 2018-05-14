@@ -380,18 +380,6 @@ c----------------------------------------------------------------------
      &                     phi10_x(2)*phi10_x(3)*g0_uu(2,3))
 
               !---------------------------------------------------------------- 
-              ! eom_ft = -sqrtdetg g^tt f_t,t 
-              !          -sqrtdetg g^tx (f_t,x + 2 f_t gB^{-1} gB_,x - 2 f_x gB^{-1} gB_,t)
-              !          -sqrtdetg g^ty (f_t,y + 2 f_t gB^{-1} gB_,y - 2 f_y gB^{-1} gB_,t)
-              !          -sqrtdetg g^ta_,t f_a 
-              !          -sqrtdetg_,t g^ta f_a - f_ty,x + f_tx,y 
-              !          +1.5d0 (f_xy gA_,t/gA - f_ty gA_,x/gA + f_tx gA_,y/gA)
-              ! eom_fx = -f_x,t + f_t,x + 2 f_t gB^{-1} gB_,x - 2 f_x gB^{-1} gB_,t
-              ! eom_fy = -f_y,t + f_t,y + 2 f_t gB^{-1} gB_,y - 2 f_y gB^{-1} gB_,t 
-              !
-              !---------------------------------------------------------------- 
-         
-              !---------------------------------------------------------------- 
               ! Included pure AdS terms in the EFEs,
               ! efe_ab =   term1_ab + term2_ab + term3_ab + term4_ab 
               !          + term5_ab + term6_ab + term7_ab + term8_ab 
@@ -483,6 +471,42 @@ c----------------------------------------------------------------------
 
                 end do
               end do
+
+              !---------------------------------------------------------------- 
+              ! ffe_t = -sqrtdetg g^tt f_t,t 
+              !         -sqrtdetg g^tx (f_t,x + 2 f_t gB_,x/gB - 2 f_x gB_,t/gB)
+              !         -sqrtdetg g^ty (f_t,y + 2 f_t gB_,y/gB - 2 f_y gB_,t/gB)
+              !         -sqrtdetg g^ta_,t f_a 
+              !         -sqrtdetg_,t g^ta f_a 
+              !         -f_ty,x + f_tx,y 
+              !         +1.5d0 (f_xy gA_,t/gA - f_ty gA_,x/gA + f_tx gA_,y/gA)
+              ! ffe_x = -f_x,t + f_t,x + 2 f_t gB_,x/gB - 2 f_x gB_,t/gB 
+              ! ffe_y = -f_y,t + f_t,y + 2 f_t gB_,y/gB - 2 f_y gB_,t/gB 
+              !
+              !---------------------------------------------------------------- 
+              ffe(1)=-sqrtdetg*g0_uu(1,1)*f1_l_x(1,1)
+     &               -sqrtdetg*g0_uu(1,2)*(f1_l_x(1,2)
+     &                                  +2*f1_l(1)*gB_x(2)/gB
+     &                                  -2*f1_l(2)*gB_x(1)/gB)
+     &               -sqrtdetg*g0_uu(1,3)*(f1_l_x(1,3)
+     &                                  +2*f1_l(1)*gB_x(3)/gB
+     &                                  -2*f1_l(3)*gB_x(1)/gB)
+     &               -sqrtdetg*(g0_uu_x(1,1,1)*f1_l(1) 
+     &                         +g0_uu_x(1,2,1)*f1_l(2)
+     &                         +g0_uu_x(1,3,1)*f1_l(3))
+     &               -sqrtdetg_x(1)*(g0_uu(1,1)*f1_l(1)
+     &                              +g0_uu(1,2)*f1_l(2)
+     &                              +g0_uu(1,3)*f1_l(3))
+     &               -f2_ll_x(1,3,2)+f2_ll_x(1,2,3)
+     &               +1.5d0*(f2_ll(2,3)*gA_x(1)/gA
+     &                      -f2_ll(1,3)*gA_x(2)/gA 
+     &                      +f2_ll(1,2)*gA_x(3)/gA)
+
+              ffe(2)=-f1_l_x(2,1)+f1_l_x(1,2)
+     &               +2*f1_l(1)*gB_x(2)/gB-2*f1_l(2)*gB_x(1)/gB 
+
+              ffe(3)=-f1_l_x(3,1)+f1_l_x(1,3)
+     &               +2*f1_l(1)*gB_x(3)/gB-2*f1_l(3)*gB_x(1)/gB 
 
               !--------------------------------------------------------------------------
               ! phi1_res = g^ab phi1,ab + g^ab,a phi1,b + g^cb gamma^a_ab phi1,c  
