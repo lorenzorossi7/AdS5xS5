@@ -134,6 +134,7 @@ c----------------------------------------------------------------------
         !
         !--------------------------------------------------------------
         real*8 efe(3,3),efe_J(3,3)
+        real*8 ffe(3),ffe_J(3)
         real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
         real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
         real*8 term9(3,3)
@@ -151,6 +152,7 @@ c----------------------------------------------------------------------
         real*8 H0_t_ads0,H0_x_ads0,H0_y_ads0
 
         real*8 dgb_J,ddgb_J,ddgb_J_tx
+        real*8 dfb_J
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
         real*8 dc_J
 
@@ -193,6 +195,7 @@ c----------------------------------------------------------------------
         data H0_t_ads0,H0_x_ads0,H0_y_ads0/0.0,0.0,0.0/
 
         data dgb_J,ddgb_J,ddgb_J_tx/0.0,0.0,0.0/
+        data dfb_J/0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
         data dc_J/0.0/
 
@@ -206,6 +209,7 @@ c----------------------------------------------------------------------
         data term9/9*0.0/
 
         data efe,efe_J/9*0.0,9*0.0/
+        data ffe,ffe_J/3*0.0,3*0.0/
         data cd_ll,cd_J_ll/9*0.0,9*0.0/
 
         data phi1_t,phi1_x/0.0,0.0/
@@ -818,6 +822,15 @@ c----------------------------------------------------------------------
      &                           cuuuu(3,3,3,1)*dlll(3,3,3))
      &                              )
 
+              !----------------------------------------------------------------
+              ! computes diag. Jacobian of f_np1->L.f_np1 transformation
+              ! by differentiating L.f wrt. f(a)_i_np1 same-i entries
+              !----------------------------------------------------------------
+              dfb_J=1d0/2d0/dt
+
+              ffe_J(1)=-sqrtdetg*g0_uu(1,1)*dfb_J
+              ffe_J(2)=-dfb_J
+              ffe_J(3)=-dfb_J
 
               !----------------------------------------------------------------
               ! computes diag. Jacobian of phi1_np1->L.phi1_np1 transformation
@@ -916,6 +929,7 @@ c----------------------------------------------------------------------
                 end do
               end do
 
+              ! differentiating cd(a,b) wrt. g(a,b)_ij_np1 diag. entries
               dc_J=1d0/2d0/dt
 
               cd_J_ll(1,1)=-kappa_cd*
@@ -974,7 +988,29 @@ c----------------------------------------------------------------------
                 gb_yy_np1(i)=gb_yy_np1(i)-efe(3,3)/efe_J(3,3)
               end if
 
-              ! update phi1, phi4 
+              ! update fbars 
+              if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
+     &          ffe_J(1).eq.0) then
+                dump=.true.
+              else
+                fb_t_np1(i)=fb_t_np1(i)-ffe(1)/ffe_J(1)
+              end if
+
+              if (is_nan(ffe(2)).or.is_nan(ffe_J(2)).or.
+     &          ffe_J(2).eq.0) then
+                dump=.true.
+              else
+                fb_x_np1(i)=fb_x_np1(i)-ffe(2)/ffe_J(2)
+              end if
+
+              if (is_nan(ffe(3)).or.is_nan(ffe_J(3)).or.
+     &          ffe_J(3).eq.0) then
+                dump=.true.
+              else
+                fb_y_np1(i)=fb_y_np1(i)-ffe(3)/ffe_J(3)
+              end if
+
+              ! update phi1 
               if (is_nan(phi1_res).or.is_nan(phi1_J)) then
                 dump=.true.
               else
@@ -986,7 +1022,10 @@ c----------------------------------------------------------------------
      &              abs(efe(1,2)/efe_J(1,2)),
      &              abs(efe(2,2)/efe_J(2,2)),
      &              abs(efe(3,3)/efe_J(3,3)))
-              fb_res(i)=abs(phi1_res/phi1_J)  !NOTE: change to fb_res when fbar evolution added
+              fb_res(i)=
+     &          max(abs(ffe(1)/ffe_J(1)),
+     &              abs(ffe(2)/ffe_J(2)),
+     &              abs(ffe(3)/ffe_J(3)))
               cl_res(i)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
               ! check for NaNs
