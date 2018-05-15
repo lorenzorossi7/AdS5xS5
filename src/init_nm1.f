@@ -351,15 +351,15 @@ c----------------------------------------------------------------------
      &     +g0_uu(3,1)*gamma_ull(3,1,3)*gA_x(3)/2
      &     +g0_uu(3,2)*gamma_ull(3,2,3)*gA_x(3)/2
      &     +g0_uu(3,3)*gamma_ull(3,3,3)*gA_x(3)/2
-     &     +g0_uu(1,1)*(gA_x(1)*gA_x(1))/(4*gA)*(dimA-2)
-     &     +g0_uu(1,2)*(gA_x(1)*gA_x(2))/(4*gA)*(dimA-2)
-     &     +g0_uu(1,3)*(gA_x(1)*gA_x(3))/(4*gA)*(dimA-2)
-     &     +g0_uu(2,1)*(gA_x(2)*gA_x(1))/(4*gA)*(dimA-2)
-     &     +g0_uu(2,2)*(gA_x(2)*gA_x(2))/(4*gA)*(dimA-2)
-     &     +g0_uu(2,3)*(gA_x(2)*gA_x(3))/(4*gA)*(dimA-2)
-     &     +g0_uu(3,1)*(gA_x(3)*gA_x(1))/(4*gA)*(dimA-2)
-     &     +g0_uu(3,2)*(gA_x(3)*gA_x(2))/(4*gA)*(dimA-2)
-     &     +g0_uu(3,3)*(gA_x(3)*gA_x(3))/(4*gA)*(dimA-2)
+     &     -g0_uu(1,1)*(gA_x(1)*gA_x(1))/(4*gA)*(dimA-2)
+     &     -g0_uu(1,2)*(gA_x(1)*gA_x(2))/(4*gA)*(dimA-2)
+     &     -g0_uu(1,3)*(gA_x(1)*gA_x(3))/(4*gA)*(dimA-2)
+     &     -g0_uu(2,1)*(gA_x(2)*gA_x(1))/(4*gA)*(dimA-2)
+     &     -g0_uu(2,2)*(gA_x(2)*gA_x(2))/(4*gA)*(dimA-2)
+     &     -g0_uu(2,3)*(gA_x(2)*gA_x(3))/(4*gA)*(dimA-2)
+     &     -g0_uu(3,1)*(gA_x(3)*gA_x(1))/(4*gA)*(dimA-2)
+     &     -g0_uu(3,2)*(gA_x(3)*gA_x(2))/(4*gA)*(dimA-2)
+     &     -g0_uu(3,3)*(gA_x(3)*gA_x(3))/(4*gA)*(dimA-2)
      &     -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gB)*dimB
      &     -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gB)*dimB
      &     -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gB)*dimB
@@ -413,15 +413,15 @@ c----------------------------------------------------------------------
      &     +g0_uu(3,1)*gamma_ull(3,1,3)*gB_x(3)/2
      &     +g0_uu(3,2)*gamma_ull(3,2,3)*gB_x(3)/2
      &     +g0_uu(3,3)*gamma_ull(3,3,3)*gB_x(3)/2
-     &     +g0_uu(1,1)*(gB_x(1)*gB_x(1))/(4*gB)*(dimB-2)
-     &     +g0_uu(1,2)*(gB_x(1)*gB_x(2))/(4*gB)*(dimB-2)
-     &     +g0_uu(1,3)*(gB_x(1)*gB_x(3))/(4*gB)*(dimB-2)
-     &     +g0_uu(2,1)*(gB_x(2)*gB_x(1))/(4*gB)*(dimB-2)
-     &     +g0_uu(2,2)*(gB_x(2)*gB_x(2))/(4*gB)*(dimB-2)
-     &     +g0_uu(2,3)*(gB_x(2)*gB_x(3))/(4*gB)*(dimB-2)
-     &     +g0_uu(3,1)*(gB_x(3)*gB_x(1))/(4*gB)*(dimB-2)
-     &     +g0_uu(3,2)*(gB_x(3)*gB_x(2))/(4*gB)*(dimB-2)
-     &     +g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2)
+     &     -g0_uu(1,1)*(gB_x(1)*gB_x(1))/(4*gB)*(dimB-2)
+     &     -g0_uu(1,2)*(gB_x(1)*gB_x(2))/(4*gB)*(dimB-2)
+     &     -g0_uu(1,3)*(gB_x(1)*gB_x(3))/(4*gB)*(dimB-2)
+     &     -g0_uu(2,1)*(gB_x(2)*gB_x(1))/(4*gB)*(dimB-2)
+     &     -g0_uu(2,2)*(gB_x(2)*gB_x(2))/(4*gB)*(dimB-2)
+     &     -g0_uu(2,3)*(gB_x(2)*gB_x(3))/(4*gB)*(dimB-2)
+     &     -g0_uu(3,1)*(gB_x(3)*gB_x(1))/(4*gB)*(dimB-2)
+     &     -g0_uu(3,2)*(gB_x(3)*gB_x(2))/(4*gB)*(dimB-2)
+     &     -g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2)
      &     -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gA)*dimA
      &     -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gA)*dimA
      &     -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gA)*dimA
@@ -432,9 +432,9 @@ c----------------------------------------------------------------------
      &     -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
      &     -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
      &
-     &     +(dimA-1)
+     &     +(dimB-1)
      &
-     &     +tA
+     &     +tB
      &            )
 
           ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
@@ -497,10 +497,10 @@ c----------------------------------------------------------------------
      &                      + gb_xx_tt*dt**2/2
            gb_yy_nm1(i)=gb_yy_n(i) - gb_yy_t*dt
      &                      + gb_yy_tt*dt**2/2
-!           psi_nm1(i)  =psi_n(i) - psi_t*dt  
-!     &                      + psi_tt*dt**2/2
-!           omega_nm1(i)=omega_n(i) - omega_t*dt  
-!     &                      + omega_tt*dt**2/2
+           psi_nm1(i)  =psi_n(i) - psi_t*dt  
+     &                      + psi_tt*dt**2/2
+           omega_nm1(i)=omega_n(i) - omega_t*dt  
+     &                      + omega_tt*dt**2/2
            Hb_t_nm1(i) =Hb_t_n(i) - Hb_t_t*dt
            Hb_x_nm1(i) =Hb_x_n(i) - Hb_x_t*dt
            phi1_nm1(i) =phi1_n(i) - phi1_t*dt
@@ -515,10 +515,10 @@ c----------------------------------------------------------------------
      &                      + gb_xx_tt*dt**2/2
            gb_yy_np1(i)=gb_yy_n(i) + gb_yy_t*dt
      &                      + gb_yy_tt*dt**2/2
-!           psi_np1(i)  =psi_n(i) + psi_t*dt  
-!     &                      + psi_tt*dt**2/2
-!           omega_np1(i)=omega_n(i) + omega_t*dt  
-!     &                      + omega_tt*dt**2/2
+           psi_np1(i)  =psi_n(i) + psi_t*dt  
+     &                      + psi_tt*dt**2/2
+           omega_np1(i)=omega_n(i) + omega_t*dt  
+     &                      + omega_tt*dt**2/2
            Hb_t_np1(i) =Hb_t_n(i) + Hb_t_t*dt
            Hb_x_np1(i) =Hb_x_n(i) + Hb_x_t*dt     
            phi1_np1(i) =phi1_n(i) + phi1_t*dt

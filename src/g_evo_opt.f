@@ -332,8 +332,8 @@ c----------------------------------------------------------------------
      &                gamma_ull,gamma_ull_x,
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
-     &                phi10_x,phi10_xx,
      &                sA,sB,tA,tB,
+     &                phi10_x,phi10_xx,
      &                x,dt,chr,L,ex,Nx,i)
 
               ! computes auxiliary objects at point i
@@ -487,7 +487,7 @@ c----------------------------------------------------------------------
 
               !--------------------------------------------------------------------------
               ! afe      = (dimA-1)
-              !            -g^ab ( (gA_,ab - G^c_ba gA_,c)/2 - (dimA-2)*(gA_,a gA_,b)/(4 gA) 
+              !            -g^ab ( (gA_,ab - G^c_ba gA_,c)/2 + (dimA-2)*(gA_,a gA_,b)/(4 gA) 
               !                                              +     dimB*(gA_,a gB_,b)/(4 gB) )
               !            -gA*(g^ab g^cd f2_ac f2_bd)/8
               !
@@ -496,9 +496,16 @@ c----------------------------------------------------------------------
 
               afe=(dimA-1)+sA+tA
 
+!         if (x(i).eq.0.5d0) then
+!           write(*,*) '(dimA-1)+sA+tA=',(dimA-1)+sA+tA
+!           stop
+!         end if
+!!TEST!
+!              phi1_np1(i)=afe
+
               !--------------------------------------------------------------------------
               ! bfe      = (d_B-1)
-              !            -g^ab ( (gB_,ab - G^c_ba gB_,c)/2 - (dimB-2)*(gB_,a gB_,b)/(4 gB) 
+              !            -g^ab ( (gB_,ab - G^c_ba gB_,c)/2 + (dimB-2)*(gB_,a gB_,b)/(4 gB) 
               !                                              +     dimA*(gA_,a gB_,b)/(4 gA) )
               !            -gB*(g^ab f1_a f1_b)/4
               !
@@ -898,11 +905,11 @@ c----------------------------------------------------------------------
      &              +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
      &              +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
      &              +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
-     &              +g0_uu(1,1)*(2*dgb_J*gA_x(1))/(4*gA)*(dimA-2)
-     &              +g0_uu(1,2)*(dgb_J*gA_x(2))/(4*gA)*(dimA-2)
-     &              +g0_uu(1,3)*(dgb_J*gA_x(3))/(4*gA)*(dimA-2)
-     &              +g0_uu(2,1)*(gA_x(2)*dgb_J)/(4*gA)*(dimA-2)
-     &              +g0_uu(3,1)*(gA_x(3)*dgb_J)/(4*gA)*(dimA-2)
+     &              -g0_uu(1,1)*(2*dgb_J*gA_x(1))/(4*gA)*(dimA-2)
+     &              -g0_uu(1,2)*(dgb_J*gA_x(2))/(4*gA)*(dimA-2)
+     &              -g0_uu(1,3)*(dgb_J*gA_x(3))/(4*gA)*(dimA-2)
+     &              -g0_uu(2,1)*(gA_x(2)*dgb_J)/(4*gA)*(dimA-2)
+     &              -g0_uu(3,1)*(gA_x(3)*dgb_J)/(4*gA)*(dimA-2)
      &              -g0_uu(1,1)*(dgb_J*gB_x(1))/(4*gB)*dimB
      &              -g0_uu(1,2)*(dgb_J*gB_x(2))/(4*gB)*dimB
      &              -g0_uu(1,3)*(dgb_J*gB_x(3))/(4*gB)*dimB
@@ -925,11 +932,11 @@ c----------------------------------------------------------------------
      &              +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
      &              +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
      &              +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
-     &              +g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2)
-     &              +g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2)
-     &              +g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2)
-     &              +g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2)
-     &              +g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2)
+     &              -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2)
+     &              -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2)
+     &              -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2)
+     &              -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2)
+     &              -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2)
      &              -g0_uu(1,1)*dgb_J*gA_x(1)/(4*gA)*dimA 
      &              -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
      &              -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA 
@@ -1101,14 +1108,14 @@ c----------------------------------------------------------------------
                 gb_yy_np1(i)=gb_yy_np1(i)-efe(3,3)/efe_J(3,3)
               end if
 
-!              ! update psi,omega
-!              if (is_nan(afe).or.is_nan(afe_J).or.
-!     &          afe_J.eq.0) then
-!                dump=.true.
-!              else
-!                psi_np1(i)=psi_np1(i)-afe/afe_J
-!              end if
-!
+              ! update psi,omega
+              if (is_nan(afe).or.is_nan(afe_J).or.
+     &          afe_J.eq.0) then
+                dump=.true.
+              else
+                psi_np1(i)=psi_np1(i)-afe/afe_J
+              end if
+
 !              if (is_nan(bfe).or.is_nan(bfe_J).or.
 !     &          bfe_J.eq.0) then
 !                dump=.true.
