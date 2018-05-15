@@ -53,11 +53,15 @@ c----------------------------------------------------------------------
         real*8 gb_tx_t,gb_tx_tt
         real*8 gb_xx_t,gb_xx_tt
         real*8 gb_yy_t,gb_yy_tt
+        real*8 psi_t,psi_tt
+        real*8 omega_t,omega_tt
         real*8 Hb_t_t
         real*8 Hb_x_t
         real*8 phi1_t,phi1_tt
 
-        real*8 h0_ll_tt(3,3),phi10_tt
+        real*8 h0_ll_tt(3,3)
+        real*8 gA_tt,gB_tt
+        real*8 phi10_tt
 
         real*8 x0
 
@@ -73,6 +77,8 @@ c----------------------------------------------------------------------
 
         logical ltrace
         parameter (ltrace=.false.)
+
+        integer dimA,dimB
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
@@ -149,6 +155,10 @@ c----------------------------------------------------------------------
         !---------------------------------------------------------------
 
         dx=x(2)-x(1)
+
+        ! set dimensions of S3 and S4 subspaces
+        dimA=3
+        dimB=4
 
         do i=1,Nx
           phi1_nm1(i)=phi1_n(i)
@@ -303,6 +313,130 @@ c----------------------------------------------------------------------
             end do
           end do          
 
+          ! 0 = afe
+          gA_tt=2/g0_uu(1,1)*
+     &            (
+     &     -g0_uu(1,2)*gA_xx(1,2)/2
+     &     -g0_uu(1,3)*gA_xx(1,3)/2
+     &     -g0_uu(2,1)*gA_xx(2,1)/2
+     &     -g0_uu(2,2)*gA_xx(2,2)/2
+     &     -g0_uu(2,3)*gA_xx(2,3)/2
+     &     -g0_uu(3,1)*gA_xx(3,1)/2
+     &     -g0_uu(3,2)*gA_xx(3,2)/2
+     &     -g0_uu(3,3)*gA_xx(3,3)/2
+     &     +g0_uu(1,1)*gamma_ull(1,1,1)*gA_x(1)/2
+     &     +g0_uu(1,2)*gamma_ull(1,2,1)*gA_x(1)/2
+     &     +g0_uu(1,3)*gamma_ull(1,3,1)*gA_x(1)/2
+     &     +g0_uu(2,1)*gamma_ull(1,1,2)*gA_x(1)/2
+     &     +g0_uu(2,2)*gamma_ull(1,2,2)*gA_x(1)/2
+     &     +g0_uu(2,3)*gamma_ull(1,3,2)*gA_x(1)/2
+     &     +g0_uu(3,1)*gamma_ull(1,1,3)*gA_x(1)/2
+     &     +g0_uu(3,2)*gamma_ull(1,2,3)*gA_x(1)/2
+     &     +g0_uu(3,3)*gamma_ull(1,3,3)*gA_x(1)/2
+     &     +g0_uu(1,1)*gamma_ull(2,1,1)*gA_x(2)/2
+     &     +g0_uu(1,2)*gamma_ull(2,2,1)*gA_x(2)/2
+     &     +g0_uu(1,3)*gamma_ull(2,3,1)*gA_x(2)/2
+     &     +g0_uu(2,1)*gamma_ull(2,1,2)*gA_x(2)/2
+     &     +g0_uu(2,2)*gamma_ull(2,2,2)*gA_x(2)/2
+     &     +g0_uu(2,3)*gamma_ull(2,3,2)*gA_x(2)/2
+     &     +g0_uu(3,1)*gamma_ull(2,1,3)*gA_x(2)/2
+     &     +g0_uu(3,2)*gamma_ull(2,2,3)*gA_x(2)/2
+     &     +g0_uu(3,3)*gamma_ull(2,3,3)*gA_x(2)/2
+     &     +g0_uu(1,1)*gamma_ull(3,1,1)*gA_x(3)/2
+     &     +g0_uu(1,2)*gamma_ull(3,2,1)*gA_x(3)/2
+     &     +g0_uu(1,3)*gamma_ull(3,3,1)*gA_x(3)/2
+     &     +g0_uu(2,1)*gamma_ull(3,1,2)*gA_x(3)/2
+     &     +g0_uu(2,2)*gamma_ull(3,2,2)*gA_x(3)/2
+     &     +g0_uu(2,3)*gamma_ull(3,3,2)*gA_x(3)/2
+     &     +g0_uu(3,1)*gamma_ull(3,1,3)*gA_x(3)/2
+     &     +g0_uu(3,2)*gamma_ull(3,2,3)*gA_x(3)/2
+     &     +g0_uu(3,3)*gamma_ull(3,3,3)*gA_x(3)/2
+     &     +g0_uu(1,1)*(gA_x(1)*gA_x(1))/(4*gA)*(dimA-2)
+     &     +g0_uu(1,2)*(gA_x(1)*gA_x(2))/(4*gA)*(dimA-2)
+     &     +g0_uu(1,3)*(gA_x(1)*gA_x(3))/(4*gA)*(dimA-2)
+     &     +g0_uu(2,1)*(gA_x(2)*gA_x(1))/(4*gA)*(dimA-2)
+     &     +g0_uu(2,2)*(gA_x(2)*gA_x(2))/(4*gA)*(dimA-2)
+     &     +g0_uu(2,3)*(gA_x(2)*gA_x(3))/(4*gA)*(dimA-2)
+     &     +g0_uu(3,1)*(gA_x(3)*gA_x(1))/(4*gA)*(dimA-2)
+     &     +g0_uu(3,2)*(gA_x(3)*gA_x(2))/(4*gA)*(dimA-2)
+     &     +g0_uu(3,3)*(gA_x(3)*gA_x(3))/(4*gA)*(dimA-2)
+     &     -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gB)*dimB
+     &     -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gB)*dimB
+     &     -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gB)*dimB
+     &     -g0_uu(2,1)*(gA_x(2)*gB_x(1))/(4*gB)*dimB
+     &     -g0_uu(2,2)*(gA_x(2)*gB_x(2))/(4*gB)*dimB
+     &     -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gB)*dimB
+     &     -g0_uu(3,1)*(gA_x(3)*gB_x(1))/(4*gB)*dimB
+     &     -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gB)*dimB
+     &     -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gB)*dimB
+     &
+     &     +(dimA-1)
+     &
+     &     +tA
+     &            )
+
+          ! 0 = bfe
+          gB_tt=2/g0_uu(1,1)*
+     &            (
+     &     -g0_uu(1,2)*gB_xx(1,2)/2
+     &     -g0_uu(1,3)*gB_xx(1,3)/2
+     &     -g0_uu(2,1)*gB_xx(2,1)/2
+     &     -g0_uu(2,2)*gB_xx(2,2)/2
+     &     -g0_uu(2,3)*gB_xx(2,3)/2
+     &     -g0_uu(3,1)*gB_xx(3,1)/2
+     &     -g0_uu(3,2)*gB_xx(3,2)/2
+     &     -g0_uu(3,3)*gB_xx(3,3)/2
+     &     +g0_uu(1,1)*gamma_ull(1,1,1)*gB_x(1)/2
+     &     +g0_uu(1,2)*gamma_ull(1,2,1)*gB_x(1)/2
+     &     +g0_uu(1,3)*gamma_ull(1,3,1)*gB_x(1)/2
+     &     +g0_uu(2,1)*gamma_ull(1,1,2)*gB_x(1)/2
+     &     +g0_uu(2,2)*gamma_ull(1,2,2)*gB_x(1)/2
+     &     +g0_uu(2,3)*gamma_ull(1,3,2)*gB_x(1)/2
+     &     +g0_uu(3,1)*gamma_ull(1,1,3)*gB_x(1)/2
+     &     +g0_uu(3,2)*gamma_ull(1,2,3)*gB_x(1)/2
+     &     +g0_uu(3,3)*gamma_ull(1,3,3)*gB_x(1)/2
+     &     +g0_uu(1,1)*gamma_ull(2,1,1)*gB_x(2)/2
+     &     +g0_uu(1,2)*gamma_ull(2,2,1)*gB_x(2)/2
+     &     +g0_uu(1,3)*gamma_ull(2,3,1)*gB_x(2)/2
+     &     +g0_uu(2,1)*gamma_ull(2,1,2)*gB_x(2)/2
+     &     +g0_uu(2,2)*gamma_ull(2,2,2)*gB_x(2)/2
+     &     +g0_uu(2,3)*gamma_ull(2,3,2)*gB_x(2)/2
+     &     +g0_uu(3,1)*gamma_ull(2,1,3)*gB_x(2)/2
+     &     +g0_uu(3,2)*gamma_ull(2,2,3)*gB_x(2)/2
+     &     +g0_uu(3,3)*gamma_ull(2,3,3)*gB_x(2)/2
+     &     +g0_uu(1,1)*gamma_ull(3,1,1)*gB_x(3)/2
+     &     +g0_uu(1,2)*gamma_ull(3,2,1)*gB_x(3)/2
+     &     +g0_uu(1,3)*gamma_ull(3,3,1)*gB_x(3)/2
+     &     +g0_uu(2,1)*gamma_ull(3,1,2)*gB_x(3)/2
+     &     +g0_uu(2,2)*gamma_ull(3,2,2)*gB_x(3)/2
+     &     +g0_uu(2,3)*gamma_ull(3,3,2)*gB_x(3)/2
+     &     +g0_uu(3,1)*gamma_ull(3,1,3)*gB_x(3)/2
+     &     +g0_uu(3,2)*gamma_ull(3,2,3)*gB_x(3)/2
+     &     +g0_uu(3,3)*gamma_ull(3,3,3)*gB_x(3)/2
+     &     +g0_uu(1,1)*(gB_x(1)*gB_x(1))/(4*gB)*(dimB-2)
+     &     +g0_uu(1,2)*(gB_x(1)*gB_x(2))/(4*gB)*(dimB-2)
+     &     +g0_uu(1,3)*(gB_x(1)*gB_x(3))/(4*gB)*(dimB-2)
+     &     +g0_uu(2,1)*(gB_x(2)*gB_x(1))/(4*gB)*(dimB-2)
+     &     +g0_uu(2,2)*(gB_x(2)*gB_x(2))/(4*gB)*(dimB-2)
+     &     +g0_uu(2,3)*(gB_x(2)*gB_x(3))/(4*gB)*(dimB-2)
+     &     +g0_uu(3,1)*(gB_x(3)*gB_x(1))/(4*gB)*(dimB-2)
+     &     +g0_uu(3,2)*(gB_x(3)*gB_x(2))/(4*gB)*(dimB-2)
+     &     +g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2)
+     &     -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gA)*dimA
+     &     -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gA)*dimA
+     &     -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gA)*dimA
+     &     -g0_uu(2,1)*(gA_x(2)*gB_x(1))/(4*gA)*dimA
+     &     -g0_uu(2,2)*(gA_x(2)*gB_x(2))/(4*gA)*dimA
+     &     -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gA)*dimA
+     &     -g0_uu(3,1)*(gA_x(3)*gB_x(1))/(4*gA)*dimA
+     &     -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
+     &     -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
+     &
+     &     +(dimA-1)
+     &
+     &     +tA
+     &            )
+
           ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
           phi10_tt=-1/g0_uu(1,1)
      &              *(    
@@ -349,7 +483,9 @@ c----------------------------------------------------------------------
           gb_tt_tt=h0_ll_tt(1,1)/(1-x0**2) 
           gb_tx_tt=h0_ll_tt(1,2)/(1-x0**2)
           gb_xx_tt=h0_ll_tt(2,2)/(1-x0**2) 
-          gb_yy_tt=h0_ll_tt(3,3)/(1-x0**2)**3 
+          gb_yy_tt=h0_ll_tt(3,3)/(1-x0**2)**3
+          psi_tt=gA_tt/(1-x0**2)/x0**2
+          omega_tt=gB_tt/(1-x0**2)**3
           phi1_tt =phi10_tt/(1-x0**2)**3
 
           ! initialize past time level by O(h^3) expansion
@@ -361,8 +497,10 @@ c----------------------------------------------------------------------
      &                      + gb_xx_tt*dt**2/2
            gb_yy_nm1(i)=gb_yy_n(i) - gb_yy_t*dt
      &                      + gb_yy_tt*dt**2/2
-!           psi_nm1(i)  =psi_n(i) - psi_t*dt  !NOTE: add these when you add psi subsector
+!           psi_nm1(i)  =psi_n(i) - psi_t*dt  
 !     &                      + psi_tt*dt**2/2
+!           omega_nm1(i)=omega_n(i) - omega_t*dt  
+!     &                      + omega_tt*dt**2/2
            Hb_t_nm1(i) =Hb_t_n(i) - Hb_t_t*dt
            Hb_x_nm1(i) =Hb_x_n(i) - Hb_x_t*dt
            phi1_nm1(i) =phi1_n(i) - phi1_t*dt
@@ -377,8 +515,10 @@ c----------------------------------------------------------------------
      &                      + gb_xx_tt*dt**2/2
            gb_yy_np1(i)=gb_yy_n(i) + gb_yy_t*dt
      &                      + gb_yy_tt*dt**2/2
-!           psi_np1(i)  =psi_n(i) + psi_t*dt  !NOTE: !NOTE: add these when you add psi subsector
+!           psi_np1(i)  =psi_n(i) + psi_t*dt  
 !     &                      + psi_tt*dt**2/2
+!           omega_np1(i)=omega_n(i) + omega_t*dt  
+!     &                      + omega_tt*dt**2/2
            Hb_t_np1(i) =Hb_t_n(i) + Hb_t_t*dt
            Hb_x_np1(i) =Hb_x_n(i) + Hb_x_t*dt     
            phi1_np1(i) =phi1_n(i) + phi1_t*dt
