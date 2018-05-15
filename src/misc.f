@@ -351,12 +351,13 @@ c----------------------------------------------------------------------
      &                  gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &                  gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
-     &                  sqrtdetg,sqrtdetg_x,f1_l_x,f2_ll_x,
+     &                  sqrtdetg,sqrtdetg_x,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &                  s0_ll,t0_ll,f1_l,f2_ll,
+     &                  s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &                  sA,sB,tA,tB,
      &                  phi10_x,phi10_xx,
      &                  x,dt,chr,L,ex,Nx,i)
         implicit none
@@ -415,6 +416,7 @@ c----------------------------------------------------------------------
         real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 f1_l(3),f1_l_x(3,3)
         real*8 f2_ll(3,3),f2_ll_x(3,3,3)
+        real*8 sA,sB,tA,tB
         real*8 levicivi3(3,3,3),vol(3,3,3),vol_x(3,3,3,3)
         real*8 sqrtdetg,sqrtdetg_x(3)
         real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
@@ -1212,7 +1214,11 @@ c----------------------------------------------------------------------
           end do
         end do
 
-        ! calculate s0_ll,t0_ll,ricci_ll
+        ! calculate s0_ll,t0_ll,ricci_ll,sA,sB,tA,tB
+        sA=0
+        sB=0
+        tA=0
+        tB=0
         do a=1,3
           do b=1,3
             s0_ll(a,b)=-dimA*( (gA_xx(a,b)
@@ -1241,6 +1247,40 @@ c----------------------------------------------------------------------
      &                  )/4
 
             ricci_ll(a,b)=riccibar_ll(a,b)+s0_ll(a,b)
+
+            sA=sA-g0_uu(a,b)*( 
+     &                         (gA_xx(a,b)
+     &                         -gamma_ull(1,b,a)*gA_x(1)
+     &                         -gamma_ull(2,b,a)*gA_x(2)
+     &                         -gamma_ull(3,b,a)*gA_x(3)
+     &                         )/2
+     &                       - (gA_x(a)*gA_x(b))/(4*gA)*(dimA-2)
+     &                       + (gA_x(a)*gB_x(b))/(4*gB)*dimB
+     &                       )
+
+            sB=sB-g0_uu(a,b)*( 
+     &                         (gB_xx(a,b)
+     &                         -gamma_ull(1,b,a)*gB_x(1)
+     &                         -gamma_ull(2,b,a)*gB_x(2)
+     &                         -gamma_ull(3,b,a)*gB_x(3)
+     &                         )/2
+     &                       - (gB_x(a)*gB_x(b))/(4*gB)*(dimB-2) 
+     &                       + (gA_x(a)*gB_x(b))/(4*gA)*dimA
+     &                       )
+
+            tA=tA-gA*g0_uu(a,b)*(
+     &                  +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                  +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                  +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                  +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                  +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                  +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                  +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                  +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                  +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                          )/8
+
+            tB=tB-gB*g0_uu(a,b)*f1_l(a)*f1_l(b)/4
           end do
         end do
 

@@ -64,6 +64,7 @@ c----------------------------------------------------------------------
         real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 f1_l(3),f1_l_x(3,3)
         real*8 f2_ll(3,3),f2_ll_x(3,3,3)
+        real*8 sA,sB,tA,tB
         real*8 sqrtdetg,sqrtdetg_x(3)
 
         !--------------------------------------------------------------
@@ -94,6 +95,7 @@ c----------------------------------------------------------------------
         data s0_ll,t0_ll/9*0.0,9*0.0/
         data f1_l,f1_l_x/3*0.0,9*0.0/
         data f2_ll,f2_ll_x/9*0.0,27*0.0/
+        data sA,sB,tA,tB/0.0,0.0,0.0,0.0/
         data sqrtdetg,sqrtdetg_x/0.0,3*0.0/
 
         data A_l,Hads_l/3*0.0,3*0.0/
@@ -150,12 +152,13 @@ c----------------------------------------------------------------------
      &              gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
      &              gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &              gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
-     &              sqrtdetg,sqrtdetg_x,f1_l_x,f2_ll_x,
+     &              sqrtdetg,sqrtdetg_x,
      &              h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &              A_l,A_l_x,Hads_l,Hads_l_x,
      &              gamma_ull,gamma_ull_x,
      &              riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &              s0_ll,t0_ll,f1_l,f2_ll,
+     &              s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &              sA,sB,tA,tB,
      &              phi10_x,phi10_xx,
      &              x,dt,chr,L,ex,Nx,i)
 
