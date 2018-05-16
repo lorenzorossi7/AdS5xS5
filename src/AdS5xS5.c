@@ -965,6 +965,13 @@ void AdS5xS5_evolve(int iter)
              Hb_t_0,Hb_x_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
 
+//     //TEST//
+//     for (i=0; i<size; i++)
+//     {
+//       printf("omega_np1[i]=%.16f,omega_n[i]=%.16f,omega_nm1[i]=%.16f\n",omega_np1[i],omega_n[i],omega_nm1[i]);
+//     }
+//     //TEST//
+
    g_evo_opt_(gb_res,fb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,

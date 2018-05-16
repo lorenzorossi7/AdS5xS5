@@ -155,7 +155,7 @@ id_pl_method := 3
 id_pl_steps := 5
 id_pl_lambda := 0.2
 
-np1_initial_guess := 1
+np1_initial_guess := 0
 io_node := 0
 
 max_t_interp_order := 3

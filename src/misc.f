@@ -1451,11 +1451,11 @@ c----------------------------------------------------------------------
      &     -gB*g0_uu(3,3)*f1_l(3)*f1_l(3)/4
 
 !         if (x(i).eq.0.5d0) then
-!           write(*,*) '(dimA-1)+sA+tA=',(dimA-1)+sA+tA
+!           write(*,*) '(dimB-1)+sB+tB=',(dimB-1)+sB+tB
 !           stop
 !         end if
 !TEST!
-!        phi1_np1(i)=(dimA-1)+sA+tA
+!        phi1_np1(i)=omega_t
 !!TEST!
 !              do a=1,3
 !                do b=a,3
