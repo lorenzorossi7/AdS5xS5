@@ -543,8 +543,6 @@ c----------------------------------------------------------------------
               ffe(3)=-f1_l_x(3,1)+f1_l_x(1,3)
      &               +2*f1_l(1)*gB_x(3)/gB-2*f1_l(3)*gB_x(1)/gB 
 
-!              phi1_np1(i)=gB_x(1) !TEST!
-
               !--------------------------------------------------------------------------
               ! phi1_res = g^ab phi1,ab + g^ab,a phi1,b + g^cb gamma^a_ab phi1,c  
               !         (= g^ab phi1,ab - g^ab gamma^c_ab phi1,c) 
@@ -936,6 +934,27 @@ c----------------------------------------------------------------------
      &              -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
      &              -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA 
      &              )*(1-x0**2)**3
+!TMP!
+!              bfe_J=(
+!     &              -g0_uu(1,1)*ddgb_J/2
+!     &              +g0_uu(1,1)*gamma_ull(1,1,1)*dgb_J/2
+!     &              +g0_uu(1,2)*gamma_ull(1,2,1)*dgb_J/2
+!     &              +g0_uu(1,3)*gamma_ull(1,3,1)*dgb_J/2
+!     &              +g0_uu(2,1)*gamma_ull(1,1,2)*dgb_J/2
+!     &              +g0_uu(2,2)*gamma_ull(1,2,2)*dgb_J/2
+!     &              +g0_uu(2,3)*gamma_ull(1,3,2)*dgb_J/2
+!     &              +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
+!     &              +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
+!     &              +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
+!     &              -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2)
+!     &              -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2)
+!     &              -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2)
+!     &              -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2)
+!     &              -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2)
+!     &              -g0_uu(1,1)*dgb_J*gA_x(1)/(4*gA)*dimA
+!     &              -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
+!     &              -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA
+!     &              )*(1-x0**2)*x0**2
 
               !----------------------------------------------------------------
               ! computes diag. Jacobian of f_np1->L.f_np1 transformation
@@ -1111,13 +1130,13 @@ c----------------------------------------------------------------------
                 psi_np1(i)=psi_np1(i)-afe/afe_J
               end if
 
-!              ! update omega
-!              if (is_nan(bfe).or.is_nan(bfe_J).or.
-!     &          bfe_J.eq.0) then
-!                dump=.true.
-!              else
-!                omega_np1(i)=omega_np1(i)-bfe/bfe_J
-!              end if
+              ! update omega
+              if (is_nan(bfe).or.is_nan(bfe_J).or.
+     &          bfe_J.eq.0) then
+                dump=.true.
+              else
+                omega_np1(i)=omega_np1(i)-bfe/bfe_J
+              end if
 
               ! update fbars 
               if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
