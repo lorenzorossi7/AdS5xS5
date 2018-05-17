@@ -852,9 +852,7 @@ void AdS5xS5_pre_io_calc(void)
    // fill in ires arrays with independent residuals
    for (i=0; i<Nx; i++)
    {
-     // excise i=Nx-1 pts (pure AdS diverges at i=Nx, so cannot use these pts in difference stencils) 
-     if (chr[i]==AMRD_ex 
-         || x[i]<1.5*dx_Lc || 1-x[i]<1.5*dx_Lc) 
+     if (chr[i]==AMRD_ex) 
      {
        iresphi1[i]=0;  
        iresall[i]=0;
