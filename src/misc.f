@@ -774,7 +774,7 @@ c----------------------------------------------------------------------
         end do
 
         gA=gA_ads0+psi0*(1-x0**2)*x0**2
-        gB=gB_ads0+omega0*(1-x0**2)**3
+        gB=gB_ads0+omega0*(1-x0**2)**3*sin(PI*y0/L)**2
 !TMP!
 !        gB=gB_ads0+omega0*(1-x0**2)*x0**2
 
@@ -795,20 +795,20 @@ c----------------------------------------------------------------------
      &            +psi0*(2-12*x0**2)
 
         gB_x(1)   =0
-     &            +omega_t*(1-x0**2)**3
+     &            +omega_t*(1-x0**2)**3*sin(PI*y0/L)**2
         gB_x(2)   =0
-     &            +omega_x*(1-x0**2)**3
-     &            +omega0*3*(1-x0**2)**2*(-2*x0)
+     &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
         gB_xx(1,1)=0
-     &            +omega_tt*(1-x0**2)**3
+     &            +omega_tt*(1-x0**2)**3*sin(PI*y0/L)**2
         gB_xx(1,2)=0
-     &            +omega_tx*(1-x0**2)**3
-     &            +omega_t*3*(1-x0**2)**2*(-2*x0)
+     &            +omega_tx*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_t*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
         gB_xx(2,2)=0
-     &            +omega_xx*(1-x0**2)**3
-     &            +omega_x*3*(1-x0**2)**2*(-2*x0)
-     &            +omega_x*3*(1-x0**2)**2*(-2*x0)
-     &            +omega0*6*(-1+6*x0**2-5*x0**4)
+     &            +omega_xx*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_x*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
+     &            +omega_x*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
+     &            +omega0*6*(-1+6*x0**2-5*x0**4)*sin(PI*y0/L)**2
         gB_xx(3,3)=gB_ads_yy  !NOTE: add the rest of the terms when you add y-dependence
 !TMP!
 !        gB_x(1)   =0
