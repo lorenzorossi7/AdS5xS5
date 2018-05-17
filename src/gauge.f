@@ -91,6 +91,9 @@ c----------------------------------------------------------------------
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
+     &                    fb_t_np1,fb_t_n,fb_t_nm1,
+     &                    fb_x_np1,fb_x_n,fb_x_nm1,
+     &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
@@ -98,6 +101,7 @@ c----------------------------------------------------------------------
      &                    phys_bdy,ghost_width,Nx,
      &                    Hb_t_0,Hb_x_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2)
+
         implicit none
         integer Nx,gauge,phys_bdy(2),ghost_width(2)
         real*8 res(Nx),t_n,t_np1
@@ -109,6 +113,9 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
+        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
+        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
+        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
         real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
@@ -193,6 +200,9 @@ c-----------------------------------------------------------------------
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
+     &                    fb_t_np1,fb_t_n,fb_t_nm1,
+     &                    fb_x_np1,fb_x_n,fb_x_nm1,
+     &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
@@ -212,6 +222,9 @@ c-----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
+        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
+        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
+        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
         real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
         real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
         real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
