@@ -1130,13 +1130,14 @@ c----------------------------------------------------------------------
                 psi_np1(i)=psi_np1(i)-afe/afe_J
               end if
 
-              ! update omega
-              if (is_nan(bfe).or.is_nan(bfe_J).or.
-     &          bfe_J.eq.0) then
-                dump=.true.
-              else
-                omega_np1(i)=omega_np1(i)-bfe/bfe_J
-              end if
+!TEST: fixedgb
+!              ! update omega
+!              if (is_nan(bfe).or.is_nan(bfe_J).or.
+!     &          bfe_J.eq.0) then
+!                dump=.true.
+!              else
+!                omega_np1(i)=omega_np1(i)-bfe/bfe_J
+!              end if
 
               ! update fbars 
               if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
