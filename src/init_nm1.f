@@ -219,8 +219,6 @@ c----------------------------------------------------------------------
             A_l_x(2,1)    =Hb_x_t_n(i)*(1-x0**2)**2
             gA_x(1)       =psi_t_n(i)*(1-x0**2)*x0**2
             gB_x(1)       =omega_t_n(i)*(1-x0**2)**3
-!TMP!
-!            gB_x(1)       =omega_t_n(i)*(1-x0**2)*x0**2
 
             ! need this in gb_ii_nm1/np1,Hb_i_nm1/np1,phi1_nm1/np1 updates
             phi1_t =phi1_t_n(i)                
