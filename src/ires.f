@@ -179,7 +179,7 @@ c----------------------------------------------------------------------
 
             if (chr(i).ne.ex) then
 
-              ! computes tensors at point i
+              ! computes tensors at point i,j
               call tensor_init(
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                gb_tx_np1,gb_tx_n,gb_tx_nm1,

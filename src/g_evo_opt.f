@@ -227,6 +227,7 @@ c----------------------------------------------------------------------
         data y0/0.0/
 
         data dx/0.0/
+        data dy/0.0/
 
         data boxx_u,boxx_l/3*0.0,3*0.0/
 
@@ -309,7 +310,7 @@ c----------------------------------------------------------------------
               !(REGION) interior points; evolve 
               if (chr(i,j).ne.ex) then
 
-                ! computes tensors at point i
+                ! computes tensors at point i,j
                 call tensor_init(
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
