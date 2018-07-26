@@ -27,21 +27,21 @@ c----------------------------------------------------------------------
         integer phys_bdy(4),ghost_width(4)
         integer background
         real*8 kappa_cd,rho_cd
-        real*8 gb_res(Nx),fb_res(Nx),cl_res(Nx)
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
-        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
-        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
-        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
-        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
-        real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
+        real*8 gb_res(Nx,Ny),fb_res(Nx,Ny),cl_res(Nx,Ny)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
+        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
+        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
+        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
         real*8 L
-        real*8 x(Nx),y(Ny),dt,chr(Nx),ex
+        real*8 x(Nx),y(Ny),dt,chr(Nx,Ny),ex
 
         integer a,b,c,d,e
 
@@ -276,17 +276,11 @@ c----------------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
 
         dx=x(2)-x(1)
+        dy=y(2)-y(1)
 
         ! set dimensions of S3 and S4 subspaces
         dimA=3
         dimB=4
-
-        ! initialize output variables
-        do i=1,Nx
-          if (chr(i).eq.ex) then
-            phi1_np1(i) = 0
-          end if
-        end do
 
         ! set index bounds for main loop
         is=2
@@ -310,10 +304,10 @@ c----------------------------------------------------------------------
 
               dump=.false.
 
-              if (ltrace) write(*,*) 'i:',i
+              if (ltrace) write(*,*) 'i,j:',i,j
 
               !(REGION) interior points; evolve 
-              if (chr(i).ne.ex) then
+              if (chr(i,j).ne.ex) then
 
                 ! computes tensors at point i
                 call tensor_init(
@@ -610,17 +604,17 @@ c----------------------------------------------------------------------
                 dgb_J=1d0/2d0/dt
                 ddgb_J=1d0/dt/dt
 
-                if (i.eq.1.or.(chr(i-1).eq.ex)) then
+                if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
                    if (i.le.(Nx-3)
-     &                 .and.((chr(i+1).ne.ex
-     &                 .and.chr(i+2).ne.ex
-     &                 .and.chr(i+3).ne.ex))) then
+     &                 .and.((chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex
+     &                 .and.chr(i+3,j).ne.ex))) then
                       ddgb_J_tx=-1/dt/dx
                    else if (i.le.(Nx-2)
-     &                      .and.((chr(i+1).ne.ex
-     &                      .and.chr(i+2).ne.ex))) then
+     &                      .and.((chr(i+1,j).ne.ex
+     &                      .and.chr(i+2,j).ne.ex))) then
                       ddgb_J_tx=-3d0/4d0/dt/dx
-                   else if (i.le.(Nx-1).and.chr(i+1).ne.ex) then
+                   else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
                       ddgb_J_tx=-1d0/2d0/dt/dx
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (A)'
@@ -628,17 +622,17 @@ c----------------------------------------------------------------------
                       write(*,*) '    (first error only)'
                       ddgb_J_tx=0
                    end if
-                else if (i.eq.Nx.or.(chr(i+1).eq.ex)) then
+                else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
                    if (i.ge.4
-     &                 .and.((chr(i-1).ne.ex
-     &                 .and.chr(i-2).ne.ex
-     &                 .and.chr(i-3).ne.ex))) then
+     &                 .and.((chr(i-1,j).ne.ex
+     &                 .and.chr(i-2,j).ne.ex
+     &                 .and.chr(i-3,j).ne.ex))) then
                       ddgb_J_tx=1d0/dt/dx
                    else if (i.ge.3
-     &                      .and.((chr(i-1).ne.ex
-     &                      .and.chr(i-2).ne.ex))) then
+     &                      .and.((chr(i-1,j).ne.ex
+     &                      .and.chr(i-2,j).ne.ex))) then
                       ddgb_J_tx=3d0/4d0/dt/dx
-                   else if (i.ge.2.and.chr(i-1).ne.ex) then
+                   else if (i.ge.2.and.chr(i-1,j).ne.ex) then
                       ddgb_J_tx=1d0/2d0/dt/dx
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (B)'
@@ -647,7 +641,7 @@ c----------------------------------------------------------------------
                       ddgb_J_tx=0
                    end if
                 else
-                   if ((chr(i+1).ne.ex.and.chr(i-1).ne.ex)) then
+                   if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
                       ddgb_J_tx=0
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (C)'
@@ -964,17 +958,17 @@ c----------------------------------------------------------------------
                 dphi1_J=1d0/2d0/dt
                 ddphi1_J=1d0/dt/dt
 
-                if (i.eq.1.or.(chr(i-1).eq.ex)) then
+                if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
                    if (i.le.(Nx-3)
-     &                 .and.((chr(i+1).ne.ex
-     &                 .and.chr(i+2).ne.ex
-     &                 .and.chr(i+3).ne.ex))) then
+     &                 .and.((chr(i+1,j).ne.ex
+     &                 .and.chr(i+2,j).ne.ex
+     &                 .and.chr(i+3,j).ne.ex))) then
                       ddphi1_J_tx=-1d0/dt/dx
                    else if (i.le.(Nx-2)
-     &                      .and.((chr(i+1).ne.ex
-     &                      .and.chr(i+2).ne.ex))) then
+     &                      .and.((chr(i+1,j).ne.ex
+     &                      .and.chr(i+2,j).ne.ex))) then
                       ddphi1_J_tx=-3d0/4d0/dt/dx
-                   else if (i.le.(Nx-1).and.chr(i+1).ne.ex) then
+                   else if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
                       ddphi1_J_tx=-1d0/2d0/dt/dx
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (A)'
@@ -982,17 +976,17 @@ c----------------------------------------------------------------------
                       write(*,*) '    (first error only)'
                       ddphi1_J_tx=0
                    end if
-                else if (i.eq.Nx.or.(chr(i+1).eq.ex)) then
+                else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
                    if (i.ge.4
-     &                 .and.((chr(i-1).ne.ex
-     &                 .and.chr(i-2).ne.ex
-     &                 .and.chr(i-3).ne.ex))) then
+     &                 .and.((chr(i-1,j).ne.ex
+     &                 .and.chr(i-2,j).ne.ex
+     &                 .and.chr(i-3,j).ne.ex))) then
                       ddphi1_J_tx=1d0/dt/dx
                    else if (i.ge.3
-     &                      .and.((chr(i-1).ne.ex
-     &                      .and.chr(i-2).ne.ex))) then
+     &                      .and.((chr(i-1,j).ne.ex
+     &                      .and.chr(i-2,j).ne.ex))) then
                       ddphi1_J_tx=3d0/4d0/dt/dx
-                   else if (i.ge.2.and.chr(i-1).ne.ex) then
+                   else if (i.ge.2.and.chr(i-1,j).ne.ex) then
                       ddphi1_J_tx=1d0/2d0/dt/dx
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (B)'
@@ -1001,7 +995,7 @@ c----------------------------------------------------------------------
                       ddphi1_J_tx=0
                    end if
                 else
-                   if ((chr(i+1).ne.ex.and.chr(i-1).ne.ex)) then
+                   if ((chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex)) then
                       ddphi1_J_tx=0
                    else
                       write(*,*) 'g_evo_opt: error in chr stencil (C)'
@@ -1084,28 +1078,28 @@ c----------------------------------------------------------------------
      &            efe_J(1,1).eq.0) then
                   dump=.true.
                 else
-                  gb_tt_np1(i)=gb_tt_np1(i)-efe(1,1)/efe_J(1,1)
+                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
                 end if
 
                 if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
      &            efe_J(1,2).eq.0) then
                   dump=.true.
                 else
-                  gb_tx_np1(i)=gb_tx_np1(i)-efe(1,2)/efe_J(1,2)
+                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
                 end if
 
                 if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
      &            efe_J(2,2).eq.0) then
                   dump=.true.
                 else
-                  gb_xx_np1(i)=gb_xx_np1(i)-efe(2,2)/efe_J(2,2)
+                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
                 end if
 
                 if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
      &            efe_J(3,3).eq.0) then
                   dump=.true.
                 else
-                  gb_yy_np1(i)=gb_yy_np1(i)-efe(3,3)/efe_J(3,3)
+                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
                 end if
 
                 ! update psi
@@ -1113,15 +1107,16 @@ c----------------------------------------------------------------------
      &            afe_J.eq.0) then
                   dump=.true.
                 else
-                  psi_np1(i)=psi_np1(i)-afe/afe_J
+                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
                 end if
 
+!TEST!
 !                ! update omega
 !                if (is_nan(bfe).or.is_nan(bfe_J).or.
 !     &            bfe_J.eq.0) then
 !                  dump=.true.
 !                else
-!                  omega_np1(i)=omega_np1(i)-bfe/bfe_J
+!                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
 !                end if
 
                 ! update fbars 
@@ -1129,62 +1124,62 @@ c----------------------------------------------------------------------
      &            ffe_J(1).eq.0) then
                   dump=.true.
                 else
-                  fb_t_np1(i)=fb_t_np1(i)-ffe(1)/ffe_J(1)
+                  fb_t_np1(i,j)=fb_t_np1(i,j)-ffe(1)/ffe_J(1)
                 end if
 
                 if (is_nan(ffe(2)).or.is_nan(ffe_J(2)).or.
      &            ffe_J(2).eq.0) then
                   dump=.true.
                 else
-                  fb_x_np1(i)=fb_x_np1(i)-ffe(2)/ffe_J(2)
+                  fb_x_np1(i,j)=fb_x_np1(i,j)-ffe(2)/ffe_J(2)
                 end if
 
                 if (is_nan(ffe(3)).or.is_nan(ffe_J(3)).or.
      &            ffe_J(3).eq.0) then
                   dump=.true.
                 else
-                  fb_y_np1(i)=fb_y_np1(i)-ffe(3)/ffe_J(3)
+                  fb_y_np1(i,j)=fb_y_np1(i,j)-ffe(3)/ffe_J(3)
                 end if
 
                 ! update phi1 
                 if (is_nan(phi1_res).or.is_nan(phi1_J)) then
                   dump=.true.
                 else
-                  phi1_np1(i)=phi1_np1(i)-phi1_res/phi1_J 
+                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
                 end if
 
-                gb_res(i) =
+                gb_res(i,j) =
      &            max(abs(efe(1,1)/efe_J(1,1)),
      &                abs(efe(1,2)/efe_J(1,2)),
      &                abs(efe(2,2)/efe_J(2,2)),
      &                abs(efe(3,3)/efe_J(3,3)),
      &                abs(afe/afe_J),
      &                abs(bfe/bfe_J))
-                fb_res(i)=
+                fb_res(i,j)=
      &            max(abs(ffe(1)/ffe_J(1)),
      &                abs(ffe(2)/ffe_J(2)),
      &                abs(ffe(3)/ffe_J(3)))
-                cl_res(i)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
+                cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
                 if (dump.and.first_nan.or.ltrace) then
                   first_nan=.false.
                   write(*,*)
-                  write(*,*) 'g_evo_opt: Nan/zero at i,Nx=',
-     &                                              i,Nx
-                  write(*,*) 'x=',x(i)
-                  write(*,*) 'dt,dx=',dt,dx
-                  write(*,*) 'x0',x0
+                  write(*,*) 'g_evo_opt: Nan/zero at i,j,Nx,Ny=',
+     &                                              i,j,Nx,Ny
+                  write(*,*) 'x,y=',x(i),y(j)
+                  write(*,*) 'dt,dx,dy=',dt,dx,dy
+                  write(*,*) 'x0,y0',x0,y0
 
                   write(*,*) ' at tn:'
-                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i),
-     &                   gb_tt_n(i),gb_tt_nm1(i)
-                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i),
-     &                   gb_tx_n(i),gb_tx_nm1(i)
-                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i),
-     &                   gb_xx_n(i),gb_xx_nm1(i)
-                  write(*,*) ' psi np1,n,nm1:',psi_np1(i),
-     &                   psi_n(i),psi_nm1(i)
+                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i,j),
+     &                   gb_tt_n(i,j),gb_tt_nm1(i,j)
+                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i,j),
+     &                   gb_tx_n(i,j),gb_tx_nm1(i,j)
+                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j),
+     &                   gb_xx_n(i,j),gb_xx_nm1(i,j)
+                  write(*,*) ' psi np1,n,nm1:',psi_np1(i,j),
+     &                   psi_n(i,j),psi_nm1(i,j)
                   write(*,*) ' g0_11 :',g0_ll(1,1)
                   write(*,*) ' g0_12 :',g0_ll(1,2)
                   write(*,*) ' g0_22 :',g0_ll(2,2)
@@ -1193,8 +1188,8 @@ c----------------------------------------------------------------------
                   write(*,*) ' g0u_12 :',g0_uu(1,2)
                   write(*,*) ' g0u_22 :',g0_uu(2,2)
                   write(*,*) ' g0u_33:',g0_uu(3,3)
-                  write(*,*) ' phi np1,n,nm1:',phi1_np1(i),
-     &                     phi1_n(i),phi1_nm1(i)
+                  write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j),
+     &                     phi1_n(i,j),phi1_nm1(i,j)
                   write(*,*) ' phi1_t/x:',phi1_t,phi1_x
                   write(*,*) ' phi1_ti..:',phi1_tt,phi1_tx,phi1_xx
 
@@ -1208,11 +1203,12 @@ c----------------------------------------------------------------------
 
               ! (REGION) non-interior points; set to zero prior to applying bcs 
               else 
-                gb_tt_np1(i) = 0
-                gb_tx_np1(i) = 0
-                gb_xx_np1(i) = 0
-                psi_np1(i)   = 0
-                phi1_np1(i)  = 0 
+                gb_tt_np1(i,j) = 0
+                gb_tx_np1(i,j) = 0
+                gb_xx_np1(i,j) = 0
+                psi_np1(i,j)   = 0
+                omega_np1(i,j) = 0
+                phi1_np1(i,j)  = 0 
 
               endif ! (near start of main loop)
 
