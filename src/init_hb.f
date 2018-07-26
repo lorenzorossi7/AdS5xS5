@@ -15,14 +15,14 @@ c----------------------------------------------------------------------
         integer Nx,Ny
         integer phys_bdy(4)
         real*8 dt,ex,L
-        real*8 chr(Nx)
+        real*8 chr(Nx,Ny)
         real*8 Hb_t_n(Nx,Ny),Hb_x_n(Nx,Ny),Hb_y_n(Nx,Ny)
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
         real*8 x(Nx),y(Ny)
 
         integer i,j,is,ie,js,je,a,b,c,d
@@ -116,10 +116,12 @@ c----------------------------------------------------------------------
         dx=x(2)-x(1)
 
         do i=1,Nx
-          Hb_t_n(i,j)=0
-          Hb_x_n(i,j)=0
-          Hb_y_n(i,j)=0
-          zeros(i)=0
+          do j=1,Ny
+            Hb_t_n(i,j)=0
+            Hb_x_n(i,j)=0
+            Hb_y_n(i,j)=0
+            zeros(i)=0
+          end do
         end do
 
         is=1
@@ -133,8 +135,9 @@ c----------------------------------------------------------------------
 
         do i=is,ie
           do j=js,je
-            if (chr(i).ne.ex) then
+            if (chr(i,j).ne.ex) then
               x0=x(i)
+              y0=y(j)
 
               !-----------------------------------------------------------
               ! some other initializion
