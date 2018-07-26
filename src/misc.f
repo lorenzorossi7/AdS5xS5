@@ -204,15 +204,15 @@ c
 c where the profile is constructed to be phi1~(1-x^2)=(1-x)(1+x)
 c for correct AdS asymptotics (1-x^2)^3*phi1~(1-x)^4, and regularity at x=0 
 c----------------------------------------------------------------------
-        subroutine gauss2d(f,amp,r0,delta,xu0,ax,
-     &                     amp2,r02,delta2,xu02,ax2,
-     &                     L,x,Nx)
+        subroutine gauss2d(f,amp,r0,delta,xu0,yu0,ax,ay,
+     &                     amp2,r02,delta2,xu02,yu02,ax2,ay2,
+     &                     L,x,y,Nx,Ny)
         implicit none
-        integer i,Nx
-        real*8 f(Nx),x(Nx),L
-        real*8 amp,r0,delta,ax,xu0,r
-        real*8 amp2,r02,delta2,ax2,xu02,r2
-        real*8 x0
+        integer i,j,Nx,Ny
+        real*8 f(Nx),x(Nx),y(Ny),L
+        real*8 amp,r0,delta,ax,ay,xu0,yu0,r
+        real*8 amp2,r02,delta2,ax2,ay2,xu02,yu02,r2
+        real*8 x0,y0
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -244,16 +244,18 @@ c----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c for variables with lin_zero_bnd ... zeros residual there
 c-----------------------------------------------------------------------
-        subroutine lin_zero_bnd_res(f,phys_bdy,all,Nx)
+        subroutine lin_zero_bnd_res(f,phys_bdy,all,Nx,Ny)
         implicit none
-        integer Nx,all
+        integer Nx,Ny,all
         real*8 f(Nx)
-        integer phys_bdy(2)
+        integer phys_bdy(4)
 
         integer i,is,ie
+        integer j,js,je
 
         ! initialize fixed-size variables
         data i,is,ie/0,0,0/
+        data j,js,je/0,0,0/
 
         !--------------------------------------------------------------
 
@@ -265,6 +267,14 @@ c-----------------------------------------------------------------------
           f(Nx-1)=0
         end if
 
+        if (phys_bdy(3).eq.1.or.all.eq.1) then
+          f(2)=0
+        end if
+
+        if (phys_bdy(4).eq.1.or.all.eq.1) then
+          f(Ny-1)=0
+        end if
+
         return
         end
 
@@ -273,14 +283,14 @@ c initializes the metric to an exact black hole solution
 c with radius parameter r0
 c----------------------------------------------------------------------
         subroutine init_schw(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
-     &                       r0,L,phys_bdy,chr,ex,x,Nx)
+     &                       r0,L,phys_bdy,chr,ex,x,y,Nx,Ny)
         implicit none
         real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx)
         real*8 gb_yy(Nx),psi(Nx),omega(Nx)
-        real*8 chr(Nx),x(Nx)
+        real*8 chr(Nx),x(Nx),y(Ny)
         real*8 r0,ex,L
-        integer phys_bdy(2)
-        integer i,Nx
+        integer phys_bdy(4)
+        integer i,Nx,Ny
 
         real*8 r_h,x_h,x0
 
@@ -328,7 +338,7 @@ c----------------------------------------------------------------------
         end do
 
         ! (REGION) x=0; impose regularity conditions 
-        call axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,chr,ex,L,x,Nx)
+        call axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,chr,ex,L,x,y,Nx,Ny)
 
         return
         end
@@ -361,14 +371,14 @@ c----------------------------------------------------------------------
      &                  s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
      &                  sA,sB,tA,tB,
      &                  phi10_x,phi10_xx,
-     &                  x,dt,chr,L,ex,Nx,i)
+     &                  x,y,dt,chr,L,ex,Nx,Ny,i,j)
         implicit none
 
-        integer Nx
-        integer i
+        integer Nx,Ny
+        integer i,j
 
         real*8 chr(Nx),ex
-        real*8 x(Nx),dt,L
+        real*8 x(Nx),y(Ny),dt,L
 
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)

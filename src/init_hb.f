@@ -10,29 +10,29 @@ c----------------------------------------------------------------------
      &                     psi_np1,psi_n,psi_nm1,
      &                     omega_np1,omega_n,omega_nm1,
      &                     Hb_t_n,Hb_x_n,
-     &                     L,phys_bdy,x,dt,chr,ex,Nx)
+     &                     L,phys_bdy,x,y,dt,chr,ex,Nx,Ny)
         implicit none
-        integer Nx
-        integer phys_bdy(2)
+        integer Nx,Ny
+        integer phys_bdy(4)
         real*8 dt,ex,L
         real*8 chr(Nx)
-        real*8 Hb_t_n(Nx),Hb_x_n(Nx)
+        real*8 Hb_t_n(Nx,Ny),Hb_x_n(Nx,Ny),Hb_y_n(Nx,Ny)
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
         real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
         real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
         real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 x(Nx)
+        real*8 x(Nx),y(Ny)
 
-        integer i,is,ie,a,b,c,d
+        integer i,j,is,ie,js,je,a,b,c,d
 
-        real*8 x0
+        real*8 x0,y0
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 dx
+        real*8 dx,dy
 
         logical ltrace,extrap_int_boundaries
         parameter (ltrace=.false.,extrap_int_boundaries=.true.)
@@ -116,94 +116,122 @@ c----------------------------------------------------------------------
         dx=x(2)-x(1)
 
         do i=1,Nx
-          Hb_t_n(i)=0
-          Hb_x_n(i)=0
+          Hb_t_n(i,j)=0
+          Hb_x_n(i,j)=0
+          Hb_y_n(i,j)=0
           zeros(i)=0
         end do
 
         is=1
         ie=Nx
+        js=1
+        je=Ny
         if (phys_bdy(1).eq.1) is=2
         if (phys_bdy(2).eq.1) ie=Nx-1 
+        if (phys_bdy(3).eq.1) js=2
+        if (phys_bdy(4).eq.1) je=Ny-1 
 
         do i=is,ie
-          if (chr(i).ne.ex) then
-            x0=x(i)
+          do j=js,je
+            if (chr(i).ne.ex) then
+              x0=x(i)
 
-            !-----------------------------------------------------------
-            ! some other initializion
-            !-----------------------------------------------------------
+              !-----------------------------------------------------------
+              ! some other initializion
+              !-----------------------------------------------------------
 
-            ! computes tensors at point i 
-            call tensor_init(
-     &              gb_tt_np1,gb_tt_n,gb_tt_nm1,
-     &              gb_tx_np1,gb_tx_n,gb_tx_nm1,
-     &              gb_xx_np1,gb_xx_n,gb_xx_nm1,
-     &              gb_yy_np1,gb_yy_n,gb_yy_nm1,
-     &              psi_np1,psi_n,psi_nm1,
-     &              omega_np1,omega_n,omega_nm1,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
-     &              gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
-     &              gA,gB,gA_x,gB_x,gA_xx,gB_xx,
-     &              gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
-     &              sqrtdetg,sqrtdetg_x,
-     &              h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
-     &              A_l,A_l_x,Hads_l,Hads_l_x,
-     &              gamma_ull,gamma_ull_x,
-     &              riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &              s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
-     &              sA,sB,tA,tB,
-     &              phi10_x,phi10_xx,
-     &              x,dt,chr,L,ex,Nx,i)
+              ! computes tensors at point i 
+              call tensor_init(
+     &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
+     &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                psi_np1,psi_n,psi_nm1,
+     &                omega_np1,omega_n,omega_nm1,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
+     &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
+     &                gA,gB,gA_x,gB_x,gA_xx,gB_xx,
+     &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
+     &                sqrtdetg,sqrtdetg_x,
+     &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
+     &                A_l,A_l_x,Hads_l,Hads_l_x,
+     &                gamma_ull,gamma_ull_x,
+     &                riemann_ulll,ricci_ll,ricci_lu,ricci,
+     &                s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &                sA,sB,tA,tB,
+     &                phi10_x,phi10_xx,
+     &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
 
-            ! calculate boxx^c at point i 
-            ! (boxx^c = -g^ab gamma^c_ab)
-            do c=1,3
-              boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
-     &                     gamma_ull(c,2,2)*g0_uu(2,2)+
-     &                     gamma_ull(c,3,3)*g0_uu(3,3)+
-     &                  2*(gamma_ull(c,1,2)*g0_uu(1,2)+
-     &                     gamma_ull(c,1,3)*g0_uu(1,3)+
-     &                     gamma_ull(c,2,3)*g0_uu(2,3)) )
-            end do
+              ! calculate boxx^c at point i 
+              ! (boxx^c = -g^ab gamma^c_ab)
+              do c=1,3
+                boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
+     &                       gamma_ull(c,2,2)*g0_uu(2,2)+
+     &                       gamma_ull(c,3,3)*g0_uu(3,3)+
+     &                    2*(gamma_ull(c,1,2)*g0_uu(1,2)+
+     &                       gamma_ull(c,1,3)*g0_uu(1,3)+
+     &                       gamma_ull(c,2,3)*g0_uu(2,3)) )
+              end do
 
-            ! calculate boxx_a at point i 
-            ! (boxx_a = g_ab boxx^b)
-            do a=1,3
-              boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
-     &                  boxx_u(2)*g0_ll(a,2)+
-     &                  boxx_u(3)*g0_ll(a,3)
-            end do
+              ! calculate boxx_a at point i 
+              ! (boxx_a = g_ab boxx^b)
+              do a=1,3
+                boxx_l(a)=boxx_u(1)*g0_ll(a,1)+
+     &                    boxx_u(2)*g0_ll(a,2)+
+     &                    boxx_u(3)*g0_ll(a,3)
+              end do
 
-            ! here have \box{x}_a = Hads_a + (1-x0**2)**2*H0_a
-            Hb_t_n(i)=(boxx_l(1)-Hads_l(1))/(1-x0**2)**2
-            Hb_x_n(i)=(boxx_l(2)-Hads_l(2))/(1-x0**2)**2
+              ! here have \box{x}_a = Hads_a + (1-x0**2)**2*H0_a
+              Hb_t_n(i,j)=(boxx_l(1)-Hads_l(1))/(1-x0**2)**2
+              Hb_x_n(i,j)=(boxx_l(2)-Hads_l(2))/(1-x0**2)**2
+              Hb_y_n(i,j)=(boxx_l(3)-Hads_l(3))/(1-x0**2)**2
 
-          end if
+            end if
+          end do
         end do
 
         if (extrap_int_boundaries) then
           if (phys_bdy(1).eq.0) then
-            Hb_t_n(1)=4*Hb_t_n(2)-6*Hb_t_n(3)
-     &               +4*Hb_t_n(4)-Hb_t_n(5)
-            Hb_x_n(1)=4*Hb_x_n(2)-6*Hb_x_n(3)
-     &               +4*Hb_x_n(4)-Hb_x_n(5)
+            Hb_t_n(1,j)=4*Hb_t_n(2,j)-6*Hb_t_n(3,j)
+     &                 +4*Hb_t_n(4,j)-Hb_t_n(5,j)
+            Hb_x_n(1,j)=4*Hb_x_n(2,j)-6*Hb_x_n(3,j)
+     &                 +4*Hb_x_n(4,j)-Hb_x_n(5,j)
+            Hb_y_n(1,j)=4*Hb_y_n(2,j)-6*Hb_y_n(3,j)
+     &                 +4*Hb_y_n(4,j)-Hb_y_n(5,j)
           end if
           if (phys_bdy(2).eq.0) then
-            Hb_t_n(Nx)=4*Hb_t_n(Nx-1)-6*Hb_t_n(Nx-2)
-     &                +4*Hb_t_n(Nx-3)-Hb_t_n(Nx-4)
-            Hb_x_n(Nx)=4*Hb_x_n(Nx-1)-6*Hb_x_n(Nx-2) 
-     &                +4*Hb_x_n(Nx-3)-Hb_x_n(Nx-4)
+            Hb_t_n(Nx,j)=4*Hb_t_n(Nx-1,j)-6*Hb_t_n(Nx-2,j)
+     &                  +4*Hb_t_n(Nx-3,j)-Hb_t_n(Nx-4,j)
+            Hb_x_n(Nx,j)=4*Hb_x_n(Nx-1,j)-6*Hb_x_n(Nx-2,j) 
+     &                  +4*Hb_x_n(Nx-3,j)-Hb_x_n(Nx-4,j)
+            Hb_y_n(Nx,j)=4*Hb_y_n(Nx-1,j)-6*Hb_y_n(Nx-2,j) 
+     &                  +4*Hb_y_n(Nx-3,j)-Hb_y_n(Nx-4,j)
+          end if
+          if (phys_bdy(3).eq.0) then
+            Hb_t_n(i,1)=4*Hb_t_n(i,2)-6*Hb_t_n(i,3)
+     &                 +4*Hb_t_n(i,4)-Hb_t_n(i,5)
+            Hb_x_n(i,1)=4*Hb_x_n(i,2)-6*Hb_x_n(i,3)
+     &                 +4*Hb_x_n(i,4)-Hb_x_n(i,5)
+            Hb_y_n(i,1)=4*Hb_y_n(i,2)-6*Hb_y_n(i,3)
+     &                 +4*Hb_y_n(i,4)-Hb_y_n(i,5)
+          end if
+          if (phys_bdy(4).eq.0) then
+            Hb_t_n(i,Ny)=4*Hb_t_n(i,Ny-1)-6*Hb_t_n(i,Ny-2)
+     &                  +4*Hb_t_n(i,Ny-3)-Hb_t_n(i,Ny-4)
+            Hb_x_n(i,Ny)=4*Hb_x_n(i,Ny-1)-6*Hb_x_n(i,Ny-2) 
+     &                  +4*Hb_x_n(i,Ny-3)-Hb_x_n(i,Ny-4)
+            Hb_y_n(i,Ny)=4*Hb_y_n(i,Ny-1)-6*Hb_y_n(i,Ny-2) 
+     &                  +4*Hb_y_n(i,Ny-3)-Hb_y_n(i,Ny-4)
           end if
         end if
 
-        call axi_reg_Hb(Hb_t_n,Hb_x_n,chr,ex,L,x,Nx)
+        call axi_reg_Hb(Hb_t_n,Hb_x_n,chr,ex,L,x,y,Nx,Ny)
 
         return
         end

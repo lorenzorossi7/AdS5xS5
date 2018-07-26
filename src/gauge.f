@@ -97,16 +97,16 @@ c----------------------------------------------------------------------
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
-     &                    L,x,dt,chr,ex,
-     &                    phys_bdy,ghost_width,Nx,
+     &                    L,x,y,dt,chr,ex,
+     &                    phys_bdy,ghost_width,Nx,Ny,
      &                    Hb_t_0,Hb_x_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2)
 
         implicit none
-        integer Nx,gauge,phys_bdy(2),ghost_width(2)
+        integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
         real*8 res(Nx),t_n,t_np1
         real*8 chr(Nx),ex,L
-        real*8 x(Nx),dt,rho1,rho2,xi1,xi2
+        real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
@@ -206,16 +206,16 @@ c-----------------------------------------------------------------------
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
-     &                    L,x,dt,chr,ex,
-     &                    phys_bdy,ghost_width,Nx,
+     &                    L,x,y,dt,chr,ex,
+     &                    phys_bdy,ghost_width,Nx,Ny,
      &                    Hb_t_0,Hb_x_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2)
 
         implicit none
-        integer Nx,gauge,phys_bdy(2),ghost_width(2)
+        integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
         real*8 res(Nx),t_n,t_np1
         real*8 chr(Nx),ex,L
-        real*8 x(Nx),dt,rho1,rho2,xi1,xi2
+        real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)

@@ -17,14 +17,14 @@ c----------------------------------------------------------------------
      &                  fb_x_np1,fb_x_n,fb_x_nm1,
      &                  fb_y_np1,fb_y_n,fb_y_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
-     &                  x,dt,chr,L,ex,Nx,phys_bdy,ghost_width)
+     &                  x,y,dt,chr,L,ex,Nx,Ny,phys_bdy,ghost_width)
         implicit none
-        integer Nx
-        integer i
-        integer phys_bdy(2),ghost_width(2)
+        integer Nx,Ny
+        integer i,j
+        integer phys_bdy(4),ghost_width(4)
         real*8 efe_all_ires(Nx),kg_ires(Nx)
         real*8 chr(Nx),ex
-        real*8 x(Nx),dt,L
+        real*8 x(Nx),y(Ny),dt,L
         real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
         real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
         real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
@@ -38,6 +38,7 @@ c----------------------------------------------------------------------
 
         integer dimA,dimB
         integer is,ie
+        integer js,je
         integer a,b,c,d,e,f,g,h
 
         real*8 PI
@@ -95,6 +96,7 @@ c----------------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
         data is,ie/0,0/
+        data js,je/0,0/
         data a,b,c,d,e,f,g,h/0,0,0,0,0,0,0,0/
 
         data dx/0.0/
@@ -162,59 +164,65 @@ c----------------------------------------------------------------------
         ! set index bounds for main loop
         is=2
         ie=Nx-1
+        js=2
+        je=Ny-1
 
         ! adjust index bounds to compensate for ghost_width
         if (ghost_width(1).gt.0) is=is+ghost_width(1)-2
         if (ghost_width(2).gt.0) ie=ie-(ghost_width(2)-2)
+        if (ghost_width(3).gt.0) js=js+ghost_width(3)-2
+        if (ghost_width(4).gt.0) je=je-(ghost_width(4)-2)
 
         ! (MAIN LOOP) loop through spacetime points x(i),y(j),z(k)
         do i=is,ie
+          do j=js,je
 
-          if (chr(i).ne.ex) then
+            if (chr(i).ne.ex) then
 
-            ! computes tensors at point i
-            call tensor_init(
-     &              gb_tt_np1,gb_tt_n,gb_tt_nm1,
-     &              gb_tx_np1,gb_tx_n,gb_tx_nm1,
-     &              gb_xx_np1,gb_xx_n,gb_xx_nm1,
-     &              gb_yy_np1,gb_yy_n,gb_yy_nm1,
-     &              psi_np1,psi_n,psi_nm1,
-     &              omega_np1,omega_n,omega_nm1,
-     &              fb_t_np1,fb_t_n,fb_t_nm1,
-     &              fb_x_np1,fb_x_n,fb_x_nm1,
-     &              fb_y_np1,fb_y_n,fb_y_nm1,
-     &              zeros,zeros,zeros,
-     &              zeros,zeros,zeros,
-     &              phi1_np1,phi1_n,phi1_nm1,
-     &              g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
-     &              gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
-     &              gA,gB,gA_x,gB_x,gA_xx,gB_xx,
-     &              gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
-     &              sqrtdetg,sqrtdetg_x,
-     &              h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
-     &              A_l,A_l_x,Hads_l,Hads_l_x,
-     &              gamma_ull,gamma_ull_x,
-     &              riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &              s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
-     &              sA,sB,tA,tB,
-     &              phi10_x,phi10_xx,
-     &              x,dt,chr,L,ex,Nx,i)
+              ! computes tensors at point i
+              call tensor_init(
+     &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
+     &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
+     &                psi_np1,psi_n,psi_nm1,
+     &                omega_np1,omega_n,omega_nm1,
+     &                fb_t_np1,fb_t_n,fb_t_nm1,
+     &                fb_x_np1,fb_x_n,fb_x_nm1,
+     &                fb_y_np1,fb_y_n,fb_y_nm1,
+     &                zeros,zeros,zeros,
+     &                zeros,zeros,zeros,
+     &                phi1_np1,phi1_n,phi1_nm1,
+     &                g0_ll,g0_uu,g0_ll_x,g0_uu_x,g0_ll_xx,
+     &                gads_ll,gads_uu,gads_ll_x,gads_uu_x,gads_ll_xx,
+     &                gA,gB,gA_x,gB_x,gA_xx,gB_xx,
+     &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
+     &                sqrtdetg,sqrtdetg_x,
+     &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
+     &                A_l,A_l_x,Hads_l,Hads_l_x,
+     &                gamma_ull,gamma_ull_x,
+     &                riemann_ulll,ricci_ll,ricci_lu,ricci,
+     &                s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &                sA,sB,tA,tB,
+     &                phi10_x,phi10_xx,
+     &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
 
-              ! calculates efe_ires functions at point i,j
-              !(efe_ires_ab=G_ab+fterm_ab)
-              do a=1,3
-                do b=a,3
-                  efe_ires(a,b)=ricci_ll(a,b)+t0_ll(a,b)
+                ! calculates efe_ires functions at point i,j
+                !(efe_ires_ab=G_ab+fterm_ab)
+                do a=1,3
+                  do b=a,3
+                    efe_ires(a,b)=ricci_ll(a,b)+t0_ll(a,b)
+                  end do
                 end do
-              end do
 
-              ! calculate efe_all_ires function at point i,j
-              efe_all_ires(i)=
-     &        max(abs(efe_ires(1,1)),abs(efe_ires(1,2)),
-     &            abs(efe_ires(2,2)),abs(efe_ires(3,3)))
+                ! calculate efe_all_ires function at point i,j
+                efe_all_ires(i)=
+     &          max(abs(efe_ires(1,1)),abs(efe_ires(1,2)),
+     &              abs(efe_ires(2,2)),abs(efe_ires(3,3)))
 
-          end if
+            end if
 
+          end do
         end do
 
         return

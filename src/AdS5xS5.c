@@ -1,9 +1,11 @@
 //============================================================================
 // in polar coordinates t,x,y for x in [0,1] and y in [0,1]
 // using r=x/(1-x) compactification and \chi=\pi y rescaling 
+//
 // coordinate labels are (1:t),(2:x),(3:y),(4,5,6,:theta1,theta2,theta3),
 // (7,8,9,10:phi2,phi3,phi4,phi5) 
-// for (t,x,theta1,theta2,theta3) in the AdS_5 sector and (y,phi2,phi3,phi4,phi5) in the S^5 sector
+// for (t,x,theta1,theta2,theta3) in the AdS_5 sector and 
+// (y,phi2,phi3,phi4,phi5) in the S^5 sector
 //
 // application interface functions for AdS5xS5
 //=============================================================================
@@ -33,9 +35,9 @@ real kappa_cd,rho_cd;
 //=============================================================================
 
 // gaussians
-real phi1_amp_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[1],phi1_width_1[1],phi1_amp2_1,phi1_r02_1,phi1_delta2_1,phi1_x02_1[1],phi1_width2_1[1];
-real phi1_amp_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[1],phi1_width_2[1],phi1_amp2_2,phi1_r02_2,phi1_delta2_2,phi1_x02_2[1],phi1_width2_2[1];
-real phi1_amp_3,phi1_r0_3,phi1_delta_3,phi1_x0_3[1],phi1_width_3[1],phi1_amp2_3,phi1_r02_3,phi1_delta2_3,phi1_x02_3[1],phi1_width2_3[1];
+real phi1_amp_1,phi1_r0_1,phi1_delta_1,phi1_x0_1[2],phi1_width_1[2],phi1_amp2_1,phi1_r02_1,phi1_delta2_1,phi1_x02_1[2],phi1_width2_1[2];
+real phi1_amp_2,phi1_r0_2,phi1_delta_2,phi1_x0_2[2],phi1_width_2[2],phi1_amp2_2,phi1_r02_2,phi1_delta2_2,phi1_x02_2[2],phi1_width2_2[2];
+real phi1_amp_3,phi1_r0_3,phi1_delta_3,phi1_x0_3[2],phi1_width_3[2],phi1_amp2_3,phi1_r02_3,phi1_delta2_3,phi1_x02_3[2],phi1_width2_3[2];
 
 // if nonzero, initialize with exact BH
 real ief_bh_r0;
@@ -95,11 +97,13 @@ real *cl_res;
 
 real *Hb_t,*Hb_t_n,*Hb_t_np1,*Hb_t_nm1;
 real *Hb_x,*Hb_x_n,*Hb_x_np1,*Hb_x_nm1;
+real *Hb_y,*Hb_y_n,*Hb_y_np1,*Hb_y_nm1;
 real *Hb_t_t,*Hb_t_t_n;
 real *Hb_x_t,*Hb_x_t_n;
+real *Hb_y_t,*Hb_y_t_n;
 real *hb_t_res,*hb_i_res;
 
-real *Hb_t_0,*Hb_x_0;
+real *Hb_t_0,*Hb_x_0,*Hb_y_0;
 
 real *zetab,*zetab_res,*zetab_lop,*zetab_rhs;
 
@@ -115,9 +119,9 @@ real *efe_all_ires,*iresall;
 
 real *g_norms;
 
-real *x;
-int shape[1],ghost_width[2],Nx,phys_bdy[2],size,g_rank;
-real base_bbox[2],bbox[2],dx,dt,dx_Lc;
+real *x,*y;
+int shape[2],ghost_width[4],Nx,Ny,phys_bdy[4],size,g_rank;
+real base_bbox[4],bbox[4],dx,dy,dt,dx_Lc,dy_Lc;
 int g_L;
 
 int phi1_gfn,phi1_n_gfn,phi1_np1_gfn,phi1_nm1_gfn; 
@@ -151,11 +155,13 @@ int cl_res_gfn;
 
 int Hb_t_gfn,Hb_t_n_gfn,Hb_t_np1_gfn,Hb_t_nm1_gfn;
 int Hb_x_gfn,Hb_x_n_gfn,Hb_x_np1_gfn,Hb_x_nm1_gfn;
+int Hb_y_gfn,Hb_y_n_gfn,Hb_y_np1_gfn,Hb_y_nm1_gfn;
 int Hb_t_t_gfn,Hb_t_t_n_gfn;
 int Hb_x_t_gfn,Hb_x_t_n_gfn;
+int Hb_y_t_gfn,Hb_y_t_n_gfn;
 int hb_t_res_gfn,hb_i_res_gfn;
 
-int Hb_t_0_gfn,Hb_x_0_gfn;	
+int Hb_t_0_gfn,Hb_x_0_gfn,Hb_y_0_gfn;	
 
 int zetab_gfn,zetab_res_gfn,zetab_lop_gfn,zetab_rhs_gfn;
 
@@ -259,15 +265,22 @@ void set_gfns(void)
     if ((Hb_x_nm1_gfn  = PAMR_get_gfn("Hb_x",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_n_gfn    = PAMR_get_gfn("Hb_x",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_np1_gfn  = PAMR_get_gfn("Hb_x",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_gfn      = PAMR_get_gfn("Hb_y",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_nm1_gfn  = PAMR_get_gfn("Hb_y",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_n_gfn    = PAMR_get_gfn("Hb_y",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_np1_gfn  = PAMR_get_gfn("Hb_y",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_t_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_t_t_n_gfn  = PAMR_get_gfn("Hb_t_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_t_gfn  = PAMR_get_gfn("Hb_x_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_t_n_gfn  = PAMR_get_gfn("Hb_x_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_t_gfn  = PAMR_get_gfn("Hb_y_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_t_n_gfn  = PAMR_get_gfn("Hb_y_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_t_res_gfn  = PAMR_get_gfn("hb_t_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((hb_i_res_gfn  = PAMR_get_gfn("hb_i_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((Hb_t_0_gfn  = PAMR_get_gfn("Hb_t_0",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((Hb_x_0_gfn  = PAMR_get_gfn("Hb_x_0",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
+    if ((Hb_y_0_gfn  = PAMR_get_gfn("Hb_y_0",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((zetab_gfn     = PAMR_get_gfn("zetab",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((zetab_res_gfn = PAMR_get_gfn("zetab_res",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -302,7 +315,7 @@ void set_gfns(void)
 //=============================================================================
 void ldptr_bbox(void)
 {
-   real dx0[1];
+   real dx0[2];
    static int first=1;
 
    if (first) 
@@ -312,6 +325,7 @@ void ldptr_bbox(void)
       PAMR_get_global_bbox(base_bbox);
       if (PAMR_get_max_lev(PAMR_AMRH)>1) PAMR_get_dxdt(2,dx0,&dt); else PAMR_get_dxdt(1,dx0,&dt);
       dx_Lc=dx0[0];
+      dy_Lc=dx0[1];
    }
 
    PAMR_get_g_rank(&g_rank);
@@ -321,24 +335,29 @@ void ldptr_bbox(void)
    PAMR_get_g_level(&g_L);
    PAMR_get_dxdt(g_L,dx0,&dt);
    dx=dx0[0];
+   dy=dx0[1];
 
    if ((bbox[0]-base_bbox[0])<dx/2) phys_bdy[0]=1; else phys_bdy[0]=0;
    if ((base_bbox[1]-bbox[1])<dx/2) phys_bdy[1]=1; else phys_bdy[1]=0;
+   if ((bbox[2]-base_bbox[2])<dy/2) phys_bdy[2]=1; else phys_bdy[2]=0;
+   if ((base_bbox[3]-bbox[3])<dy/2) phys_bdy[3]=1; else phys_bdy[3]=0;
 
    Nx=shape[0];
+   Ny=shape[1];
 
-   size=Nx;
+   size=Nx*Ny;
 }
 
 void ldptr(void)
 {
-   real *x0[1],*gfs[PAMR_MAX_GFNS];
+   real *x0[2],*gfs[PAMR_MAX_GFNS];
 
    ldptr_bbox();
 
    PAMR_get_g_x(x0);
 
    x=x0[0];
+   y=x0[1];
 
    PAMR_get_g_gfs(gfs);
 
@@ -427,15 +446,22 @@ void ldptr(void)
    Hb_x_n    = gfs[Hb_x_n_gfn-1];
    Hb_x_nm1  = gfs[Hb_x_nm1_gfn-1];
    Hb_x_np1  = gfs[Hb_x_np1_gfn-1];
+   Hb_y      = gfs[Hb_y_gfn-1];
+   Hb_y_n    = gfs[Hb_y_n_gfn-1];
+   Hb_y_nm1  = gfs[Hb_y_nm1_gfn-1];
+   Hb_y_np1  = gfs[Hb_y_np1_gfn-1];
    Hb_t_t  = gfs[Hb_t_t_gfn-1];
    Hb_t_t_n  = gfs[Hb_t_t_n_gfn-1];
    Hb_x_t  = gfs[Hb_x_t_gfn-1];
    Hb_x_t_n  = gfs[Hb_x_t_n_gfn-1];
+   Hb_y_t  = gfs[Hb_y_t_gfn-1];
+   Hb_y_t_n  = gfs[Hb_y_t_n_gfn-1];
    hb_t_res  = gfs[hb_t_res_gfn-1];
    hb_i_res  = gfs[hb_i_res_gfn-1];
 
    Hb_t_0  = gfs[Hb_t_0_gfn-1];
    Hb_x_0  = gfs[Hb_x_0_gfn-1];
+   Hb_y_0  = gfs[Hb_y_0_gfn-1];
 
    zetab     = gfs[zetab_gfn-1];
    zetab_lop = gfs[zetab_lop_gfn-1];
@@ -473,7 +499,7 @@ void ldptr_mg(void)
 
    ldptr();
 
-   dx=x[1]-x[0];
+   dx=x[1]-x[0]; dy=y[1]-y[0];
    PAMR_get_lambda(&lambda);
    dt=lambda*dx;
 }
@@ -485,7 +511,7 @@ void const_f(real *f, real c)
 {
    int i;
 
-   for (i=0; i<Nx; i++) f[i]=c;
+   for (i=0; i<Nx*Ny; i++) f[i]=c;
 }
 
 void zero_f(real *f)
@@ -497,7 +523,7 @@ void zero_f_ex(real *f, real *chr)
 {
    int i;
 
-   for (i=0; i<Nx; i++) if (chr[i]==AMRD_ex) f[i]=0;
+   for (i=0; i<Nx*Ny; i++) if (chr[i]==AMRD_ex) f[i]=0;
 }
 
 real norm_l2(real *f, real *cmask, real *chr)
@@ -506,7 +532,7 @@ real norm_l2(real *f, real *cmask, real *chr)
    real norm=0;
    int sum=0;
 
-   for (i=0; i<Nx; i++) 
+   for (i=0; i<Nx*Ny; i++) 
       if (cmask[i]==AMRD_CMASK_ON && (chr[i]!=AMRD_ex)) { sum++; norm+=f[i]*f[i]; }
 
    if (!sum) sum=1;
@@ -555,12 +581,12 @@ void AdS5xS5_var_post_init(char *pfile)
       printf("Reading AdS5xS5 parameters:\n\n");
    }
 
-   phi1_amp_1=phi1_r0_1=phi1_x0_1[0]=phi1_amp2_1=phi1_r02_1=phi1_x02_1[0]=0;
-   phi1_amp_2=phi1_r0_2=phi1_x0_2[0]=phi1_amp2_2=phi1_r02_2=phi1_x02_2[0]=0;
-   phi1_amp_3=phi1_r0_3=phi1_x0_3[0]=phi1_amp2_3=phi1_r02_3=phi1_x02_3[0]=0;
-   phi1_width_1[0]=phi1_width2_1[0]=1;
-   phi1_width_2[0]=phi1_width2_2[0]=1;
-   phi1_width_3[0]=phi1_width2_3[0]=1;
+   phi1_amp_1=phi1_r0_1=phi1_x0_1[0]=phi1_x0_1[1]=phi1_amp2_1=phi1_r02_1=phi1_x02_1[0]=phi1_x02_1[1]=0;
+   phi1_amp_2=phi1_r0_2=phi1_x0_2[0]=phi1_x0_2[1]=phi1_amp2_2=phi1_r02_2=phi1_x02_2[0]=phi1_x02_2[1]=0;
+   phi1_amp_3=phi1_r0_3=phi1_x0_3[0]=phi1_x0_3[1]=phi1_amp2_3=phi1_r02_3=phi1_x02_3[0]=phi1_x02_3[1]=0;
+   phi1_width_1[0]=phi1_width_1[1]=phi1_width2_1[0]=phi1_width2_1[1]=1;
+   phi1_width_2[0]=phi1_width_2[1]=phi1_width2_2[0]=phi1_width2_2[1]=1;
+   phi1_width_3[0]=phi1_width_3[1]=phi1_width2_3[0]=phi1_width2_3[1]=1;
 
    AMRD_real_param(pfile,"phi1_amp_1",&phi1_amp_1,1);
    AMRD_real_param(pfile,"phi1_r0_1",&phi1_r0_1,1);
@@ -683,19 +709,19 @@ void AdS5xS5_free_data(void)
    zero_f(Hb_x_t_n);
 
    gauss2d_(phi1_n,
-            &phi1_amp_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_width_1[0],
-            &phi1_amp2_1,&phi1_r02_1,&phi1_delta2_1,&phi1_x02_1[0],&phi1_width2_1[0],
-            &AdS_L,x,&Nx);
+            &phi1_amp_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_x0_1[0],&phi1_width_1[0],&phi1_width_1[0],
+            &phi1_amp2_1,&phi1_r02_1,&phi1_delta2_1,&phi1_x02_1[0],&phi1_x02_1[1],&phi1_width2_1[0],&phi1_width2_1[1],
+            &AdS_L,x,y,&Nx,&Ny);
 
    gauss2d_(w1,
-            &phi1_amp_2,&phi1_r0_2,&phi1_delta_2,&phi1_x0_2[0],&phi1_width_2[0],
-            &phi1_amp2_2,&phi1_r02_2,&phi1_delta2_2,&phi1_x02_2[0],&phi1_width2_2[0],
-            &AdS_L,x,&Nx);
+            &phi1_amp_2,&phi1_r0_2,&phi1_delta_2,&phi1_x0_2[0],&phi1_x0_2[1],&phi1_width_2[0],&phi1_width_2[1],
+            &phi1_amp2_2,&phi1_r02_2,&phi1_delta2_2,&phi1_x02_2[0],&phi1_x02_2[1],&phi1_width2_2[0],&phi1_width2_2[1],
+            &AdS_L,x,y,&Nx,&Ny);
 
    gauss2d_(w2,
-            &phi1_amp_3,&phi1_r0_3,&phi1_delta_3,&phi1_x0_3[0],&phi1_width_3[0],
-            &phi1_amp2_3,&phi1_r02_3,&phi1_delta2_3,&phi1_x02_3[0],&phi1_width2_3[0],
-            &AdS_L,x,&Nx);
+            &phi1_amp_3,&phi1_r0_3,&phi1_delta_3,&phi1_x0_3[0],&phi1_x0_3[1],&phi1_width_3[0],&phi1_width_3[1],
+            &phi1_amp2_3,&phi1_r02_3,&phi1_delta2_3,&phi1_x02_3[0],&phi1_x02_3[1],&phi1_width2_3[0],&phi1_width2_3[1],
+            &AdS_L,x,y,&Nx,&Ny);
 
    for (i=0; i<size; i++) phi1_n[i]+=w1[i]+w2[i]; 
 
@@ -734,12 +760,12 @@ void AdS5xS5_t0_cnst_data(void)
    if (ief_bh_r0==0 && skip_constraints==0)
    {
      init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
-               &rhoa,&rhob,&AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
+               &rhoa,&rhob,&AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,y,&Nx,&Ny);
    }
    else
    {
      init_schw_(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,&ief_bh_r0,
-                &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,&Nx);
+                &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,y,&Nx,&Ny);
    }   
 
    // initialize nm1,np1 time levels and hbars
@@ -753,7 +779,7 @@ void AdS5xS5_t0_cnst_data(void)
               psi_np1,psi_n,psi_nm1,
               omega_np1,omega_n,omega_nm1,
               Hb_t_n,Hb_x_n,
-              &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
+              &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny);
 
      init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
                gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
@@ -767,7 +793,7 @@ void AdS5xS5_t0_cnst_data(void)
                Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                phi1_np1,phi1_n,phi1_nm1,phi1_t_n,
-               &AdS_L,phys_bdy,x,&dt,chr,&AMRD_ex,&Nx);
+               &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny);
 //     // straight copies 
 //     for (i=0; i<size; i++)
 //     {
@@ -781,16 +807,17 @@ void AdS5xS5_t0_cnst_data(void)
 //       Hb_x_np1[i]=Hb_x_nm1[i]=Hb_x_n[i];
 //       phi1_np1[i]=phi1_nm1[i]=phi1[i];
 //     }
-     axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
-     axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
-     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,&Nx);
-     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_xx_np1,gb_yy_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,&Nx);
+     axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
+     axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
+     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
+     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_xx_np1,gb_yy_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
 
      // store initial source functions, metric components
      for (i=0; i<size; i++)
      {
        Hb_t_0[i]=Hb_t[i];
        Hb_x_0[i]=Hb_x[i];
+       Hb_y_0[i]=Hb_y[i];
      }
 
    }
@@ -807,10 +834,10 @@ void AdS5xS5_pre_io_calc(void)
 {
    ldptr();
 
-   int i;
+   int i,j;
    real ct;
 
-   dx=x[1]-x[0];
+   dx=x[1]-x[0]; dy=y[1]-y[0];
    ct=PAMR_get_time(g_L);
 
    // compute independent residuals of the AdS5D system
@@ -829,7 +856,7 @@ void AdS5xS5_pre_io_calc(void)
         fb_x_np1,fb_x_n,fb_x_nm1,
         fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_n,phi1_nm1,phi1_np1,
-        x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
+        x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
    }
    else
    {
@@ -846,22 +873,25 @@ void AdS5xS5_pre_io_calc(void)
         fb_x_np1,fb_x_n,fb_x_nm1,
         fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_np1,phi1_n,phi1_nm1,
-        x,&dt,chr,&AdS_L,&AMRD_ex,&Nx,phys_bdy,ghost_width);
+        x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
    }
 
    // fill in ires arrays with independent residuals
    for (i=0; i<Nx; i++)
    {
-     if (chr[i]==AMRD_ex) 
-     {
-       iresphi1[i]=0;  
-       iresall[i]=0;
-     }
-     else
-     {
-       iresphi1[i]=kg_ires[i];
-       iresall[i]=efe_all_ires[i];
-     }
+      for (j=0; j<Ny; j++)
+      {
+         if (chr[i+j*Nx]==AMRD_ex) 
+         {
+            iresphi1[i+j*Nx]=0;  
+            iresall[i+j*Nx]=0;
+         }
+         else
+         {
+            iresphi1[i+j*Nx]=kg_ires[i+j*Nx];
+            iresall[i+j*Nx]=efe_all_ires[i+j*Nx];
+         }
+      }
    }
 
    return;
@@ -888,10 +918,10 @@ real AdS5xS5_evo_residual(void)
 
    if (LIN_ZERO_BND) 
    {
-      lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx);
-      lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx);
-      lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx);
-      lin_zero_bnd_res_(fb_res,phys_bdy,&lin_zero_bnd_all,&Nx);
+      lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
+      lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
+      lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
+      lin_zero_bnd_res_(fb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
    }
 
    l2norm_gb  =norm_l2(gb_res,mask,chr);
@@ -907,7 +937,7 @@ real AdS5xS5_evo_residual(void)
    {
       printf("\nl2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, l2norm_phi1=%lf\n",
               l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_phi1);
-      printf("Nx=%i,L=%i\n",Nx,g_L);
+      printf("Nx=%i,Ny=%i,L=%i\n",Nx,Ny,g_L);
       AMRD_stop("l2norm is nan ... stopping","");
       l2norm=0;
    }
@@ -922,10 +952,8 @@ real AdS5xS5_evo_residual(void)
 //=============================================================================
 void AdS5xS5_evolve(int iter)
 {
-   int i;
-   int zero_i=0;
    int ltrace=0;
-   real ct,zero=0;
+   real ct;
 
    ldptr();
 
@@ -946,8 +974,8 @@ void AdS5xS5_evolve(int iter)
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              phi1_np1,phi1_n,phi1_nm1,
-             &AdS_L,x,&dt,chr,&AMRD_ex,
-             phys_bdy,ghost_width,&Nx,
+             &AdS_L,x,y,&dt,chr,&AMRD_ex,
+             phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,
              &gauge_t,&ct,&rho1_t,&rho2_t,&xi1_t,&xi2_t);
 
@@ -964,8 +992,8 @@ void AdS5xS5_evolve(int iter)
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              phi1_np1,phi1_n,phi1_nm1,
-             &AdS_L,x,&dt,chr,&AMRD_ex,
-             phys_bdy,ghost_width,&Nx,
+             &AdS_L,x,y,&dt,chr,&AMRD_ex,
+             phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
 
@@ -989,8 +1017,8 @@ void AdS5xS5_evolve(int iter)
               Hb_t_np1,Hb_t_n,Hb_t_nm1,
               Hb_x_np1,Hb_x_n,Hb_x_nm1,
               phi1_np1,phi1_n,phi1_nm1,
-              &AdS_L,x,&dt,chr,&AMRD_ex,
-              phys_bdy,ghost_width,&Nx,
+              &AdS_L,x,y,&dt,chr,&AMRD_ex,
+              phys_bdy,ghost_width,&Nx,&Ny,
               &background,&kappa_cd,&rho_cd);
 
    return;
@@ -1003,28 +1031,33 @@ void AdS5xS5_evolve(int iter)
 //=============================================================================
 void AdS5xS5_fill_ex_mask(real *mask, int dim, int *shape, real *bbox, real excised)
 {
-   int i;
+   int i,j;
    int l,n,a,b;
    int axiregpts;
    int rho_sp[PAMR_MAX_LEVS],rho_tm[PAMR_MAX_LEVS];
    int Lf,rho_sp0,rho_tm0;
-   real x,dx;
+   real x,y,dx,dy;
 
    PAMR_get_rho(rho_sp,rho_tm,PAMR_MAX_LEVS);
    Lf=PAMR_get_max_lev(PAMR_AMRH);
    rho_sp0=rho_sp[Lf]; rho_tm0=rho_tm[Lf];
 
    dx=(bbox[1]-bbox[0])/(shape[0]-1);
+   dy=(bbox[3]-bbox[2])/(shape[1]-1);
 
    for (i=0; i<shape[0]; i++)
    {
-      x=bbox[0]+i*dx;
-      mask[i]=excised-1;
-      for (l=0; l<MAX_BHS; l++)
+      for (j=0; j<shape[1]; j++)
       {
-         if (ief_bh_r0!=0) // only activates for analytic BH initial data (nonzero ief_bh_r0)
+         x=bbox[0]+i*dx;
+         y=bbox[1]+j*dy;
+         mask[i+j*shape[0]]=excised-1;
+         for (l=0; l<MAX_BHS; l++)
          {
-           if (x/ex_r[l][0]<1) mask[i]=excised; 
+            if (ief_bh_r0!=0) // only activates for analytic BH initial data (nonzero ief_bh_r0)
+            {
+              if (x/ex_r[l][0]<1) mask[i+j*shape[0]]=excised; 
+            }
          }
       }
    }
@@ -1061,8 +1094,6 @@ void AdS5xS5_pre_tstep(int L)
    real new_rbuf;
    int n,i,Lf,Lc;
 
-   int is,ie;
-
    ct=PAMR_get_time(L);
 
    Lf=PAMR_get_max_lev(PAMR_AMRH);
@@ -1087,8 +1118,6 @@ void AdS5xS5_post_tstep(int L)
 
    real ct;
    int n,i,Lf,Lc;
-
-   int is,ie;
 
    ct=PAMR_get_time(L);
 
@@ -1122,7 +1151,7 @@ real AdS5xS5_MG_residual(void)
 
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,
-           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,&norm,&Nx);
+           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,y,&norm,&Nx,&Ny);
 
    return norm;
 }
@@ -1147,7 +1176,7 @@ real AdS5xS5_MG_relax(void)
 
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,
-           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,&norm,&Nx);
+           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,y,&norm,&Nx,&Ny);
 
    return norm;
 }
@@ -1172,7 +1201,7 @@ void AdS5xS5_L_op(void)
 
    // solves for zetab conformal factor at t=0; residual
    mg_sup_(&action,zetab,zetab_rhs,zetab_lop,zetab_res,
-           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,&norm,&Nx);
+           phi1,&AdS_L,mask_mg,phys_bdy,chr_mg,&AMRD_ex,x,y,&norm,&Nx,&Ny);
 
    return;
 }
