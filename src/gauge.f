@@ -104,36 +104,36 @@ c----------------------------------------------------------------------
 
         implicit none
         integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
-        real*8 res(Nx),t_n,t_np1
-        real*8 chr(Nx),ex,L
+        real*8 res(Nx,Ny),t_n,t_np1
+        real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
-        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
-        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
-        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
-        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
-        real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
+        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
+        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
+        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
-        real*8 Hb_t_0(Nx),Hb_x_0(Nx)
+        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny)
 
-        integer i
+        integer i,j
 
         real*8 F_t_np1,F_x_np1,F_y_np1
 
         real*8 Hb_t0,Hb_x0
 
-        real*8 x0
+        real*8 x0,y0
 
         real*8 trans
 
         real*8 f0,g0
-        real*8 dx
+        real*8 dx,dy
 
         real*8 PI
         parameter (PI=3.141592653589793d0)
@@ -141,15 +141,17 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         dx=x(2)-x(1)
+        dy=y(2)-y(1)
 
         t_np1=t_n+dt
 
         do i=1,Nx
-          x0=x(i)
-          res(i)=0
-          if (chr(i).eq.ex) then
-            Hb_t_np1(i)=0
-          end if
+          do j=1,Ny
+            res(i,j)=0
+            if (chr(i,j).eq.ex) then
+              Hb_t_np1(i,j)=0
+            end if
+          end do
         end do
 
         !--------------------------------------------------------------
@@ -164,21 +166,24 @@ c----------------------------------------------------------------------
 
         if (gauge.eq.1) then
           do i=2,Nx-1
-            if (chr(i).ne.ex) then
-                x0=x(i)
-                Hb_t0=Hb_t_0(i)
+            do j=2,Ny-1
+              if (chr(i,j).ne.ex) then
+                  x0=x(i)
+                  y0=y(j)
+                  Hb_t0=Hb_t_0(i,j)
 
-                F_t_np1=gb_tx_np1(i)*2.0d0
+                  F_t_np1=gb_tx_np1(i,j)*2.0d0
 
-                f0=trans(x0,rho1,rho2)
-                g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+                  f0=trans(x0,rho1,rho2)
+                  g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
-                if (xi2.le.1e-16) then
-                  Hb_t_np1(i)=F_t_np1
-                else
-                  Hb_t_np1(i)=F_t_np1+(Hb_t0-F_t_np1)*exp(-g0)
-                end if
-            end if
+                  if (xi2.le.1e-16) then
+                    Hb_t_np1(i,j)=F_t_np1
+                  else
+                    Hb_t_np1(i,j)=F_t_np1+(Hb_t0-F_t_np1)*exp(-g0)
+                  end if
+              end if
+            end do
           end do
           return
         end if
@@ -213,36 +218,36 @@ c-----------------------------------------------------------------------
 
         implicit none
         integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
-        real*8 res(Nx),t_n,t_np1
-        real*8 chr(Nx),ex,L
+        real*8 res(Nx,Ny),t_n,t_np1
+        real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
-        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
-        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
-        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
-        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
-        real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
+        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
+        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
+        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
-        real*8 Hb_t_0(Nx),Hb_x_0(Nx)
+        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny)
 
-        integer i
+        integer i,j
 
         real*8 F_t_np1,F_x_np1,F_y_np1
 
         real*8 Hb_t0,Hb_x0
 
-        real*8 x0
+        real*8 x0,y0
 
         real*8 trans
 
         real*8 f0,g0
-        real*8 dx
+        real*8 dx,dy
 
         real*8 PI
         parameter (PI=3.141592653589793d0) 
@@ -250,15 +255,17 @@ c-----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         dx=x(2)-x(1)
+        dy=y(2)-y(1)
 
         t_np1=t_n+dt
 
         do i=1,Nx
-          x0=x(i)
-          res(i)=0
-          if (chr(i).eq.ex) then
-            Hb_x_np1(i)=0
-          end if
+          do j=1,Ny
+            res(i,j)=0
+            if (chr(i,j).eq.ex) then
+              Hb_x_np1(i,j)=0
+            end if
+          end do
         end do
 
         !--------------------------------------------------------------
@@ -273,21 +280,23 @@ c-----------------------------------------------------------------------
 
         if (gauge.eq.1) then 
           do i=2,Nx-1
-            if (chr(i).ne.ex) then
-                x0=x(i)
-                Hb_x0=Hb_x_0(i)
+            do j=2,Ny-1
+              if (chr(i,j).ne.ex) then
+                  x0=x(i)
+                  Hb_x0=Hb_x_0(i,j)
 
-                F_x_np1=gb_xx_np1(i)*2.0d0
+                  F_x_np1=gb_xx_np1(i,j)*2.0d0
 
-                f0=trans(x0,rho1,rho2)
-                g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+                  f0=trans(x0,rho1,rho2)
+                  g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
-                if (xi2.le.1e-16) then
-                  Hb_x_np1(i)=F_x_np1
-                else
-                  Hb_x_np1(i)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
-                end if
-            end if
+                  if (xi2.le.1e-16) then
+                    Hb_x_np1(i,j)=F_x_np1
+                  else
+                    Hb_x_np1(i,j)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
+                  end if
+              end if
+            end do
           end do
           return
         end if
