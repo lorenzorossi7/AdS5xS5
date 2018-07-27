@@ -23,17 +23,17 @@ c-----------------------------------------------------------------------
         implicit none
         integer Nx,Ny,action
         integer phys_bdy(4)
-        real*8 zetab(Nx),zetab_rhs(Nx),zetab_lop(Nx)
-        real*8 zetab_res(Nx)
-        real*8 phi1(Nx)
-        real*8 cmask(Nx),chr(Nx)
+        real*8 zetab(Nx,Ny),zetab_rhs(Nx,Ny),zetab_lop(Nx,Ny)
+        real*8 zetab_res(Nx,Ny)
+        real*8 phi1(Nx,Ny)
+        real*8 cmask(Nx,Ny),chr(Nx,Ny)
         real*8 x(Nx),y(Ny),norm,ex,L
 
         real*8 trhoE_grad,trhoE_ptl
         real*8 ddzeta,ddzeta_Jac,grad_zetab_sq
         real*8 ddphi1,ddphi1_Jac,grad_phi1_sq
 
-        real*8 phi10(Nx)
+        real*8 phi10(Nx,Ny)
 
         integer relax,lop,residual,cdiff_method
         parameter (relax=1,lop=3,residual=2)
@@ -54,8 +54,8 @@ c-----------------------------------------------------------------------
 
         logical first,do_red_black
         data first/.true./
-!        data do_red_black/.false./
-        data do_red_black/.true./
+        data do_red_black/.false./
+        !data do_red_black/.true./
         save first
 
         ! initialize fixed-size variables
@@ -89,9 +89,11 @@ c-----------------------------------------------------------------------
 
         ! manually reconstruct phi10=phi1*(1-x^2)^3 
         do i=1,Nx
-          x0=x(i)
-          if (phi1(i).ne.0) phi10(i)=phi1(i)*(1-x0**2)**3
-          if (phi1(i).eq.0) phi10(i)=0
+          do j=1,Ny
+            x0=x(i)
+            if (phi1(i,j).ne.0) phi10(i,j)=phi1(i,j)*(1-x0**2)**3
+            if (phi1(i,j).eq.0) phi10(i,j)=0
+          end do
         end do
 
         ! (REGION) interior, solve L.zetab=0 Hamiltonian constraint 
@@ -105,15 +107,15 @@ c-----------------------------------------------------------------------
               if (
      &            ((do_red_black.and.mod(i+j+pass,2).eq.0)
      &             .or.(.not.do_red_black.and.pass.eq.0)) 
-     &             .and.(cmask(i).eq.1)
-     &             .and.(chr(i).ne.ex)      
+     &             .and.(cmask(i,j).eq.1)
+     &             .and.(chr(i,j).ne.ex)      
      &           ) then
 
                 ! fill in zetab 
-                zetab0=zetab(i)
+                zetab0=zetab(i,j)
 
                 ! fill in phi10_0
-                phi10_0=phi10(i)
+                phi10_0=phi10(i,j)
 
                 ! computes initial energy density at i, with initial data
                 ! time-symmetric so phi_t=0, and free scalar so V(phi)=0
@@ -138,7 +140,7 @@ c-----------------------------------------------------------------------
      &              +8*PI*trhoE_grad*(1+(1-x0**2)**3*zetab0)/3
 
                 ! computes MG residual L.zetab-R
-                rhs=res-zetab_rhs(i)
+                rhs=res-zetab_rhs(i,j)
 
                 Jac=ddzeta_Jac
      &              -( lambda5*( (1-x0**2)**3 )/3 )
@@ -149,11 +151,11 @@ c-----------------------------------------------------------------------
 
                 ! performs action
                 if (action.eq.residual) then
-                  zetab_res(i)=rhs
+                  zetab_res(i,j)=rhs
                 else if (action.eq.lop) then
-                  zetab_lop(i)=res
+                  zetab_lop(i,j)=res
                 else if (action.eq.relax) then
-                  zetab(i)=zetab(i)-rhs/Jac
+                  zetab(i,j)=zetab(i,j)-rhs/Jac
                 end if
 
                 norm=norm+rhs**2
@@ -168,80 +170,86 @@ c-----------------------------------------------------------------------
 
         ! (REGION) x=0 axis, solve d/dx(zetab)=0  
         if (phys_bdy(1).ne.0) then
+          do j=1,Ny
 
-          ! computes normal residual d/dx(zetab)
-          res=zetab(1)-(4*zetab(2)-zetab(3))/3
+            ! computes normal residual d/dx(zetab)
+            res=zetab(1,j)-(4*zetab(2,j)-zetab(3,j))/3
 
-          ! computes MG residual d/dx(zetab)-R
-          rhs=res-zetab_rhs(1)
+            ! computes MG residual d/dx(zetab)-R
+            rhs=res-zetab_rhs(1,j)
 
-          ! computes diag. Jacobian of zetab->L.zetab transformation
-          ! by differentiating L.zetab wrt. z(1) diag. entries
-          Jac=1
+            ! computes diag. Jacobian of zetab->L.zetab transformation
+            ! by differentiating L.zetab wrt. z(1) diag. entries
+            Jac=1
 
-          if (action.eq.residual) then
-            zetab_res(1)=rhs
-          else if (action.eq.lop) then
-            zetab_lop(1)=res
-          else if (action.eq.relax) then
-            zetab(1)=zetab(1)-rhs/Jac                  
-          end if
+            if (action.eq.residual) then
+              zetab_res(1,j)=rhs
+            else if (action.eq.lop) then
+              zetab_lop(1,j)=res
+            else if (action.eq.relax) then
+              zetab(1,j)=zetab(1,j)-rhs/Jac                  
+            end if
 
-          norm=norm+rhs**2
-          sum=sum+1
+            norm=norm+rhs**2
+            sum=sum+1
 
+          end do
         end if
 
         ! (REGION) y=0 axis, solve d/dy(zetab)=0  
         if (phys_bdy(3).ne.0) then
+          do i=2,Nx-1
 
-          ! computes normal residual d/dx(zetab)
-          res=zetab(1)-(4*zetab(2)-zetab(3))/3
+            ! computes normal residual d/dx(zetab)
+            res=zetab(i,1)-(4*zetab(i,2)-zetab(i,3))/3
 
-          ! computes MG residual d/dx(zetab)-R
-          rhs=res-zetab_rhs(1)
+            ! computes MG residual d/dx(zetab)-R
+            rhs=res-zetab_rhs(i,1)
 
-          ! computes diag. Jacobian of zetab->L.zetab transformation
-          ! by differentiating L.zetab wrt. z(1) diag. entries
-          Jac=1
+            ! computes diag. Jacobian of zetab->L.zetab transformation
+            ! by differentiating L.zetab wrt. z(1) diag. entries
+            Jac=1
 
-          if (action.eq.residual) then
-            zetab_res(1)=rhs
-          else if (action.eq.lop) then
-            zetab_lop(1)=res
-          else if (action.eq.relax) then
-            zetab(1)=zetab(1)-rhs/Jac
-          end if
+            if (action.eq.residual) then
+              zetab_res(i,1)=rhs
+            else if (action.eq.lop) then
+              zetab_lop(i,1)=res
+            else if (action.eq.relax) then
+              zetab(i,1)=zetab(i,1)-rhs/Jac
+            end if
 
-          norm=norm+rhs**2
-          sum=sum+1
+            norm=norm+rhs**2
+            sum=sum+1
 
+          end do
         end if
 
         ! (REGION) y=1 axis, solve d/dy(zetab)=0  
         if (phys_bdy(4).ne.0) then
+          do i=2,Nx-1
 
-          ! computes normal residual d/dx(zetab)
-          res=zetab(Ny)-(4*zetab(Ny-1)-zetab(Ny-2))/3
+            ! computes normal residual d/dx(zetab)
+            res=zetab(i,Ny)-(4*zetab(i,Ny-1)-zetab(i,Ny-2))/3
 
-          ! computes MG residual d/dx(zetab)-R
-          rhs=res-zetab_rhs(Ny)
+            ! computes MG residual d/dx(zetab)-R
+            rhs=res-zetab_rhs(i,Ny)
 
-          ! computes diag. Jacobian of zetab->L.zetab transformation
-          ! by differentiating L.zetab wrt. z(1) diag. entries
-          Jac=1
+            ! computes diag. Jacobian of zetab->L.zetab transformation
+            ! by differentiating L.zetab wrt. z(1) diag. entries
+            Jac=1
 
-          if (action.eq.residual) then
-            zetab_res(Ny)=rhs
-          else if (action.eq.lop) then
-            zetab_lop(Ny)=res
-          else if (action.eq.relax) then
-            zetab(Ny)=zetab(Ny)-rhs/Jac
-          end if
+            if (action.eq.residual) then
+              zetab_res(i,Ny)=rhs
+            else if (action.eq.lop) then
+              zetab_lop(i,Ny)=res
+            else if (action.eq.relax) then
+              zetab(i,Ny)=zetab(i,Ny)-rhs/Jac
+            end if
 
-          norm=norm+rhs**2
-          sum=sum+1
+            norm=norm+rhs**2
+            sum=sum+1
 
+          end do
         end if
 
         norm=sqrt(norm/sum)
@@ -263,12 +271,12 @@ c-----------------------------------------------------------------------
      &                      rhoa,rhob,L,phys_bdy,chr,ex,x,y,Nx,Ny)
         implicit none
         integer Nx,Ny
-        integer phys_bdy(2)
-        real*8 zetab(Nx)
-        real*8 phi1(Nx)
-        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx)
-        real*8 gb_yy(Nx),psi(Nx),omega(Nx)
-        real*8 chr(Nx),ex,L
+        integer phys_bdy(4)
+        real*8 zetab(Nx,Ny)
+        real*8 phi1(Nx,Ny)
+        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_xx(Nx,Ny)
+        real*8 gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
+        real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny)
         real*8 rhoa,rhob
  
@@ -310,19 +318,19 @@ c-----------------------------------------------------------------------
             x0=x(i)
             y0=y(j)
 
-            if (chr(i).ne.ex) then 
+            if (chr(i,j).ne.ex) then 
 
-              zetab0=zetab(i)
+              zetab0=zetab(i,j)
               g0_tt_ads0=-((1-x0)**2+x0**2)/(1-x0)**2
               g0_xx_ads0=1/((1-x0)**2+x0**2)/(1-x0)**2
               g0_psi_ads0=x0**2/(1-x0)**2
 
-              gb_tt(i)=0
-              gb_tx(i)=0
-              gb_xx(i)=g0_xx_ads0
+              gb_tt(i,j)=0
+              gb_tx(i,j)=0
+              gb_xx(i,j)=g0_xx_ads0
      &                   *((1+(1-x0**2)**3*zetab0)**2-1)
      &                   /(1-x0**2)
-              psi(i)=g0_psi_ads0
+              psi(i,j)=g0_psi_ads0
      &                 *((1+(1-x0**2)**3*zetab0)**2-1)
      &                 /(1-x0**2)
      &                 /(x0**2)
@@ -334,7 +342,7 @@ c-----------------------------------------------------------------------
               else
                 trans=0
               end if
-              gb_tt(i)=(gb_xx(i)+3*psi(i))*trans
+              gb_tt(i,j)=(gb_xx(i,j)+3*psi(i,j))*trans
 
             endif
 
@@ -360,9 +368,9 @@ c----------------------------------------------------------------------
         implicit none
         integer Nx,Ny
         integer i,j
-        real*8 chr(Nx),ex
+        real*8 chr(Nx,Ny),ex
         real*8 x(Nx),y(Ny),L
-        real*8 f(Nx),fdot(Nx)
+        real*8 f(Nx,Ny),fdot(Nx,Ny)
         real*8 f0,f0_x(5),f0_xx(5,5),ddf,ddf_Jac,grad_f_sq
 
         real*8 PI
@@ -370,14 +378,14 @@ c----------------------------------------------------------------------
 
         integer a,b,c,d
 
-        real*8 dx
-        real*8 x0
+        real*8 dx,dy
+        real*8 x0,y0
 
         ! initialize fixed-size variables 
         data a,b,c,d/0,0,0,0/
 
-        data dx/0.0/
-        data x0/0.0/
+        data dx,dy/0.0,0.0/
+        data x0,y0/0.0,0.0/
  
         data f0/0.0/
         data f0_x/5*0.0/
@@ -386,15 +394,17 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         dx=(x(2)-x(1))
+        dy=(y(2)-y(1))
 
-        ! sets x0 to values at i
+        ! sets x0,y0 to values at i,j
         x0=x(i)
+        y0=y(j)
 
         ! set first and second derivatives
         !(only the spatial part of the metric here, so don't need time derivatives)
-        f0=f(i)
-        f0_x(2)=(f(i+1)-f(i-1))/2/dx
-        f0_xx(2,2)=(f(i+1)-2*f(i)+f(i-1))/dx/dx
+        f0=f(i,j)
+        f0_x(2)=(f(i+1,j)-f(i-1,j))/2/dx
+        f0_xx(2,2)=(f(i+1,j)-2*f(i,j)+f(i-1,j))/dx/dx
 
         ! calculate ddzeta, background Laplacian acting on zeta
         ! and ddzeta_Jac, Jacobian of zeta->ddzeta transformation 
