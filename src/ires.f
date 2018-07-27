@@ -22,19 +22,19 @@ c----------------------------------------------------------------------
         integer Nx,Ny
         integer i,j
         integer phys_bdy(4),ghost_width(4)
-        real*8 efe_all_ires(Nx),kg_ires(Nx)
-        real*8 chr(Nx),ex
+        real*8 efe_all_ires(Nx,Ny),kg_ires(Nx,Ny)
+        real*8 chr(Nx,Ny),ex
         real*8 x(Nx),y(Ny),dt,L
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
-        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
-        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
-        real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
+        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
         integer dimA,dimB
         integer is,ie
@@ -44,12 +44,12 @@ c----------------------------------------------------------------------
         real*8 PI
         parameter (PI=3.141592653589793d0)
 
-        real*8 dx
+        real*8 dx,dy
 
         real*8 boxx_u(3)
         real*8 sqrtdetmg0
 
-        real*8 zeros(Nx)
+        real*8 zeros(Nx,Ny)
 
         real*8 efe_ires(3,3)
 
@@ -99,7 +99,7 @@ c----------------------------------------------------------------------
         data js,je/0,0/
         data a,b,c,d,e,f,g,h/0,0,0,0,0,0,0,0/
 
-        data dx/0.0/
+        data dx,dy/0.0,0.0/
 
         data fterm/9*0.0/
 
@@ -151,6 +151,7 @@ c----------------------------------------------------------------------
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
+        dy=(y(2)-y(1))
 
         ! set dimensions of S3 and S4 subspaces
         dimA=3
@@ -158,7 +159,9 @@ c----------------------------------------------------------------------
 
         ! initialize 
         do i=1,Nx
-          zeros(i)=0
+          do j=1,Ny
+            zeros(i,j)=0
+          end do
         end do
 
         ! set index bounds for main loop
@@ -173,11 +176,11 @@ c----------------------------------------------------------------------
         if (ghost_width(3).gt.0) js=js+ghost_width(3)-2
         if (ghost_width(4).gt.0) je=je-(ghost_width(4)-2)
 
-        ! (MAIN LOOP) loop through spacetime points x(i),y(j),z(k)
+        ! (MAIN LOOP) loop through spacetime points x(i),y(j)
         do i=is,ie
           do j=js,je
 
-            if (chr(i).ne.ex) then
+            if (chr(i,j).ne.ex) then
 
               ! computes tensors at point i,j
               call tensor_init(
@@ -216,7 +219,7 @@ c----------------------------------------------------------------------
                 end do
 
                 ! calculate efe_all_ires function at point i,j
-                efe_all_ires(i)=
+                efe_all_ires(i,j)=
      &          max(abs(efe_ires(1,1)),abs(efe_ires(1,2)),
      &              abs(efe_ires(2,2)),abs(efe_ires(3,3)))
 
