@@ -7,53 +7,53 @@ c specific x first derivative routine used by excision routines
 c below, for method 0,3,4 only
 c
 c-----------------------------------------------------------------------
-        subroutine df1_int_x(f,f_x,dx,i,chr,ex,Nx)
+        subroutine df1_int_x(f,f_x,dx,i,j,chr,ex,Nx,Ny)
 
         implicit none
-        integer Nx,i
-        real*8 f(Nx),chr(Nx),ex,f_x,dx
+        integer Nx,Ny,i,j
+        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_x,dx
         logical first
         save first
         data first/.true./
 
-        if (i.eq.1.or.chr(i-1).eq.ex) then
-           if (i.le.(Nx-1).and.chr(i+1).ne.ex) then
-              f_x=(-f(i)+f(i+1))/dx
+        if (i.eq.1.or.chr(i-1,j).eq.ex) then
+           if (i.le.(Nx-1).and.chr(i+1,j).ne.ex) then
+              f_x=(-f(i,j)+f(i+1,j))/dx
 !              write(*,*) 'df1_int_x: warning ... i=1 first order'
 !              write(*,*) '    i,Nx,dx=',i,Nx,dx
            else
               if (first) then
                  first=.false.
                  write(*,*) 'df1_int_x: error in chr stencil (A)'
-                 write(*,*) '    i,Nx,dx=',i,Nx,dx
+                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                  write(*,*) '    (first error only)'
               end if
               f_x=0
               return
            end if
-        else if (i.eq.Nx.or.chr(i+1).eq.ex) then
-           if (i.ge.2.and.chr(i-1).ne.ex) then
-              f_x=(f(i)-f(i-1))/dx
+        else if (i.eq.Nx.or.chr(i+1,j).eq.ex) then
+           if (i.ge.2.and.chr(i-1,j).ne.ex) then
+              f_x=(f(i,j)-f(i-1,j))/dx
 !              write(*,*) 'df1_int: warning ... i=Nx first order'
 !              write(*,*) '    i,Nx,dx=',i,Nx,dx
            else
               if (first) then
                  first=.false.
                  write(*,*) 'df1_int: error in chr stencil (B)'
-                 write(*,*) '    i,Nx,dx=',i,Nx,dx
+                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                  write(*,*) '    (first error only)'
               end if
               f_x=0
               return
            end if
         else
-           if (chr(i+1).ne.ex.and.chr(i-1).ne.ex) then
-              f_x=(f(i+1)-f(i-1))/2/dx
+           if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
+              f_x=(f(i+1,j)-f(i-1,j))/2/dx
            else
               if (first) then
                  first=.false.
                  write(*,*) 'df1_int: error in chr stencil (C)'
-                 write(*,*) '    i,Nx,dx=',i,Nx,dx
+                 write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                  write(*,*) '    (first error only)'
               end if
               f_x=0
@@ -71,11 +71,11 @@ c
 c stencil reduces to first order on excision surface
 c----------------------------------------------------------------------
         subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,
-     &                     dx,dt,i,chr,ex,Nx,name)
+     &                     dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
         implicit none
-        integer Nx,i
-        real*8 f_np1(Nx),f_n(Nx),f_nm1(Nx)
-        real*8 f_t,f_x,dx,dt,ex,chr(Nx)
+        integer Nx,Ny,i,j
+        real*8 f_np1(Nx,Ny),f_n(Nx,Ny),f_nm1(Nx,Ny)
+        real*8 f_t,f_x,dx,dy,dt,ex,chr(Nx,Ny)
         character*(*) name
 
         logical ltrace,first
@@ -84,14 +84,14 @@ c----------------------------------------------------------------------
         data first/.true./
         real*8 f_x_np1,f_x_nm1
 
-        if (chr(i).eq.ex) then
+        if (chr(i,j).eq.ex) then
          write(*,*) 'df1_int: error ... point excised'
          stop
         end if
 
-        f_t=(f_np1(i)-f_nm1(i))/2/dt
+        f_t=(f_np1(i,j)-f_nm1(i,j))/2/dt
 
-        call df1_int_x(f_n,f_x,dx,i,chr,ex,Nx)
+        call df1_int_x(f_n,f_x,dx,i,j,chr,ex,Nx,Ny)
 
         if (ltrace) then
            write(*,*) 'df1_int for ',name
@@ -109,12 +109,12 @@ c----------------------------------------------------------------------
         subroutine df2_int(f_np1,f_n,f_nm1,
      &                     f_t,f_x,
      &                     f_tt,f_tx,f_xx,
-     &                     dx,dt,i,chr,ex,Nx,name)
+     &                     dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
         implicit none
-        integer Nx,i
-        real*8 f_np1(Nx),f_n(Nx),f_nm1(Nx)
+        integer Nx,Ny,i,j
+        real*8 f_np1(Nx,Ny),f_n(Nx,Ny),f_nm1(Nx,Ny)
         real*8 f_t,f_x,f_tt,f_tx,f_xx
-        real*8 dx,dt,ex,chr(Nx)
+        real*8 dx,dy,dt,ex,chr(Nx,Ny)
         character*(*) name
         logical first
         save first
@@ -125,57 +125,57 @@ c----------------------------------------------------------------------
         real*8 f_x_np1,f_x_nm1
 
         call df1_int(f_np1,f_n,f_nm1,f_t,f_x,
-     &               dx,dt,i,chr,ex,Nx,name)
+     &               dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
 
-        f_tt=(f_np1(i)-2*f_n(i)+f_nm1(i))/dt/dt 
+        f_tt=(f_np1(i,j)-2*f_n(i,j)+f_nm1(i,j))/dt/dt 
 
         f_xx=0
 
-        if (chr(i).eq.ex) then
+        if (chr(i,j).eq.ex) then
           write(*,*) 'df2_int: error ... point excised'
           stop
         end if
 
-        call df1_int_x(f_np1,f_x_np1,dx,i,chr,ex,Nx)
-        call df1_int_x(f_nm1,f_x_nm1,dx,i,chr,ex,Nx)
+        call df1_int_x(f_np1,f_x_np1,dx,i,j,chr,ex,Nx,Ny)
+        call df1_int_x(f_nm1,f_x_nm1,dx,i,j,chr,ex,Nx,Ny)
         f_tx=(f_x_np1-f_x_nm1)/2/dt
 
         !i
 
-        if (i.eq.1.or.(chr(i-1).eq.ex)) then
+        if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
           if (i.ge.(Nx-1).or.
-     &        chr(i+1).eq.ex.or.chr(i+2).eq.ex) then
+     &        chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
             if (first) then
               first=.false.
               write(*,*) 'df2_int: error in chr (A)'
-              write(*,*) '    i,Nx,dx=',i,Nx,dx
+              write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
               write(*,*) '    (first error only)'
             end if
             return
           end if
-          f_xx=(f_n(i+2)-2*f_n(i+1)+f_n(i))/dx/dx 
+          f_xx=(f_n(i+2,j)-2*f_n(i+1,j)+f_n(i,j))/dx/dx 
 
-        else if (i.eq.Nx.or.(chr(i+1).eq.ex)) then
+        else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
           if (i.le.2.or.
-     &        chr(i-1).eq.ex.or.chr(i-2).eq.ex) then
+     &        chr(i-1,j).eq.ex.or.chr(i-2,j).eq.ex) then
             if (first) then
               first=.false.
               write(*,*) 'df2_int: error in chr (B)'
-              write(*,*) '    i,Nx,dx=',i,Nx,dx
+              write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
               write(*,*) '    (first error only)'
             end if
             return
           end if
-          f_xx=(f_n(i)-2*f_n(i-1)+f_n(i-2))/dx/dx 
+          f_xx=(f_n(i,j)-2*f_n(i-1,j)+f_n(i-2,j))/dx/dx 
 
-        else if (chr(i+1).ne.ex.and.chr(i-1).ne.ex) then
-          f_xx=(f_n(i+1)-2*f_n(i)+f_n(i-1))/dx/dx 
+        else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
+          f_xx=(f_n(i+1,j)-2*f_n(i,j)+f_n(i-1,j))/dx/dx 
 
         else
           if (first) then
             first=.false.
             write(*,*) 'df2_int: error in chr (C)'
-            write(*,*) '    i,Nx,dx=',i,Nx,dx
+            write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
             write(*,*) '    (first error only)'
           end if
           return
@@ -209,7 +209,7 @@ c----------------------------------------------------------------------
      &                     L,x,y,Nx,Ny)
         implicit none
         integer i,j,Nx,Ny
-        real*8 f(Nx),x(Nx),y(Ny),L
+        real*8 f(Nx,Ny),x(Nx),y(Ny),L
         real*8 amp,r0,delta,ax,ay,xu0,yu0,r
         real*8 amp2,r02,delta2,ax2,ay2,xu02,yu02,r2
         real*8 x0,y0
@@ -220,22 +220,25 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         do i=1,Nx
-          f(i)=0
-          x0=x(i)
-          
-          r=sqrt((x0-xu0)**2/ax**2)
-          r2=sqrt((x0-xu02)**2/ax2**2)
+          do j=1,Ny
+            f(i,j)=0
+            x0=x(i)
+            y0=y(j)
+            
+            r=sqrt((x0-xu0)**2/ax**2)
+            r2=sqrt((x0-xu02)**2/ax2**2)
 
-          ! Gaussian phi=amp*exp(-r^2)/r^4 profile 
-          ! remember that phi=phi1*(1-x^2)^3
-          if (r.ge.1) then
-             f(i)=0
-          else if (r.gt.r0) then
-             f(i)=amp*exp(-((r-r0)/delta)**2)*(1-x0**2)
-          else
-             f(i)=amp*(1-x0**2)
-          end if
+            ! Gaussian phi=amp*exp(-r^2)/r^4 profile 
+            ! remember that phi=phi1*(1-x^2)^3
+            if (r.ge.1) then
+               f(i,j)=0
+            else if (r.gt.r0) then
+               f(i,j)=amp*exp(-((r-r0)/delta)**2)*(1-x0**2)
+            else
+               f(i,j)=amp*(1-x0**2)
+            end if
 
+          end do
         end do
 
         return
@@ -247,7 +250,7 @@ c-----------------------------------------------------------------------
         subroutine lin_zero_bnd_res(f,phys_bdy,all,Nx,Ny)
         implicit none
         integer Nx,Ny,all
-        real*8 f(Nx)
+        real*8 f(Nx,Ny)
         integer phys_bdy(4)
 
         integer i,is,ie
@@ -260,19 +263,27 @@ c-----------------------------------------------------------------------
         !--------------------------------------------------------------
 
         if (phys_bdy(1).eq.1.or.all.eq.1) then
-          f(2)=0
+          do j=2,Ny-1
+            f(2,j)=0
+          end do
         end if
 
         if (phys_bdy(2).eq.1.or.all.eq.1) then
-          f(Nx-1)=0
+          do j=2,Ny-1
+            f(Nx-1,j)=0
+          end do
         end if
 
         if (phys_bdy(3).eq.1.or.all.eq.1) then
-          f(2)=0
+          do i=2,Nx-1
+            f(i,2)=0
+          end do
         end if
 
         if (phys_bdy(4).eq.1.or.all.eq.1) then
-          f(Ny-1)=0
+          do i=2,Nx-1
+            f(i,Ny-1)=0
+          end do
         end if
 
         return
@@ -285,12 +296,12 @@ c----------------------------------------------------------------------
         subroutine init_schw(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
      &                       r0,L,phys_bdy,chr,ex,x,y,Nx,Ny)
         implicit none
-        real*8 gb_tt(Nx),gb_tx(Nx),gb_xx(Nx)
-        real*8 gb_yy(Nx),psi(Nx),omega(Nx)
-        real*8 chr(Nx),x(Nx),y(Ny)
+        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_xx(Nx,Ny)
+        real*8 gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
+        real*8 chr(Nx,Ny),x(Nx),y(Ny)
         real*8 r0,ex,L
         integer phys_bdy(4)
-        integer i,Nx,Ny
+        integer i,j,Nx,Ny
 
         real*8 r_h,x_h,x0
 
@@ -302,27 +313,28 @@ c----------------------------------------------------------------------
 
         ! initialize metric 
         do i=1,Nx
-           if (chr(i).eq.ex) then
-              gb_tt(i)=0
-              gb_tx(i)=0
-              gb_xx(i)=0
-              gb_yy(i)=0
-              psi(i)=0
-              omega(i)=0
+          do j=1,Ny
+           if (chr(i,j).eq.ex) then
+              gb_tt(i,j)=0
+              gb_tx(i,j)=0
+              gb_xx(i,j)=0
+              gb_yy(i,j)=0
+              psi(i,j)=0
+              omega(i,j)=0
            else
               x0=x(i)
 
               ! EF-like-near-horizon Schwarzschild-like-near-bdy coordinates
-              gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
-              gb_tx(i)=1/(1+x0)/(1-x_h)**4*(1-x0)
-              gb_xx(i)=-((L**2*(-1 + x0)*((-1 + x0)**4*x0**4 + 
+              gb_tt(i,j)=(r0/x0)**2/(1+x0)*(1-x0)
+              gb_tx(i,j)=1/(1+x0)/(1-x_h)**4*(1-x0)
+              gb_xx(i,j)=-((L**2*(-1 + x0)*((-1 + x0)**4*x0**4 + 
      &        L**2*((-1 + x0)**6*x0**2 - r0**2*(-1 + x_h)**8)))/
      &        ((1 + x0)*(L**2*(-1 + x0)**2 + x0**2)*
      &        (-x0**4 + L**2*(-1 + x0)**2*(r0**2*(-1 + x0)**2 - x0**2))*
      &        (-1 + x_h)**8)) 
-              gb_yy(i)=0
-              psi(i)  =0
-              omega(i)=0
+              gb_yy(i,j)=0
+              psi(i,j)  =0
+              omega(i,j)=0
 
 !              ! Schwarzschild coordinates (WARNING: not horizon-penetrating)
 !              gb_tt(i)=(r0/x0)**2/(1+x0)*(1-x0)
@@ -335,6 +347,7 @@ c----------------------------------------------------------------------
 !              psi(i)=0
 
            end if
+          end do
         end do
 
         ! (REGION) x=0; impose regularity conditions 
@@ -377,21 +390,21 @@ c----------------------------------------------------------------------
         integer Nx,Ny
         integer i,j
 
-        real*8 chr(Nx),ex
+        real*8 chr(Nx,Ny),ex
         real*8 x(Nx),y(Ny),dt,L
 
-        real*8 gb_tt_np1(Nx),gb_tt_n(Nx),gb_tt_nm1(Nx)
-        real*8 gb_tx_np1(Nx),gb_tx_n(Nx),gb_tx_nm1(Nx)
-        real*8 gb_xx_np1(Nx),gb_xx_n(Nx),gb_xx_nm1(Nx)
-        real*8 gb_yy_np1(Nx),gb_yy_n(Nx),gb_yy_nm1(Nx)
-        real*8 psi_np1(Nx),psi_n(Nx),psi_nm1(Nx)
-        real*8 omega_np1(Nx),omega_n(Nx),omega_nm1(Nx)
-        real*8 Hb_t_np1(Nx),Hb_t_n(Nx),Hb_t_nm1(Nx)
-        real*8 Hb_x_np1(Nx),Hb_x_n(Nx),Hb_x_nm1(Nx)
-        real*8 phi1_np1(Nx),phi1_n(Nx),phi1_nm1(Nx)
-        real*8 fb_t_np1(Nx),fb_t_n(Nx),fb_t_nm1(Nx)
-        real*8 fb_x_np1(Nx),fb_x_n(Nx),fb_x_nm1(Nx)
-        real*8 fb_y_np1(Nx),fb_y_n(Nx),fb_y_nm1(Nx)
+        real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
+        real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
+        real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
+        real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
+        real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
+        real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
+        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
 
         integer a,b,c,d,e,f,m,n,o,p
 
@@ -487,9 +500,10 @@ c----------------------------------------------------------------------
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
+        dy=(y(2)-y(1))
 
         x0=x(i)
-        y0=L/2  !NOTE: change this to y0=y(j) when we add y-dependence
+        y0=y(j)
 
         ! set dimensions of S3 and S4 subspaces
         dimA=3
@@ -512,24 +526,24 @@ c----------------------------------------------------------------------
         f1_y_ads0  = 4/L*PI
 
         ! set gbar values
-        gb_tt0=gb_tt_n(i)
-        gb_tx0=gb_tx_n(i)
-        gb_xx0=gb_xx_n(i)
-        gb_yy0=gb_yy_n(i)
-        psi0  =psi_n(i) 
-        omega0=omega_n(i)
+        gb_tt0=gb_tt_n(i,j)
+        gb_tx0=gb_tx_n(i,j)
+        gb_xx0=gb_xx_n(i,j)
+        gb_yy0=gb_yy_n(i,j)
+        psi0  =psi_n(i,j) 
+        omega0=omega_n(i,j)
 
         ! set fbar values
-        fb_t0=fb_t_n(i)
-        fb_x0=fb_x_n(i)
-        fb_y0=fb_y_n(i)
+        fb_t0=fb_t_n(i,j)
+        fb_x0=fb_x_n(i,j)
+        fb_y0=fb_y_n(i,j)
 
         ! set hbar values
-        Hb_t0=Hb_t_n(i)
-        Hb_x0=Hb_x_n(i)
+        Hb_t0=Hb_t_n(i,j)
+        Hb_x0=Hb_x_n(i,j)
 
         ! set phi1 value
-        phi10=phi1_n(i)
+        phi10=phi1_n(i,j)
 
         ! set gads derivatives
         g0_tt_ads_x  =-2*x0/(1-x0)**3
@@ -552,52 +566,52 @@ c----------------------------------------------------------------------
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &       gb_tt_t,gb_tt_x,
      &       gb_tt_tt,gb_tt_tx,gb_tt_xx,
-     &       dx,dt,i,chr,ex,Nx,'gb_tt')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
         call df2_int(gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &       gb_tx_t,gb_tx_x,
      &       gb_tx_tt,gb_tx_tx,gb_tx_xx,
-     &       dx,dt,i,chr,ex,Nx,'gb_tx')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &       gb_xx_t,gb_xx_x,
      &       gb_xx_tt,gb_xx_tx,gb_xx_xx,
-     &       dx,dt,i,chr,ex,Nx,'gb_xx')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
         call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &       gb_yy_t,gb_yy_x,
      &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
-     &       dx,dt,i,chr,ex,Nx,'gb_yy')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
         call df2_int(psi_np1,psi_n,psi_nm1,
      &       psi_t,psi_x,
      &       psi_tt,psi_tx,psi_xx,
-     &       dx,dt,i,chr,ex,Nx,'psi')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
         call df2_int(omega_np1,omega_n,omega_nm1,
      &       omega_t,omega_x,
      &       omega_tt,omega_tx,omega_xx,
-     &       dx,dt,i,chr,ex,Nx,'omega')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
         ! calculate fbar derivatives
         call df1_int(fb_t_np1,fb_t_n,fb_t_nm1,
      &       fb_t_t,fb_t_x,
-     &       dx,dt,i,chr,ex,Nx,'fb_t')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_t')
         call df1_int(fb_x_np1,fb_x_n,fb_x_nm1,
      &       fb_x_t,fb_x_x,
-     &       dx,dt,i,chr,ex,Nx,'fb_x')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_x')
         call df1_int(fb_y_np1,fb_y_n,fb_y_nm1,
      &       fb_y_t,fb_y_x,
-     &       dx,dt,i,chr,ex,Nx,'fb_y')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_y')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &       Hb_t_t,Hb_t_x,
-     &       dx,dt,i,chr,ex,Nx,'Hb_t')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_t')
         call df1_int(Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &       Hb_x_t,Hb_x_x,
-     &       dx,dt,i,chr,ex,Nx,'Hb_x')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_x')
 
         ! calculate phi1 derivatives
         call df2_int(phi1_np1,phi1_n,phi1_nm1,
      &       phi1_t,phi1_x,
      &       phi1_tt,phi1_tx,phi1_xx,
-     &       dx,dt,i,chr,ex,Nx,'phi1')
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
         ! give values to the metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
@@ -729,7 +743,6 @@ c----------------------------------------------------------------------
      &                   +gb_yy_x*3*(1-x0**2)**2*(-2*x0)
      &                   +gb_yy_x*3*(1-x0**2)**2*(-2*x0)
      &                   +gb_yy0*6*(-1+6*x0**2-5*x0**4)
-        ! WARNING: from sin^2chi factor in pure ads term
 
         do a=1,2
           do b=a+1,3
