@@ -503,7 +503,7 @@ c----------------------------------------------------------------------
         dy=(y(2)-y(1))
 
         x0=x(i)
-        y0=y(j)
+        y0=L/2  !NOTE: change this to y0=y(j) when we add y-dependence
 
         ! set dimensions of S3 and S4 subspaces
         dimA=3
