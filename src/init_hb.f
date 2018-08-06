@@ -201,38 +201,46 @@ c----------------------------------------------------------------------
         end do
 
         if (extrap_int_boundaries) then
-          if (phys_bdy(1).eq.0) then
-            Hb_t_n(1,j)=4*Hb_t_n(2,j)-6*Hb_t_n(3,j)
-     &                 +4*Hb_t_n(4,j)-Hb_t_n(5,j)
-            Hb_x_n(1,j)=4*Hb_x_n(2,j)-6*Hb_x_n(3,j)
-     &                 +4*Hb_x_n(4,j)-Hb_x_n(5,j)
-            Hb_y_n(1,j)=4*Hb_y_n(2,j)-6*Hb_y_n(3,j)
-     &                 +4*Hb_y_n(4,j)-Hb_y_n(5,j)
-          end if
-          if (phys_bdy(2).eq.0) then
-            Hb_t_n(Nx,j)=4*Hb_t_n(Nx-1,j)-6*Hb_t_n(Nx-2,j)
-     &                  +4*Hb_t_n(Nx-3,j)-Hb_t_n(Nx-4,j)
-            Hb_x_n(Nx,j)=4*Hb_x_n(Nx-1,j)-6*Hb_x_n(Nx-2,j) 
-     &                  +4*Hb_x_n(Nx-3,j)-Hb_x_n(Nx-4,j)
-            Hb_y_n(Nx,j)=4*Hb_y_n(Nx-1,j)-6*Hb_y_n(Nx-2,j) 
-     &                  +4*Hb_y_n(Nx-3,j)-Hb_y_n(Nx-4,j)
-          end if
-          if (phys_bdy(3).eq.0) then
-            Hb_t_n(i,1)=4*Hb_t_n(i,2)-6*Hb_t_n(i,3)
-     &                 +4*Hb_t_n(i,4)-Hb_t_n(i,5)
-            Hb_x_n(i,1)=4*Hb_x_n(i,2)-6*Hb_x_n(i,3)
-     &                 +4*Hb_x_n(i,4)-Hb_x_n(i,5)
-            Hb_y_n(i,1)=4*Hb_y_n(i,2)-6*Hb_y_n(i,3)
-     &                 +4*Hb_y_n(i,4)-Hb_y_n(i,5)
-          end if
-          if (phys_bdy(4).eq.0) then
-            Hb_t_n(i,Ny)=4*Hb_t_n(i,Ny-1)-6*Hb_t_n(i,Ny-2)
-     &                  +4*Hb_t_n(i,Ny-3)-Hb_t_n(i,Ny-4)
-            Hb_x_n(i,Ny)=4*Hb_x_n(i,Ny-1)-6*Hb_x_n(i,Ny-2) 
-     &                  +4*Hb_x_n(i,Ny-3)-Hb_x_n(i,Ny-4)
-            Hb_y_n(i,Ny)=4*Hb_y_n(i,Ny-1)-6*Hb_y_n(i,Ny-2) 
-     &                  +4*Hb_y_n(i,Ny-3)-Hb_y_n(i,Ny-4)
-          end if
+           if (phys_bdy(1).eq.0) then
+              do j=1,Ny
+                    Hb_t_n(1,j)=4*Hb_t_n(2,j) - 6*Hb_t_n(3,j) +
+     &                            4*Hb_t_n(4,j) -   Hb_t_n(5,j)
+                    Hb_x_n(1,j)=4*Hb_x_n(2,j) - 6*Hb_x_n(3,j) +
+     &                            4*Hb_x_n(4,j) -   Hb_x_n(5,j)
+                    Hb_y_n(1,j)=4*Hb_y_n(2,j) - 6*Hb_y_n(3,j) +
+     &                            4*Hb_y_n(4,j) -   Hb_y_n(5,j)
+              end do
+           end if
+           if (phys_bdy(2).eq.0) then
+              do j=1,Ny
+                    Hb_t_n(Nx,j)=4*Hb_t_n(Nx-1,j)-6*Hb_t_n(Nx-2,j)
+     &                            +4*Hb_t_n(Nx-3,j)-  Hb_t_n(Nx-4,j)
+                    Hb_x_n(Nx,j)=4*Hb_x_n(Nx-1,j)-6*Hb_x_n(Nx-2,j)
+     &                            +4*Hb_x_n(Nx-3,j)-  Hb_x_n(Nx-4,j)
+                    Hb_y_n(Nx,j)=4*Hb_y_n(Nx-1,j)-6*Hb_y_n(Nx-2,j)
+     &                            +4*Hb_y_n(Nx-3,j)-  Hb_y_n(Nx-4,j)
+              end do
+           end if
+           if (phys_bdy(3).eq.0) then
+              do i=1,Nx
+                    Hb_t_n(i,1)=4*Hb_t_n(i,2) - 6*Hb_t_n(i,3) +
+     &                            4*Hb_t_n(i,4) -   Hb_t_n(i,5)
+                    Hb_x_n(i,1)=4*Hb_x_n(i,2) - 6*Hb_x_n(i,3) +
+     &                            4*Hb_x_n(i,4) -   Hb_x_n(i,5)
+                    Hb_y_n(i,1)=4*Hb_y_n(i,2) - 6*Hb_y_n(i,3) +
+     &                            4*Hb_y_n(i,4) -   Hb_y_n(i,5)
+              end do
+           end if
+           if (phys_bdy(4).eq.0) then
+              do i=1,Nx
+                    Hb_t_n(i,Ny)=4*Hb_t_n(i,Ny-1)-6*Hb_t_n(i,Ny-2)
+     &                            +4*Hb_t_n(i,Ny-3)-  Hb_t_n(i,Ny-4)
+                    Hb_x_n(i,Ny)=4*Hb_x_n(i,Ny-1)-6*Hb_x_n(i,Ny-2)
+     &                            +4*Hb_x_n(i,Ny-3)-  Hb_x_n(i,Ny-4)
+                    Hb_y_n(i,Ny)=4*Hb_y_n(i,Ny-1)-6*Hb_y_n(i,Ny-2)
+     &                            +4*Hb_y_n(i,Ny-3)-  Hb_y_n(i,Ny-4)
+              end do
+           end if
         end if
 
         call axi_reg_Hb(Hb_t_n,Hb_x_n,chr,ex,L,x,y,Nx,Ny)
