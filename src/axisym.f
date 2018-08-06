@@ -72,12 +72,12 @@ c
 c applies regularity conditions for the metric
 c----------------------------------------------------------------------
 
-        subroutine axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
-     &                       chr,ex,L,x,y,Nx,Ny)
+        subroutine axi_reg_g(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,
+     &                       psi,omega,chr,ex,L,x,y,Nx,Ny)
         implicit none
         integer Nx,Ny
-        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_xx(Nx,Ny),gb_yy(Nx,Ny)
-        real*8 psi(Nx,Ny),omega(Nx,Ny)
+        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_ty(Nx,Ny),gb_xx(Nx,Ny)
+        real*8 gb_xy(Nx,Ny),gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny)
 

@@ -759,12 +759,12 @@ void AdS5xS5_t0_cnst_data(void)
    // initialize gbars
    if (ief_bh_r0==0 && skip_constraints==0)
    {
-     init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
+     init_ghb_(zetab,phi1,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,omega,
                &rhoa,&rhob,&AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,y,&Nx,&Ny);
    }
    else
    {
-     init_schw_(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,&ief_bh_r0,
+     init_schw_(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,omega,&ief_bh_r0,
                 &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,y,&Nx,&Ny);
    }   
 
@@ -809,8 +809,8 @@ void AdS5xS5_t0_cnst_data(void)
 //     }
      axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
      axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
-     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_xx_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
-     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_xx_np1,gb_yy_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
+     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,gb_xx_nm1,gb_xy_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
+     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_ty_np1,gb_xx_np1,gb_xy_np1,gb_yy_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
 
      // store initial source functions, metric components
      for (i=0; i<size; i++)
@@ -1007,7 +1007,9 @@ void AdS5xS5_evolve(int iter)
    g_evo_opt_(gb_res,fb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
+              gb_ty_np1,gb_ty_n,gb_ty_nm1,
               gb_xx_np1,gb_xx_n,gb_xx_nm1,
+              gb_xy_np1,gb_xy_n,gb_xy_nm1,
               gb_yy_np1,gb_yy_n,gb_yy_nm1,
               psi_np1,psi_n,psi_nm1,
               omega_np1,omega_n,omega_nm1,

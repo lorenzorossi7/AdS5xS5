@@ -266,7 +266,7 @@ c
 c NOTE: if we ever add gb_xy,gb_xz,gb_yz, must define them
 c       as AMRD MG_cnst vars
 c-----------------------------------------------------------------------
-        subroutine init_ghb(zetab,phi1,gb_tt,gb_tx,gb_xx,
+        subroutine init_ghb(zetab,phi1,gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,
      &                      gb_yy,psi,omega,
      &                      rhoa,rhob,L,phys_bdy,chr,ex,x,y,Nx,Ny)
         implicit none
@@ -274,8 +274,8 @@ c-----------------------------------------------------------------------
         integer phys_bdy(4)
         real*8 zetab(Nx,Ny)
         real*8 phi1(Nx,Ny)
-        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_xx(Nx,Ny)
-        real*8 gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
+        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_ty(Nx,Ny),gb_xx(Nx,Ny)
+        real*8 gb_xy(Nx,Ny),gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny)
         real*8 rhoa,rhob
@@ -350,8 +350,8 @@ c-----------------------------------------------------------------------
         end do
 
         ! x=0 regularization of gbars
-        call axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,chr,ex,L,x,y,
-     &                 Nx,Ny)
+        call axi_reg_g(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,omega,
+     &                 chr,ex,L,x,y,Nx,Ny)
 
         return
         end

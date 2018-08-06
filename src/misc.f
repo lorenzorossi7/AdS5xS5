@@ -293,11 +293,11 @@ c----------------------------------------------------------------------
 c initializes the metric to an exact black hole solution
 c with radius parameter r0
 c----------------------------------------------------------------------
-        subroutine init_schw(gb_tt,gb_tx,gb_xx,gb_yy,psi,omega,
-     &                       r0,L,phys_bdy,chr,ex,x,y,Nx,Ny)
+        subroutine init_schw(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,
+     &                       psi,omega,r0,L,phys_bdy,chr,ex,x,y,Nx,Ny)
         implicit none
-        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_xx(Nx,Ny)
-        real*8 gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
+        real*8 gb_tt(Nx,Ny),gb_tx(Nx,Ny),gb_ty(Nx,Ny),gb_xx(Nx,Ny)
+        real*8 gb_xy(Nx,Ny),gb_yy(Nx,Ny),psi(Nx,Ny),omega(Nx,Ny)
         real*8 chr(Nx,Ny),x(Nx),y(Ny)
         real*8 r0,ex,L
         integer phys_bdy(4)
@@ -351,7 +351,8 @@ c----------------------------------------------------------------------
         end do
 
         ! (REGION) x=0; impose regularity conditions 
-        call axi_reg_g(gb_tt,gb_tx,gb_xx,gb_yy,psi,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_g(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
+     &                 chr,ex,L,x,y,Nx,Ny)
 
         return
         end
