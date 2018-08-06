@@ -351,7 +351,7 @@ c----------------------------------------------------------------------
         end do
 
         ! (REGION) x=0; impose regularity conditions 
-        call axi_reg_g(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,
+        call axi_reg_g(gb_tt,gb_tx,gb_ty,gb_xx,gb_xy,gb_yy,psi,omega,
      &                 chr,ex,L,x,y,Nx,Ny)
 
         return

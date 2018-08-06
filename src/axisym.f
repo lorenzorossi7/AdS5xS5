@@ -95,17 +95,25 @@ c----------------------------------------------------------------------
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
                 gb_tt(1,j)=(4*gb_tt(2,j)-gb_tt(3,j))/3
+                gb_ty(1,j)=(4*gb_ty(2,j)-gb_ty(3,j))/3
                 gb_xx(1,j)=(4*gb_xx(2,j)-gb_xx(3,j))/3
+                gb_xy(1,j)=(4*gb_xy(2,j)-gb_xy(3,j))/3
                 gb_yy(1,j)=(4*gb_yy(2,j)-gb_yy(3,j))/3
+                psi(1,j)=(4*psi(2,j)-psi(3,j))/3
+                omega(1,j)=(4*omega(2,j)-omega(3,j))/3
                 gb_tx(1,j)=0
               else
                 write(*,*) 'WARNING axi_reg_g'
               end if
             else
               gb_tt(1,j)=0
+              gb_ty(1,j)=0
               gb_xx(1,j)=0
+              gb_xy(1,j)=0
               gb_yy(1,j)=0
               gb_tx(1,j)=0
+              psi(1,j)=0
+              omega(1,j)=0
             end if
           end do
         end if
@@ -119,6 +127,10 @@ c----------------------------------------------------------------------
                 gb_xx(i,1)=(4*gb_xx(i,2)-gb_xx(i,3))/3
                 gb_yy(i,1)=(4*gb_yy(i,2)-gb_yy(i,3))/3
                 gb_tx(i,1)=(4*gb_tx(i,2)-gb_tx(i,3))/3
+                psi(i,1)=(4*psi(i,2)-psi(i,3))/3
+                omega(i,1)=(4*omega(i,2)-omega(i,3))/3
+                gb_ty(i,1)=0
+                gb_xy(i,1)=0                
               else
                 write(*,*) 'WARNING axi_reg_g'
               end if
@@ -127,6 +139,10 @@ c----------------------------------------------------------------------
               gb_xx(i,1)=0
               gb_yy(i,1)=0
               gb_tx(i,1)=0
+              gb_ty(i,1)=0
+              gb_xy(i,1)=0
+              psi(i,1)=0
+              omega(i,1)=0
             end if
           end do
         end if
@@ -140,6 +156,10 @@ c----------------------------------------------------------------------
                 gb_xx(i,Ny)=(4*gb_xx(i,Ny-1)-gb_xx(i,Ny-2))/3
                 gb_yy(i,Ny)=(4*gb_yy(i,Ny-1)-gb_yy(i,Ny-2))/3
                 gb_tx(i,Ny)=(4*gb_tx(i,Ny-1)-gb_tx(i,Ny-2))/3
+                gb_ty(i,Ny)=0
+                gb_xy(i,Ny)=0
+                psi(i,Ny)=0
+                omega(i,Ny)=0
               else
                 !write(*,*) 'WARNING axi_reg_g extras'
               end if
@@ -148,6 +168,10 @@ c----------------------------------------------------------------------
               gb_xx(i,Ny)=0
               gb_yy(i,Ny)=0
               gb_tx(i,Ny)=0
+              gb_ty(i,Ny)=0
+              gb_xy(i,Ny)=0
+              psi(i,Ny)=0
+              omega(i,Ny)=0
             end if
           end do
         end if
