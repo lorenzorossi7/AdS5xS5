@@ -9,7 +9,9 @@ c----------------------------------------------------------------------
         subroutine ires(efe_all_ires,kg_ires,
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                  gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                  gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                  gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                  gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  omega_np1,omega_n,omega_nm1,
@@ -27,7 +29,9 @@ c----------------------------------------------------------------------
         real*8 x(Nx),y(Ny),dt,L
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
         real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
@@ -186,13 +190,16 @@ c----------------------------------------------------------------------
               call tensor_init(
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                psi_np1,psi_n,psi_nm1,
      &                omega_np1,omega_n,omega_nm1,
      &                fb_t_np1,fb_t_n,fb_t_nm1,
      &                fb_x_np1,fb_x_n,fb_x_nm1,
      &                fb_y_np1,fb_y_n,fb_y_nm1,
+     &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
      &                phi1_np1,phi1_n,phi1_nm1,

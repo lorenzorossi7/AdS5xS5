@@ -260,8 +260,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c in polar coordinates t==t, x==rho
 c
-c The following initializes the rest of the metric and Hb,
-c given zetab
+c The following initializes the rest of the metric given zetab
 c
 c NOTE: if we ever add gb_xy,gb_xz,gb_yz, must define them
 c       as AMRD MG_cnst vars

@@ -185,10 +185,10 @@ c
 c applies regularity conditions for the metric
 c----------------------------------------------------------------------
 
-        subroutine axi_reg_Hb(Hb_t,Hb_x,chr,ex,L,x,y,Nx,Ny)
+        subroutine axi_reg_Hb(Hb_t,Hb_x,Hb_y,chr,ex,L,x,y,Nx,Ny)
         implicit none
         integer Nx,Ny
-        real*8 Hb_t(Nx,Ny),Hb_x(Nx,Ny)
+        real*8 Hb_t(Nx,Ny),Hb_x(Nx,Ny),Hb_y(Nx,Ny)
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny)
 

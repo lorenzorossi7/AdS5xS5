@@ -87,7 +87,9 @@ c----------------------------------------------------------------------
         subroutine hb_t_evo(res,
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                    gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
@@ -96,10 +98,11 @@ c----------------------------------------------------------------------
      &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
+     &                    Hb_y_np1,Hb_y_n,Hb_y_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
      &                    L,x,y,dt,chr,ex,
      &                    phys_bdy,ghost_width,Nx,Ny,
-     &                    Hb_t_0,Hb_x_0,
+     &                    Hb_t_0,Hb_x_0,Hb_y_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2)
 
         implicit none
@@ -109,7 +112,9 @@ c----------------------------------------------------------------------
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
         real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
@@ -118,9 +123,10 @@ c----------------------------------------------------------------------
         real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
         real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
-        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny)
+        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny),Hb_y_0(Nx,Ny)
 
         integer i,j
 
@@ -201,7 +207,9 @@ c-----------------------------------------------------------------------
         subroutine hb_i_evo(res,
      &                    gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                    gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                    gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                    gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                    gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
@@ -210,10 +218,11 @@ c-----------------------------------------------------------------------
      &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
+     &                    Hb_y_np1,Hb_y_n,Hb_y_nm1,
      &                    phi1_np1,phi1_n,phi1_nm1,
      &                    L,x,y,dt,chr,ex,
      &                    phys_bdy,ghost_width,Nx,Ny,
-     &                    Hb_t_0,Hb_x_0,
+     &                    Hb_t_0,Hb_x_0,Hb_y_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2)
 
         implicit none
@@ -223,7 +232,9 @@ c-----------------------------------------------------------------------
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
         real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
@@ -232,9 +243,10 @@ c-----------------------------------------------------------------------
         real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
+        real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
         real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
-        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny)
+        real*8 Hb_t_0(Nx,Ny),Hb_x_0(Nx,Ny),Hb_y_0(Nx,Ny)
 
         integer i,j
 

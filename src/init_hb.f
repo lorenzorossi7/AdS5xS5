@@ -5,11 +5,13 @@ c this routine calculates Hb, given gb, d(gb)dt.
 c----------------------------------------------------------------------
         subroutine init_hb(gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                     gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                     gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                     gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                     gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                     gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                     psi_np1,psi_n,psi_nm1,
      &                     omega_np1,omega_n,omega_nm1,
-     &                     Hb_t_n,Hb_x_n,
+     &                     Hb_t_n,Hb_x_n,Hb_y_n,
      &                     L,phys_bdy,x,y,dt,chr,ex,Nx,Ny)
         implicit none
         integer Nx,Ny
@@ -19,7 +21,9 @@ c----------------------------------------------------------------------
         real*8 Hb_t_n(Nx,Ny),Hb_x_n(Nx,Ny),Hb_y_n(Nx,Ny)
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
+        real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
         real*8 gb_xx_np1(Nx,Ny),gb_xx_n(Nx,Ny),gb_xx_nm1(Nx,Ny)
+        real*8 gb_xy_np1(Nx,Ny),gb_xy_n(Nx,Ny),gb_xy_nm1(Nx,Ny)
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
@@ -148,10 +152,13 @@ c----------------------------------------------------------------------
               call tensor_init(
      &                gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                gb_tx_np1,gb_tx_n,gb_tx_nm1,
+     &                gb_ty_np1,gb_ty_n,gb_ty_nm1,
      &                gb_xx_np1,gb_xx_n,gb_xx_nm1,
+     &                gb_xy_np1,gb_xy_n,gb_xy_nm1,
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                psi_np1,psi_n,psi_nm1,
      &                omega_np1,omega_n,omega_nm1,
+     &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
@@ -243,7 +250,7 @@ c----------------------------------------------------------------------
            end if
         end if
 
-        call axi_reg_Hb(Hb_t_n,Hb_x_n,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_Hb(Hb_t_n,Hb_x_n,Hb_y_n,chr,ex,L,x,y,Nx,Ny)
 
         return
         end
