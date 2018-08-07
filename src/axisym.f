@@ -206,6 +206,7 @@ c----------------------------------------------------------------------
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
                 Hb_t(1,j)=(4*Hb_t(2,j)-Hb_t(3,j))/3
+                Hb_y(1,j)=(4*Hb_y(2,j)-Hb_y(3,j))/3
                 Hb_x(1,j)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
@@ -213,6 +214,7 @@ c----------------------------------------------------------------------
             else
               Hb_t(1,j)=0
               Hb_x(1,j)=0
+              Hb_y(1,j)=0
             end if
           end do
         end if
@@ -223,12 +225,14 @@ c----------------------------------------------------------------------
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
                 Hb_t(i,1)=(4*Hb_t(i,2)-Hb_t(i,3))/3
                 Hb_x(i,1)=(4*Hb_x(i,2)-Hb_x(i,3))/3
+                Hb_y(i,1)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
               end if
             else
               Hb_t(i,1)=0
               Hb_x(i,1)=0
+              Hb_y(i,1)=0
             end if
           end do
         end if
@@ -239,12 +243,14 @@ c----------------------------------------------------------------------
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
                 Hb_t(i,Ny)=(4*Hb_t(i,Ny-1)-Hb_t(i,Ny-2))/3
                 Hb_x(i,Ny)=(4*Hb_x(i,Ny-1)-Hb_x(i,Ny-2))/3
+                Hb_y(i,Ny)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
               end if
             else
               Hb_t(i,Ny)=0
               Hb_x(i,Ny)=0
+              Hb_y(i,Ny)=0
             end if
           end do
         end if
