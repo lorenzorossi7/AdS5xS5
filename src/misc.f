@@ -464,22 +464,26 @@ c----------------------------------------------------------------------
         ! level variables, and as these are the only derivatives we
         ! use we drop any _n identifier
         !--------------------------------------------------------------
-        real*8 gb_tt_t,gb_tt_x
-        real*8 gb_tt_tt,gb_tt_tx,gb_tt_xx
-        real*8 gb_tx_t,gb_tx_x
-        real*8 gb_tx_tt,gb_tx_tx,gb_tx_xx
-        real*8 gb_xx_t,gb_xx_x
-        real*8 gb_xx_tt,gb_xx_tx,gb_xx_xx
-        real*8 gb_yy_t,gb_yy_x
-        real*8 gb_yy_tt,gb_yy_tx,gb_yy_xx
-        real*8 psi_t,psi_x
-        real*8 psi_tt,psi_tx,psi_xx
-        real*8 omega_t,omega_x
-        real*8 omega_tt,omega_tx,omega_xx
-        real*8 phi1_t,phi1_x
-        real*8 phi1_tt,phi1_tx,phi1_xx
+        real*8 gb_tt_t,gb_tt_x,gb_tt_y
+        real*8 gb_tt_tt,gb_tt_tx,gb_tt_ty,gb_tt_xx,gb_tt_xy,gb_tt_yy
+        real*8 gb_tx_t,gb_tx_x,gb_tx_y
+        real*8 gb_tx_tt,gb_tx_tx,gb_tx_ty,gb_tx_xx,gb_tx_xy,gb_tx_yy
+        real*8 gb_ty_t,gb_ty_x,gb_ty_y
+        real*8 gb_ty_tt,gb_ty_tx,gb_ty_ty,gb_ty_xx,gb_ty_xy,gb_ty_yy
+        real*8 gb_xx_t,gb_xx_x,gb_xx_y
+        real*8 gb_xx_tt,gb_xx_tx,gb_xx_ty,gb_xx_xx,gb_xx_xy,gb_xx_yy
+        real*8 gb_xy_t,gb_xy_x,gb_xy_y
+        real*8 gb_xy_tt,gb_xy_tx,gb_xy_ty,gb_xy_xx,gb_xy_xy,gb_xy_yy
+        real*8 gb_yy_t,gb_yy_x,gb_yy_y
+        real*8 gb_yy_tt,gb_yy_tx,gb_yy_ty,gb_yy_xx,gb_yy_xy,gb_yy_yy
+        real*8 psi_t,psi_x,psi_y
+        real*8 psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy
+        real*8 omega_t,omega_x,omega_y
+        real*8 omega_tt,omega_tx,omega_ty,omega_xx,omega_xy,omega_yy
+        real*8 phi1_t,phi1_x,phi1_y
+        real*8 phi1_tt,phi1_tx,phi1_ty,phi1_xx,phi1_xy,phi1_yy
   
-        real*8 gb_tt0,gb_tx0,gb_xx0,gb_yy0,phi10
+        real*8 gb_tt0,gb_tx0,gb_ty0,gb_xx0,gb_xy0,gb_yy0,phi10
 
         real*8 g0_tt_ads0,g0_xx_ads0,g0_yy_ads0
         real*8 g0_tt_ads_x,g0_tt_ads_xx
@@ -492,14 +496,15 @@ c----------------------------------------------------------------------
         real*8 gA_ads_x,gA_ads_xx        
         real*8 gB_ads_yy
 
-        real*8 fb_t_t,fb_t_x
-        real*8 fb_x_t,fb_x_x
-        real*8 fb_y_t,fb_y_x
+        real*8 fb_t_t,fb_t_x,fb_t_y 
+        real*8 fb_x_t,fb_x_x,fb_x_y
+        real*8 fb_y_t,fb_y_x,fb_y_y
 
-        real*8 Hb_t_t,Hb_t_x
-        real*8 Hb_x_t,Hb_x_x
+        real*8 Hb_t_t,Hb_t_x,Hb_t_y 
+        real*8 Hb_x_t,Hb_x_x,Hb_x_y
+        real*8 Hb_y_t,Hb_y_x,Hb_y_y
 
-        real*8 Hb_t0,Hb_x0
+        real*8 Hb_t0,Hb_x0,Hb_y0
 
         real*8 fb_t0,fb_x0,fb_y0
 
@@ -535,7 +540,9 @@ c----------------------------------------------------------------------
         ! set gbar values
         gb_tt0=gb_tt_n(i,j)
         gb_tx0=gb_tx_n(i,j)
+        gb_ty0=gb_ty_n(i,j)
         gb_xx0=gb_xx_n(i,j)
+        gb_xy0=gb_xy_n(i,j)
         gb_yy0=gb_yy_n(i,j)
         psi0  =psi_n(i,j) 
         omega0=omega_n(i,j)
@@ -548,6 +555,7 @@ c----------------------------------------------------------------------
         ! set hbar values
         Hb_t0=Hb_t_n(i,j)
         Hb_x0=Hb_x_n(i,j)
+        Hb_y0=Hb_y_n(i,j)
 
         ! set phi1 value
         phi10=phi1_n(i,j)
@@ -578,10 +586,18 @@ c----------------------------------------------------------------------
      &       gb_tx_t,gb_tx_x,
      &       gb_tx_tt,gb_tx_tx,gb_tx_xx,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+        call df2_int(gb_ty_np1,gb_ty_n,gb_ty_nm1,
+     &       gb_ty_t,gb_ty_x,
+     &       gb_ty_tt,gb_ty_tx,gb_ty_xx,
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,
      &       gb_xx_t,gb_xx_x,
      &       gb_xx_tt,gb_xx_tx,gb_xx_xx,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+        call df2_int(gb_xy_np1,gb_xy_n,gb_xy_nm1,
+     &       gb_xy_t,gb_xy_x,
+     &       gb_xy_tt,gb_xy_tx,gb_xy_xx,
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
         call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &       gb_yy_t,gb_yy_x,
      &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
@@ -613,6 +629,9 @@ c----------------------------------------------------------------------
         call df1_int(Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &       Hb_x_t,Hb_x_x,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_x')
+        call df1_int(Hb_y_np1,Hb_y_n,Hb_y_nm1,
+     &       Hb_y_t,Hb_y_x,
+     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_y')
 
         ! calculate phi1 derivatives
         call df2_int(phi1_np1,phi1_n,phi1_nm1,
@@ -624,8 +643,9 @@ c----------------------------------------------------------------------
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 slice will do)
         g0_ll(1,1)=g0_tt_ads0+gb_tt0*(1-x0**2)
         g0_ll(1,2)=           gb_tx0*(1-x0**2)
-        !g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
+        g0_ll(1,3)=           gb_ty0*(1-x0**2)**2  
         g0_ll(2,2)=g0_xx_ads0+gb_xx0*(1-x0**2)
+        g0_ll(2,3)=           gb_xy0*(1-x0**2)**2  
         g0_ll(3,3)=g0_yy_ads0+gb_yy0*(1-x0**2)**3
 
         g0_uu(1,1)=
@@ -676,80 +696,148 @@ c----------------------------------------------------------------------
         g0_ll_x(1,1,2)   =g0_tt_ads_x
      &                   +gb_tt_x*(1-x0**2)
      &                   +gb_tt0*(-2*x0)
+        g0_ll_x(1,1,3)   =0
+     &                   +gb_tt_y*(1-x0**2)
         g0_ll_xx(1,1,1,1)=0
      &                   +gb_tt_tt*(1-x0**2)
         g0_ll_xx(1,1,1,2)=0
      &                   +gb_tt_tx*(1-x0**2)
      &                   +gb_tt_t*(-2*x0)
+        g0_ll_xx(1,1,1,3)=0
+     &                   +gb_tt_ty*(1-x0**2)
         g0_ll_xx(1,1,2,2)=g0_tt_ads_xx
      &                   +gb_tt_xx*(1-x0**2)
      &                   +gb_tt_x*(-2*x0)
      &                   +gb_tt_x*(-2*x0)
      &                   +gb_tt0*(-2)
+        g0_ll_xx(1,1,2,3)=0
+     &                   +gb_tt_xy*(1-x0**2)
+     &                   +gb_tt_y*(-2*x0)
+        g0_ll_xx(1,1,3,3)=0
+     &                   +gb_tt_yy*(1-x0**2)
 
         g0_ll_x(1,2,1)   =0
      &                   +gb_tx_t*(1-x0**2)
         g0_ll_x(1,2,2)   =0
      &                   +gb_tx_x*(1-x0**2)
      &                   +gb_tx0*(-2*x0)
+        g0_ll_x(1,2,3)   =0
+     &                   +gb_ty_y*(1-x0**2)
         g0_ll_xx(1,2,1,1)=0
      &                   +gb_tx_tt*(1-x0**2)
         g0_ll_xx(1,2,1,2)=0
      &                   +gb_tx_tx*(1-x0**2)
      &                   +gb_tx_t*(-2*x0)
+        g0_ll_xx(1,2,1,3)=0
+     &                   +gb_ty_tt*(1-x0**2)
         g0_ll_xx(1,2,2,2)=0
      &                   +gb_tx_xx*(1-x0**2)
      &                   +gb_tx_x*(-2*x0)
      &                   +gb_tx_x*(-2*x0)
      &                   +gb_tx0*(-2)
+        g0_ll_xx(1,2,2,3)=0
+     &                   +gb_tx_y*(1-x0**2)
+     &                   +gb_tx_y*(-2*x0)
+        g0_ll_xx(1,2,3,3)=0
+     &                   +gb_ty_yy*(1-x0**2)
 
-!        g0_ll_x(1,3,1)   =0                            !NOTE: add this when you add y-dependence
-!     &                   +gb_ty_t*(1-x0**2)**2
-!        g0_ll_x(1,3,2)   =0
-!     &                   +gb_ty_x*(1-x0**2)**2
-!     &                   +gb_ty0*2*(1-x0**2)*(-2*x0)
-!        g0_ll_xx(1,3,1,1)=0
-!     &                   +gb_ty_tt*(1-x0**2)**2
-!        g0_ll_xx(1,3,1,2)=0
-!     &                   +gb_ty_tx*(1-x0**2)**2
-!     &                   +gb_ty_t*2*(1-x0**2)*(-2*x0)
-!        g0_ll_xx(1,3,2,2)=0
-!     &                   +gb_ty_xx*(1-x0**2)**2
-!     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
-!     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
-!     &                   +gb_ty0*2*(-2+6*x0**2)
+        g0_ll_x(1,3,1)   =0                            
+     &                   +gb_ty_t*(1-x0**2)**2
+        g0_ll_x(1,3,2)   =0
+     &                   +gb_ty_x*(1-x0**2)**2
+     &                   +gb_ty0*2*(1-x0**2)*(-2*x0)
+        g0_ll_x(1,3,3)   =0                            
+     &                   +gb_ty_y*(1-x0**2)**2
+        g0_ll_xx(1,3,1,1)=0
+     &                   +gb_ty_tt*(1-x0**2)**2
+        g0_ll_xx(1,3,1,2)=0
+     &                   +gb_ty_tx*(1-x0**2)**2
+     &                   +gb_ty_t*2*(1-x0**2)*(-2*x0)
+        g0_ll_xx(1,3,1,3)=0
+     &                   +gb_ty_ty*(1-x0**2)**2
+        g0_ll_xx(1,3,2,2)=0
+     &                   +gb_ty_xx*(1-x0**2)**2
+     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_ty_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_ty0*2*(-2+6*x0**2)
+        g0_ll_xx(1,3,2,3)=0
+     &                   +gb_ty_xy*(1-x0**2)**2
+     &                   +gb_ty_y*2*(1-x0**2)*(-2*x0)
+        g0_ll_xx(1,3,3,3)=0                            
+     &                   +gb_ty_yy*(1-x0**2)**2
 
         g0_ll_x(2,2,1)   =0
      &                   +gb_xx_t*(1-x0**2)
         g0_ll_x(2,2,2)   =g0_xx_ads_x
      &                   +gb_xx_x*(1-x0**2)
      &                   +gb_xx0*(-2*x0)
+        g0_ll_x(2,2,3)   =0
+     &                   +gb_xx_y*(1-x0**2)
         g0_ll_xx(2,2,1,1)=0
      &                   +gb_xx_tt*(1-x0**2)
         g0_ll_xx(2,2,1,2)=0
      &                   +gb_xx_tx*(1-x0**2)
      &                   +gb_xx_t*(-2*x0)
+        g0_ll_xx(2,2,1,3)=0
+     &                   +gb_xx_ty*(1-x0**2)
         g0_ll_xx(2,2,2,2)=g0_xx_ads_xx
      &                   +gb_xx_xx*(1-x0**2)
      &                   +gb_xx_x*(-2*x0)
      &                   +gb_xx_x*(-2*x0)
      &                   +gb_xx0*(-2)
+        g0_ll_xx(2,2,2,3)=0
+     &                   +gb_xx_xy*(1-x0**2)
+     &                   +gb_xx_y*(-2*x0)
+
+        g0_ll_x(2,3,1)   =0                            
+     &                   +gb_xy_t*(1-x0**2)**2
+        g0_ll_x(2,3,2)   =0
+     &                   +gb_xy_x*(1-x0**2)**2
+     &                   +gb_xy0*2*(1-x0**2)*(-2*x0)
+        g0_ll_x(2,3,3)   =0                            
+     &                   +gb_xy_y*(1-x0**2)**2
+        g0_ll_xx(2,3,1,1)=0
+     &                   +gb_xy_tt*(1-x0**2)**2
+        g0_ll_xx(2,3,1,2)=0
+     &                   +gb_xy_tx*(1-x0**2)**2
+     &                   +gb_xy_t*2*(1-x0**2)*(-2*x0)
+        g0_ll_xx(2,3,1,3)=0
+     &                   +gb_xy_ty*(1-x0**2)**2
+        g0_ll_xx(2,3,2,2)=0
+     &                   +gb_xy_xx*(1-x0**2)**2
+     &                   +gb_xy_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_xy_x*2*(1-x0**2)*(-2*x0)
+     &                   +gb_xy0*2*(-2+6*x0**2)
+        g0_ll_xx(2,3,2,3)=0
+     &                   +gb_xy_xy*(1-x0**2)**2
+     &                   +gb_xy_y*2*(1-x0**2)*(-2*x0)
+        g0_ll_xx(2,3,3,3)=0
+     &                   +gb_xy_yy*(1-x0**2)**2
 
         g0_ll_x(3,3,1)   =0
      &                   +gb_yy_t*(1-x0**2)**3
         g0_ll_x(3,3,2)   =g0_yy_ads_x
      &                   +gb_yy_x*(1-x0**2)**3
      &                   +gb_yy0*3*(1-x0**2)**2*(-2*x0)
+        g0_ll_x(3,3,3)   =0
+     &                   +gb_yy_y*(1-x0**2)**3
         g0_ll_xx(3,3,1,1)=0
      &                   +gb_yy_tt*(1-x0**2)**3
         g0_ll_xx(3,3,1,2)=0
      &                   +gb_yy_tx*(1-x0**2)**3
      &                   +gb_yy_t*3*(1-x0**2)**2*(-2*x0)
+        g0_ll_xx(3,3,1,3)=0
+     &                   +gb_yy_ty*(1-x0**2)**3
         g0_ll_xx(3,3,2,2)=g0_yy_ads_xx
      &                   +gb_yy_xx*(1-x0**2)**3
      &                   +gb_yy_x*3*(1-x0**2)**2*(-2*x0)
      &                   +gb_yy_x*3*(1-x0**2)**2*(-2*x0)
      &                   +gb_yy0*6*(-1+6*x0**2-5*x0**4)
+        g0_ll_xx(3,3,2,3)=0
+     &                   +gb_yy_xy*(1-x0**2)**3
+     &                   +gb_yy_y*3*(1-x0**2)**2*(-2*x0)
+        g0_ll_xx(3,3,3,3)=0
+     &                   +gb_yy_yy*(1-x0**2)**3
 
         do a=1,2
           do b=a+1,3
@@ -811,33 +899,57 @@ c----------------------------------------------------------------------
         gA_x(2)   =gA_ads_x
      &            +psi_x*(1-x0**2)*x0**2
      &            +psi0*(2*x0-4*x0**3)
+        gA_x(3)   =0
+     &            +psi_y*(1-x0**2)*x0**2
         gA_xx(1,1)=0
      &            +psi_tt*(1-x0**2)*x0**2
         gA_xx(1,2)=0
      &            +psi_tx*(1-x0**2)*x0**2
      &            +psi_t*(2*x0-4*x0**3)
+        gA_xx(1,3)=0
+     &            +psi_ty*(1-x0**2)*x0**2
         gA_xx(2,2)=gA_ads_xx
      &            +psi_xx*(1-x0**2)*x0**2
      &            +psi_x*(2*x0-4*x0**3)
      &            +psi_x*(2*x0-4*x0**3)
      &            +psi0*(2-12*x0**2)
+        gA_xx(1,3)=0
+     &            +psi_ty*(1-x0**2)*x0**2
+     &            +psi_y*(2*x0-4*x0**3)
+        gA_xx(3,3)=0
+     &            +psi_yy*(1-x0**2)*x0**2
 
         gB_x(1)   =0
      &            +omega_t*(1-x0**2)**3*sin(PI*y0/L)**2
         gB_x(2)   =0
      &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
+        gB_x(3)   =0
+     &            +omega_y*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega0*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
         gB_xx(1,1)=0
      &            +omega_tt*(1-x0**2)**3*sin(PI*y0/L)**2
         gB_xx(1,2)=0
      &            +omega_tx*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega_t*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
+        gB_xx(1,3)=0
+     &            +omega_ty*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_t*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
         gB_xx(2,2)=0
      &            +omega_xx*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega_x*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
      &            +omega_x*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
      &            +omega0*6*(-1+6*x0**2-5*x0**4)*sin(PI*y0/L)**2
-        gB_xx(3,3)=gB_ads_yy  !NOTE: add the rest of the terms when you add y-dependence
+        gB_xx(2,3)=0
+     &            +omega_xy*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)*cos(PI*y0/L)*2*PI/L
+     &            +omega_y*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
+     &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(2*PI*y0/L)*PI/L
+        gB_xx(3,3)=gB_ads_yy 
+     &            +omega_yy*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
+     &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L 
+     &            +omega0*(1-x0**2)**3*cos(2*PI*y0/L)*2*PI**2/L**2
 
         do a=1,2
           do b=a+1,3
@@ -862,7 +974,6 @@ c----------------------------------------------------------------------
         gads_ll_xx(2,2,2,2)=g0_xx_ads_xx 
         gads_ll_x(3,3,2)   =g0_yy_ads_x 
         gads_ll_xx(3,3,2,2)=g0_yy_ads_xx
-        ! WARNING: from sin^2theta factor in pure ads term
 
         do a=1,2
           do b=a+1,3
@@ -904,13 +1015,16 @@ c----------------------------------------------------------------------
         !(considering theta1,theta2-independent case, so theta1=theta2=pi/2 will do)
         h0_ll(1,1)=gb_tt0*(1-x0**2)
         h0_ll(1,2)=gb_tx0*(1-x0**2)
-        !h0_ll(1,3)=gb_ty0*(1-x0**2)**2  !NOTE: add this when you add y-dependence
+        h0_ll(1,3)=gb_ty0*(1-x0**2)**2  
         h0_ll(2,2)=gb_xx0*(1-x0**2)
+        h0_ll(2,3)=gb_xy0*(1-x0**2)**2  
         h0_ll(3,3)=gb_yy0*(1-x0**2)**3
         
         h0_uu(1,1)=g0_uu(1,1)-gads_uu(1,1)
         h0_uu(1,2)=g0_uu(1,2)
+        h0_uu(1,3)=g0_uu(1,3)           
         h0_uu(2,2)=g0_uu(2,2)-gads_uu(2,2)
+        h0_uu(2,3)=g0_uu(2,3)           
         h0_uu(3,3)=g0_uu(3,3)-gads_uu(3,3)
 
         h0_ll_x(1,1,1)   =g0_ll_x(1,1,1)-gads_ll_x(1,1,1)
@@ -925,18 +1039,29 @@ c----------------------------------------------------------------------
         h0_ll_xx(1,2,1,2)=g0_ll_xx(1,2,1,2)-gads_ll_xx(1,2,1,2)
         h0_ll_xx(1,2,2,2)=g0_ll_xx(1,2,2,2)-gads_ll_xx(1,2,2,2)
 
+        h0_ll_x(1,3,1)   =g0_ll_x(1,3,1)-gads_ll_x(1,3,1) 
+        h0_ll_x(1,3,2)   =g0_ll_x(1,3,2)-gads_ll_x(1,3,2)
+        h0_ll_xx(1,3,1,1)=g0_ll_xx(1,3,1,1)-gads_ll_xx(1,3,1,1)
+        h0_ll_xx(1,3,1,2)=g0_ll_xx(1,3,1,2)-gads_ll_xx(1,3,1,2)
+        h0_ll_xx(1,3,2,2)=g0_ll_xx(1,3,2,2)-gads_ll_xx(1,3,2,2)
+
         h0_ll_x(2,2,1)   =g0_ll_x(2,2,1)-gads_ll_x(2,2,1)
         h0_ll_x(2,2,2)   =g0_ll_x(2,2,2)-gads_ll_x(2,2,2)
         h0_ll_xx(2,2,1,1)=g0_ll_xx(2,2,1,1)-gads_ll_xx(2,2,1,1)
         h0_ll_xx(2,2,1,2)=g0_ll_xx(2,2,1,2)-gads_ll_xx(2,2,1,2)
         h0_ll_xx(2,2,2,2)=g0_ll_xx(2,2,2,2)-gads_ll_xx(2,2,2,2)
 
+        h0_ll_x(2,3,1)   =g0_ll_x(2,3,1)-gads_ll_x(2,3,1) 
+        h0_ll_x(2,3,2)   =g0_ll_x(2,3,2)-gads_ll_x(2,3,2)
+        h0_ll_xx(2,3,1,1)=g0_ll_xx(2,3,1,1)-gads_ll_xx(2,3,1,1)
+        h0_ll_xx(2,3,1,2)=g0_ll_xx(2,3,1,2)-gads_ll_xx(2,3,1,2)
+        h0_ll_xx(2,3,2,2)=g0_ll_xx(2,3,2,2)-gads_ll_xx(2,3,2,2)
+
         h0_ll_x(3,3,1)   =g0_ll_x(3,3,1)-gads_ll_x(3,3,1)
         h0_ll_x(3,3,2)   =g0_ll_x(3,3,2)-gads_ll_x(3,3,2)
         h0_ll_xx(3,3,1,1)=g0_ll_xx(3,3,1,1)-gads_ll_xx(3,3,1,1)
         h0_ll_xx(3,3,1,2)=g0_ll_xx(3,3,1,2)-gads_ll_xx(3,3,1,2)
         h0_ll_xx(3,3,2,2)=g0_ll_xx(3,3,2,2)-gads_ll_xx(3,3,2,2)
-        ! WARNING: from sin^2theta factor in pure ads term
 
         h0_uu_x(1,1,1)=g0_uu_x(1,1,1)-gads_uu_x(1,1,1)
         h0_uu_x(1,1,2)=g0_uu_x(1,1,2)-gads_uu_x(1,1,2)
@@ -944,8 +1069,14 @@ c----------------------------------------------------------------------
         h0_uu_x(1,2,1)=g0_uu_x(1,2,1)-gads_uu_x(1,2,1)
         h0_uu_x(1,2,2)=g0_uu_x(1,2,2)-gads_uu_x(1,2,2)
 
+        h0_uu_x(1,3,1)=g0_uu_x(1,3,1)-gads_uu_x(1,3,1) 
+        h0_uu_x(1,3,2)=g0_uu_x(1,3,2)-gads_uu_x(1,3,2)
+
         h0_uu_x(2,2,1)=g0_uu_x(2,2,1)-gads_uu_x(2,2,1)
         h0_uu_x(2,2,2)=g0_uu_x(2,2,2)-gads_uu_x(2,2,2)
+
+        h0_uu_x(2,3,1)=g0_uu_x(2,3,1)-gads_uu_x(2,3,1) 
+        h0_uu_x(2,3,2)=g0_uu_x(2,3,2)-gads_uu_x(2,3,2)
 
         h0_uu_x(3,3,1)=g0_uu_x(3,3,1)-gads_uu_x(3,3,1)
         h0_uu_x(3,3,2)=g0_uu_x(3,3,2)-gads_uu_x(3,3,2)
@@ -964,14 +1095,22 @@ c----------------------------------------------------------------------
         ! give values to the gh source functions
         A_l(1)=Hb_t0*(1-x0**2)**2 
         A_l(2)=Hb_x0*(1-x0**2)**2
+        A_l(3)=Hb_y0*(1-x0**2)**2
 
         A_l_x(1,1)=Hb_t_t*(1-x0**2)**2
         A_l_x(1,2)=Hb_t_x*(1-x0**2)**2
      &            -2*x0*2*(1-x0**2)*Hb_t0
+        A_l_x(1,3)=Hb_t_y*(1-x0**2)**2 
 
         A_l_x(2,1)=Hb_x_t*(1-x0**2)**2
         A_l_x(2,2)=Hb_x_x*(1-x0**2)**2
      &            -2*x0*2*(1-x0**2)*Hb_x0
+        A_l_x(2,3)=Hb_x_y*(1-x0**2)**2 
+
+        A_l_x(3,1)=Hb_y_t*(1-x0**2)**2
+        A_l_x(3,2)=Hb_y_x*(1-x0**2)**2
+     &            -2*x0*2*(1-x0**2)*Hb_y0
+        A_l_x(3,3)=Hb_y_y*(1-x0**2)**2 
 
         ! give values to the ads gh source functions
         Hads_l(2)=(-2+4*x0)/(1-2*x0*(1-x0))
@@ -983,17 +1122,18 @@ c----------------------------------------------------------------------
         phi10_x(1)=phi1_t*(1-x0**2)**3
         phi10_x(2)=phi1_x*(1-x0**2)**3
      &            +phi10*(-6*x0)*(1-x0**2)**2
-        phi10_x(3)=0
+        phi10_x(3)=phi1_y*(1-x0**2)**3     
 
         phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
         phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
      &               +phi1_t*(-6*x0)*(1-x0**2)**2
-        phi10_xx(1,3)=0
+        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3
         phi10_xx(2,2)=phi1_xx*(1-x0**2)**3
      &               +phi1_x*(2)*(-6*x0)*(1-x0**2)**2
      &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
-        phi10_xx(2,3)=0
-        phi10_xx(3,3)=0                
+        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3 
+     &               +phi1_y*(-6*x0)*(1-x0**2)**2
+        phi10_xx(3,3)=phi1_yy*(1-x0**2)**3 
 
         do a=1,2
           do b=a+1,3
@@ -1095,12 +1235,15 @@ c----------------------------------------------------------------------
         f1_l_x(1,1)=fb_t_t*(1-x0**2)**3
         f1_l_x(1,2)=fb_t_x*(1-x0**2)**3
      &             +fb_t0*3*(1-x0**2)**2*(-2*x0)
+        f1_l_x(1,3)=fb_t_y*(1-x0**2)**3
         f1_l_x(2,1)=fb_x_t*(1-x0**2)**3
         f1_l_x(2,2)=fb_x_x*(1-x0**2)**3
      &             +fb_x0*3*(1-x0**2)**2*(-2*x0)
+        f1_l_x(2,3)=fb_x_y*(1-x0**2)**3
         f1_l_x(3,1)=fb_y_t*(1-x0**2)**3
         f1_l_x(3,2)=fb_y_x*(1-x0**2)**3
      &             +fb_y0*3*(1-x0**2)**2*(-2*x0)
+        f1_l_x(3,3)=fb_y_y*(1-x0**2)**3
 
         do c=1,3
           f2_ll_x(1,2,c)=-vol_x(1,2,3,c)*f1_l(1)*g0_uu(3,1)
@@ -1144,22 +1287,6 @@ c----------------------------------------------------------------------
         ! calculate Christoffel symbol derivatives at point i
         !(gamma^a_bc,e = 1/2 g^ad_,e(g_bd,c  + g_cd,b  - g_bc,d)
         !              +   1/2 g^ad(g_bd,ce + g_cd,be - g_bc,de))
-        !(WARNING: 
-        ! this second derivative needs more info on chi,theta, so 
-        ! cannot use the g0_ll_x, g0_uu_x, g0_ll_xx set by chi=pi/2,theta=pi/2, 
-        ! only (from pure AdS piece):
-        ! gamma_ull(4,4,3)=cotchi
-        ! gamma_ull(5,5,3)=cotchi
-        ! gamma_ull(2,4,4)=-1/L^2*x/(1-x)*(L^2*(1-x)^2+x^2)*sinchi^2
-        ! gamma_ull(3,4,4)=-coschi*sinchi
-        ! gamma_ull(4,3,4)=cotchi
-        ! gamma_ull(5,5,4)=cottheta
-        ! gamma_ull(2,5,5)=-1/L^2*x/(1-x)*(L^2*(1-x)^2+x^2)*sinchi^2*sintheta^2
-        ! gamma_ull(3,5,5)=-coschi*sinchi*sintheta^2
-        ! gamma_ull(4,5,5)=-costheta*sintheta
-        ! gamma_ull(5,4,5)=cottheta
-        ! gamma_ull(5,3,5)=cotchi
-        ! are affected in this AdS5D case, so hardcoded these at the end)
         do a=1,3
           do b=1,3
             do c=1,3
@@ -1176,19 +1303,6 @@ c----------------------------------------------------------------------
             end do
           end do
         end do
-        !gamma_ull_x(4,4,3,3)=-1 
-        !gamma_ull_x(5,5,3,3)=-1 
-        !gamma_ull_x(2,4,4,3)=0
-        !gamma_ull_x(3,4,4,3)=1
-        !gamma_ull_x(4,3,4,3)=-1
-        !gamma_ull_x(5,5,4,4)=-1
-        !gamma_ull_x(2,5,5,3)=0
-        !gamma_ull_x(2,5,5,4)=0
-        !gamma_ull_x(3,5,5,3)=1
-        !gamma_ull_x(3,5,5,4)=0
-        !gamma_ull_x(4,5,5,4)=1
-        !gamma_ull_x(5,4,5,4)=-1
-        !gamma_ull_x(5,3,5,3)=-1
 
         ! calculate Riemann tensor at point i
         !(R^a_bcd =gamma^a_bd,c - gamma^a_bc,d
