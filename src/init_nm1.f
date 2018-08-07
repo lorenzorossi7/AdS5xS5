@@ -1,6 +1,4 @@
 c----------------------------------------------------------------------
-c NEED HARDCODED VERSION (that uses g_evo_opt.f instead of f_tt0_init.inc)
-c
 c this routine initializes the past time level to O(h^3),
 c given [gb,phi] at t=t0, and d[[gb,phi]]/dt
 c No gauge evolution considered for H yet.
@@ -69,12 +67,15 @@ c----------------------------------------------------------------------
         !--------------------------------------------------------------
         real*8 gb_tt_t,gb_tt_tt
         real*8 gb_tx_t,gb_tx_tt
+        real*8 gb_ty_t,gb_ty_tt
         real*8 gb_xx_t,gb_xx_tt
+        real*8 gb_xy_t,gb_xy_tt
         real*8 gb_yy_t,gb_yy_tt
         real*8 psi_t,psi_tt
         real*8 omega_t,omega_tt
         real*8 Hb_t_t
         real*8 Hb_x_t
+        real*8 Hb_y_t
         real*8 phi1_t,phi1_tt
 
         real*8 h0_ll_tt(3,3)
@@ -245,10 +246,13 @@ c----------------------------------------------------------------------
               phi10_x(1)    =phi1_t_n(i,j)*(1-x0**2)**3   
               h0_ll_x(1,1,1)=gb_tt_t_n(i,j)*(1-x0**2)  
               h0_ll_x(1,2,1)=gb_tx_t_n(i,j)*(1-x0**2)
+              h0_ll_x(1,3,1)=gb_ty_t_n(i,j)*(1-x0**2)**2
               h0_ll_x(2,2,1)=gb_xx_t_n(i,j)*(1-x0**2)  
+              h0_ll_x(2,3,1)=gb_xy_t_n(i,j)*(1-x0**2)**2
               h0_ll_x(3,3,1)=gb_yy_t_n(i,j)*(1-x0**2)**3
               A_l_x(1,1)    =Hb_t_t_n(i,j)*(1-x0**2)**2
               A_l_x(2,1)    =Hb_x_t_n(i,j)*(1-x0**2)**2
+              A_l_x(3,1)    =Hb_y_t_n(i,j)*(1-x0**2)**2
               gA_x(1)       =psi_t_n(i,j)*(1-x0**2)*x0**2
               gB_x(1)       =omega_t_n(i,j)*(1-x0**2)**3
 
@@ -256,10 +260,15 @@ c----------------------------------------------------------------------
               phi1_t =phi1_t_n(i,j)                
               gb_tt_t=gb_tt_t_n(i,j) 
               gb_tx_t=gb_tx_t_n(i,j) 
+              gb_ty_t=gb_ty_t_n(i,j) 
               gb_xx_t=gb_xx_t_n(i,j) 
+              gb_xy_t=gb_xy_t_n(i,j) 
               gb_yy_t=gb_yy_t_n(i,j) 
+              psi_t=psi_t_n(i,j) 
+              omega_t=omega_t_n(i,j) 
               Hb_t_t =Hb_t_t_n(i,j)
               Hb_x_t =Hb_x_t_n(i,j)
+              Hb_y_t =Hb_y_t_n(i,j)
 
               ! 0 = efe_ab
               do a=1,3
@@ -505,18 +514,26 @@ c----------------------------------------------------------------------
      &                                                                 )
 
               if (is_nan(h0_ll_tt(1,1)).or.is_nan(h0_ll_tt(1,2)) 
-     &        .or.is_nan(h0_ll_tt(2,2)).or.is_nan(h0_ll_tt(3,3))) then
+     &        .or.is_nan(h0_ll_tt(1,3)).or.is_nan(h0_ll_tt(2,2))
+     &        .or.is_nan(h0_ll_tt(2,3)).or.is_nan(h0_ll_tt(3,3))
+     &        .or.is_nan(gA_tt).or.is_nan(gB_tt)) then
                 write(*,*) 'h0_ll_tt(1,1)=',h0_ll_tt(1,1)
                 write(*,*) 'h0_ll_tt(1,2)=',h0_ll_tt(1,2)
+                write(*,*) 'h0_ll_tt(1,3)=',h0_ll_tt(1,3)
                 write(*,*) 'h0_ll_tt(2,2)=',h0_ll_tt(2,2)
+                write(*,*) 'h0_ll_tt(2,3)=',h0_ll_tt(2,3)
                 write(*,*) 'h0_ll_tt(3,3)=',h0_ll_tt(3,3)
+                write(*,*) 'gA_tt=',gA_tt
+                write(*,*) 'gB_tt=',gB_tt
                 stop
               end if
 
               ! initial second time derivatives
               gb_tt_tt=h0_ll_tt(1,1)/(1-x0**2) 
               gb_tx_tt=h0_ll_tt(1,2)/(1-x0**2)
+              gb_ty_tt=h0_ll_tt(1,3)/(1-x0**2)**2
               gb_xx_tt=h0_ll_tt(2,2)/(1-x0**2) 
+              gb_xy_tt=h0_ll_tt(2,3)/(1-x0**2)**2
               gb_yy_tt=h0_ll_tt(3,3)/(1-x0**2)**3
               psi_tt=gA_tt/(1-x0**2)/x0**2
               omega_tt=gB_tt/(1-x0**2)**3
@@ -527,8 +544,12 @@ c----------------------------------------------------------------------
      &                     + gb_tt_tt*dt**2/2
               gb_tx_nm1(i,j)=gb_tx_n(i,j) - gb_tx_t*dt
      &                     + gb_tx_tt*dt**2/2
+              gb_ty_nm1(i,j)=gb_ty_n(i,j) - gb_ty_t*dt
+     &                     + gb_ty_tt*dt**2/2
               gb_xx_nm1(i,j)=gb_xx_n(i,j) - gb_xx_t*dt
      &                     + gb_xx_tt*dt**2/2
+              gb_xy_nm1(i,j)=gb_xy_n(i,j) - gb_xy_t*dt
+     &                     + gb_xy_tt*dt**2/2
               gb_yy_nm1(i,j)=gb_yy_n(i,j) - gb_yy_t*dt
      &                     + gb_yy_tt*dt**2/2
               psi_nm1(i,j)  =psi_n(i,j) - psi_t*dt  
@@ -537,6 +558,7 @@ c----------------------------------------------------------------------
      &                     + omega_tt*dt**2/2
               Hb_t_nm1(i,j) =Hb_t_n(i,j) - Hb_t_t*dt
               Hb_x_nm1(i,j) =Hb_x_n(i,j) - Hb_x_t*dt
+              Hb_y_nm1(i,j) =Hb_y_n(i,j) - Hb_y_t*dt
               phi1_nm1(i,j) =phi1_n(i,j) - phi1_t*dt
      &                     + phi1_tt*dt**2/2
         
@@ -545,8 +567,12 @@ c----------------------------------------------------------------------
      &                     + gb_tt_tt*dt**2/2
               gb_tx_np1(i,j)=gb_tx_n(i,j) + gb_tx_t*dt
      &                     + gb_tx_tt*dt**2/2
+              gb_ty_np1(i,j)=gb_ty_n(i,j) + gb_ty_t*dt
+     &                     + gb_ty_tt*dt**2/2
               gb_xx_np1(i,j)=gb_xx_n(i,j) + gb_xx_t*dt
      &                     + gb_xx_tt*dt**2/2
+              gb_xy_np1(i,j)=gb_xy_n(i,j) + gb_xy_t*dt
+     &                     + gb_xy_tt*dt**2/2
               gb_yy_np1(i,j)=gb_yy_n(i,j) + gb_yy_t*dt
      &                     + gb_yy_tt*dt**2/2
               psi_np1(i,j)  =psi_n(i,j) + psi_t*dt  
@@ -555,6 +581,7 @@ c----------------------------------------------------------------------
      &                     + omega_tt*dt**2/2
               Hb_t_np1(i,j) =Hb_t_n(i,j) + Hb_t_t*dt
               Hb_x_np1(i,j) =Hb_x_n(i,j) + Hb_x_t*dt     
+              Hb_y_np1(i,j) =Hb_y_n(i,j) + Hb_y_t*dt     
               phi1_np1(i,j) =phi1_n(i,j) + phi1_t*dt
      &                     + phi1_tt*dt**2/2
   

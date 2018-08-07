@@ -703,10 +703,15 @@ void AdS5xS5_free_data(void)
    zero_f(phi1_t_n); // sets initial time derivatives for ID
    zero_f(gb_tt_t_n);
    zero_f(gb_tx_t_n);
+   zero_f(gb_ty_t_n);
    zero_f(gb_xx_t_n);
+   zero_f(gb_xy_t_n);
+   zero_f(gb_yy_t_n);
    zero_f(psi_t_n);
+   zero_f(omega_t_n);
    zero_f(Hb_t_t_n);
    zero_f(Hb_x_t_n);
+   zero_f(Hb_y_t_n);
 
    gauss2d_(phi1_n,
             &phi1_amp_1,&phi1_r0_1,&phi1_delta_1,&phi1_x0_1[0],&phi1_x0_1[0],&phi1_width_1[0],&phi1_width_1[0],
@@ -804,12 +809,15 @@ void AdS5xS5_t0_cnst_data(void)
 //     {
 //       gb_tt_np1[i]=gb_tt_nm1[i]=gb_tt[i];
 //       gb_tx_np1[i]=gb_tx_nm1[i]=gb_tx[i];
+//       gb_ty_np1[i]=gb_ty_nm1[i]=gb_ty[i];
 //       gb_xx_np1[i]=gb_xx_nm1[i]=gb_xx[i];
+//       gb_xy_np1[i]=gb_xy_nm1[i]=gb_xy[i];
 //       gb_yy_np1[i]=gb_yy_nm1[i]=gb_yy[i];
 //       psi_np1[i]=psi_nm1[i]=psi[i];
 //       omega_np1[i]=omega_nm1[i]=omega[i];
 //       Hb_t_np1[i]=Hb_t_nm1[i]=Hb_t_n[i];
 //       Hb_x_np1[i]=Hb_x_nm1[i]=Hb_x_n[i];
+//       Hb_y_np1[i]=Hb_y_nm1[i]=Hb_y_n[i];
 //       phi1_np1[i]=phi1_nm1[i]=phi1[i];
 //     }
      axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
