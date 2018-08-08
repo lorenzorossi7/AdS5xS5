@@ -257,3 +257,84 @@ c----------------------------------------------------------------------
 
         return
         end
+
+c----------------------------------------------------------------------
+c in polar coordinates t,x for x in [0,1]
+c
+c applies regularity conditions for the field strength
+c----------------------------------------------------------------------
+
+        subroutine axi_reg_f(f_t,f_x,f_y,chr,ex,L,x,y,Nx,Ny)
+        implicit none
+        integer Nx,Ny
+        real*8 f_t(Nx,Ny),f_x(Nx,Ny),f_y(Nx,Ny)
+        real*8 chr(Nx,Ny),ex,L
+        real*8 x(Nx),y(Ny)
+
+        integer i,j
+        real*8 PI
+        real*8 dx,dy
+        parameter (PI=3.141592653589793d0)
+
+        dx=x(2)-x(1)
+        dy=y(2)-y(1)
+
+        if (x(1).gt.dx/2.and.y(1).gt.dy/2.and.y(Ny).lt.1-dy/2) return
+
+        if (x(1).le.dx/2) then
+          do j=1,Ny
+            if (chr(1,j).ne.ex) then
+              if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
+                f_t(1,j)=(4*f_t(2,j)-f_t(3,j))/3
+                f_y(1,j)=(4*f_y(2,j)-f_y(3,j))/3
+                f_x(1,j)=0
+              else
+                write(*,*) 'WARNING axi_reg_f'
+              end if
+            else
+              f_t(1,j)=0
+              f_x(1,j)=0
+              f_y(1,j)=0
+            end if
+          end do
+        end if
+
+        if (y(1).le.dy/2) then
+          do i=1,Nx
+            if (chr(i,1).ne.ex) then
+              if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
+                f_t(i,1)=(4*f_t(i,2)-f_t(i,3))/3
+                f_x(i,1)=(4*f_x(i,2)-f_x(i,3))/3
+                f_y(i,1)=0
+              else
+                write(*,*) 'WARNING axi_reg_f'
+              end if
+            else
+              f_t(i,1)=0
+              f_x(i,1)=0
+              f_y(i,1)=0
+            end if
+          end do
+        end if
+
+        if (y(Ny).ge.1-dy/2) then
+          do i=1,Nx
+            if (chr(i,Ny).ne.ex) then
+              if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
+                f_t(i,Ny)=(4*f_t(i,Ny-1)-f_t(i,Ny-2))/3
+                f_x(i,Ny)=(4*f_x(i,Ny-1)-f_x(i,Ny-2))/3
+                f_y(i,Ny)=0
+              else
+                write(*,*) 'WARNING axi_reg_f'
+              end if
+            else
+              f_t(i,Ny)=0
+              f_x(i,Ny)=0
+              f_y(i,Ny)=0
+            end if
+          end do
+        end if
+
+        return
+        end
+

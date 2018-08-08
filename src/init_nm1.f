@@ -15,9 +15,9 @@ c----------------------------------------------------------------------
      &                      gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
      &                      psi_np1,psi_n,psi_nm1,psi_t_n,
      &                      omega_np1,omega_n,omega_nm1,omega_t_n,
-     &                      fb_t_np1,fb_t_n,fb_t_nm1,
-     &                      fb_x_np1,fb_x_n,fb_x_nm1,
-     &                      fb_y_np1,fb_y_n,fb_y_nm1,
+     &                      fb_t_np1,fb_t_n,fb_t_nm1,fb_t_t_n,
+     &                      fb_x_np1,fb_x_n,fb_x_nm1,fb_x_t_n,
+     &                      fb_y_np1,fb_y_n,fb_y_nm1,fb_y_t_n,
      &                      Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
      &                      Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
      &                      Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
@@ -45,8 +45,11 @@ c----------------------------------------------------------------------
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
         real*8 omega_t_n(Nx,Ny)
         real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
+        real*8 fb_t_t_n(Nx,Ny)
         real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
+        real*8 fb_x_t_n(Nx,Ny)
         real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
+        real*8 fb_y_t_n(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_t_t_n(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
@@ -73,9 +76,8 @@ c----------------------------------------------------------------------
         real*8 gb_yy_t,gb_yy_tt
         real*8 psi_t,psi_tt
         real*8 omega_t,omega_tt
-        real*8 Hb_t_t
-        real*8 Hb_x_t
-        real*8 Hb_y_t
+        real*8 fb_t_t,fb_x_t,fb_y_t
+        real*8 Hb_t_t,Hb_x_t,Hb_y_t
         real*8 phi1_t,phi1_tt
 
         real*8 h0_ll_tt(3,3)
@@ -253,6 +255,9 @@ c----------------------------------------------------------------------
               A_l_x(1,1)    =Hb_t_t_n(i,j)*(1-x0**2)**2
               A_l_x(2,1)    =Hb_x_t_n(i,j)*(1-x0**2)**2
               A_l_x(3,1)    =Hb_y_t_n(i,j)*(1-x0**2)**2
+              f1_l_x(1,1)   =fb_t_t_n(i,j)*(1-x0**2)**3
+              f1_l_x(2,1)   =fb_x_t_n(i,j)*(1-x0**2)**3
+              f1_l_x(3,1)   =fb_y_t_n(i,j)*(1-x0**2)**3
               gA_x(1)       =psi_t_n(i,j)*(1-x0**2)*x0**2
               gB_x(1)       =omega_t_n(i,j)*(1-x0**2)**3
 
@@ -266,6 +271,9 @@ c----------------------------------------------------------------------
               gb_yy_t=gb_yy_t_n(i,j) 
               psi_t=psi_t_n(i,j) 
               omega_t=omega_t_n(i,j) 
+              fb_t_t =fb_t_t_n(i,j)
+              fb_x_t =fb_x_t_n(i,j)
+              fb_y_t =fb_y_t_n(i,j)
               Hb_t_t =Hb_t_t_n(i,j)
               Hb_x_t =Hb_x_t_n(i,j)
               Hb_y_t =Hb_y_t_n(i,j)
@@ -349,9 +357,30 @@ c----------------------------------------------------------------------
      &                              gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                                )
      & 
-     &                           +s0_ll(a,b)
+     &                           -dimA*( (gA_xx(a,b)
+     &                                   -gamma_ull(1,b,a)*gA_x(1)
+     &                                   -gamma_ull(2,b,a)*gA_x(2)
+     &                                   -gamma_ull(3,b,a)*gA_x(3)
+     &                                   )/(2*gA)
+     &                                 - (gA_x(a)*gA_x(b))/(4*gA**2) )
+     &                           -dimB*( (gB_xx(a,b)
+     &                                   -gamma_ull(1,b,a)*gB_x(1)
+     &                                   -gamma_ull(2,b,a)*gB_x(2)
+     &                                   -gamma_ull(3,b,a)*gB_x(3)
+     &                                   )/(2*gB)
+     &                                 - (gB_x(a)*gB_x(b))/(4*gB**2) )
      &
-     &                           +t0_ll(a,b)
+     &                           -(f1_l(a)*f1_l(b)
+     &                            +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                            +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                            +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                            +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                            +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                            +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                            +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                            +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                            +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                            )/4
      &                )
                 end do
               end do          
@@ -556,6 +585,9 @@ c----------------------------------------------------------------------
      &                     + psi_tt*dt**2/2
               omega_nm1(i,j)=omega_n(i,j) - omega_t*dt  
      &                     + omega_tt*dt**2/2
+              fb_t_nm1(i,j) =fb_t_n(i,j) - fb_t_t*dt
+              fb_x_nm1(i,j) =fb_x_n(i,j) - fb_x_t*dt
+              fb_y_nm1(i,j) =fb_y_n(i,j) - fb_y_t*dt
               Hb_t_nm1(i,j) =Hb_t_n(i,j) - Hb_t_t*dt
               Hb_x_nm1(i,j) =Hb_x_n(i,j) - Hb_x_t*dt
               Hb_y_nm1(i,j) =Hb_y_n(i,j) - Hb_y_t*dt

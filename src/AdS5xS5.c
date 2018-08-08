@@ -709,6 +709,9 @@ void AdS5xS5_free_data(void)
    zero_f(gb_yy_t_n);
    zero_f(psi_t_n);
    zero_f(omega_t_n);
+   zero_f(fb_t_t_n);
+   zero_f(fb_x_t_n);
+   zero_f(fb_y_t_n);
    zero_f(Hb_t_t_n);
    zero_f(Hb_x_t_n);
    zero_f(Hb_y_t_n);
@@ -796,9 +799,9 @@ void AdS5xS5_t0_cnst_data(void)
                gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
                psi_np1,psi_n,psi_nm1,psi_t_n,
                omega_np1,omega_n,omega_nm1,omega_t_n,
-               fb_t_np1,fb_t_n,fb_t_nm1,
-               fb_x_np1,fb_x_n,fb_x_nm1,
-               fb_y_np1,fb_y_n,fb_y_nm1,
+               fb_t_np1,fb_t_n,fb_t_nm1,fb_t_t_n, 
+               fb_x_np1,fb_x_n,fb_x_nm1,fb_x_t_n,
+               fb_y_np1,fb_y_n,fb_y_nm1,fb_y_t_n,
                Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
