@@ -132,7 +132,7 @@ c----------------------------------------------------------------------
 
         real*8 F_t_np1,F_x_np1,F_y_np1
 
-        real*8 Hb_t0,Hb_x0
+        real*8 Hb_t0,Hb_x0,Hb_y0
 
         real*8 x0,y0
 
@@ -175,7 +175,6 @@ c----------------------------------------------------------------------
             do j=2,Ny-1
               if (chr(i,j).ne.ex) then
                   x0=x(i)
-                  y0=y(j)
                   Hb_t0=Hb_t_0(i,j)
 
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
@@ -252,7 +251,7 @@ c-----------------------------------------------------------------------
 
         real*8 F_t_np1,F_x_np1,F_y_np1
 
-        real*8 Hb_t0,Hb_x0
+        real*8 Hb_t0,Hb_x0,Hb_y0
 
         real*8 x0,y0
 
@@ -296,16 +295,20 @@ c-----------------------------------------------------------------------
               if (chr(i,j).ne.ex) then
                   x0=x(i)
                   Hb_x0=Hb_x_0(i,j)
+                  Hb_y0=Hb_y_0(i,j)
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
+                  F_y_np1=gb_xy_np1(i,j)*2.0d0
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
                   if (xi2.le.1e-16) then
                     Hb_x_np1(i,j)=F_x_np1
+                    Hb_y_np1(i,j)=F_y_np1
                   else
                     Hb_x_np1(i,j)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
+                    Hb_y_np1(i,j)=F_y_np1+(Hb_y0-F_y_np1)*exp(-g0)
                   end if
               end if
             end do
