@@ -823,10 +823,6 @@ void AdS5xS5_t0_cnst_data(void)
 //       Hb_y_np1[i]=Hb_y_nm1[i]=Hb_y_n[i];
 //       phi1_np1[i]=phi1_nm1[i]=phi1[i];
 //     }
-     axi_reg_phi_(phi1_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
-     axi_reg_phi_(phi1_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
-     axi_reg_g_(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,gb_xx_nm1,gb_xy_nm1,gb_yy_nm1,psi_nm1,omega_nm1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
-     axi_reg_g_(gb_tt_np1,gb_tx_np1,gb_ty_np1,gb_xx_np1,gb_xy_np1,gb_yy_np1,psi_np1,omega_np1,chr,&AMRD_ex,&AdS_L,x,y,&Nx,&Ny);
 
      // store initial source functions, metric components
      for (i=0; i<size; i++)

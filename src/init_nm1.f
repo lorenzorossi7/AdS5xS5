@@ -622,5 +622,18 @@ c----------------------------------------------------------------------
           end do
         end do
 
+        call axi_reg_phi(phi1_nm1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_g(gb_tt_nm1,gb_tx_nm1,gb_ty_nm1,gb_xx_nm1,
+     &                 gb_xy_nm1,gb_yy_nm1,psi_nm1,omega_nm1,
+     &                 chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,gb_xx_np1,
+     &                 gb_xy_np1,gb_yy_np1,psi_np1,omega_np1,
+     &                 chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_Hb(Hb_t_nm1,Hb_x_nm1,Hb_y_nm1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_fb(fb_t_nm1,fb_x_nm1,fb_y_nm1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_fb(fb_t_np1,fb_x_np1,fb_y_np1,chr,ex,L,x,y,Nx,Ny)
+
         return
         end

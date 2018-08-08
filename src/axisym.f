@@ -264,7 +264,7 @@ c
 c applies regularity conditions for the field strength
 c----------------------------------------------------------------------
 
-        subroutine axi_reg_f(f_t,f_x,f_y,chr,ex,L,x,y,Nx,Ny)
+        subroutine axi_reg_fb(f_t,f_x,f_y,chr,ex,L,x,y,Nx,Ny)
         implicit none
         integer Nx,Ny
         real*8 f_t(Nx,Ny),f_x(Nx,Ny),f_y(Nx,Ny)
@@ -289,7 +289,7 @@ c----------------------------------------------------------------------
                 f_y(1,j)=(4*f_y(2,j)-f_y(3,j))/3
                 f_x(1,j)=0
               else
-                write(*,*) 'WARNING axi_reg_f'
+                write(*,*) 'WARNING axi_reg_fb'
               end if
             else
               f_t(1,j)=0
@@ -307,7 +307,7 @@ c----------------------------------------------------------------------
                 f_x(i,1)=(4*f_x(i,2)-f_x(i,3))/3
                 f_y(i,1)=0
               else
-                write(*,*) 'WARNING axi_reg_f'
+                write(*,*) 'WARNING axi_reg_fb'
               end if
             else
               f_t(i,1)=0
@@ -325,7 +325,7 @@ c----------------------------------------------------------------------
                 f_x(i,Ny)=(4*f_x(i,Ny-1)-f_x(i,Ny-2))/3
                 f_y(i,Ny)=0
               else
-                write(*,*) 'WARNING axi_reg_f'
+                write(*,*) 'WARNING axi_reg_fb'
               end if
             else
               f_t(i,Ny)=0

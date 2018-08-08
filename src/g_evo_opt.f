@@ -1228,11 +1228,12 @@ c----------------------------------------------------------------------
         end do
 
         ! (REGION) x=0; impose regularity conditions 
-        call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,Nx,Ny)
         call axi_reg_g(gb_tt_np1,gb_tx_np1,gb_ty_np1,gb_xx_np1,
      &                 gb_xy_np1,gb_yy_np1,omega_np1,psi_np1,
      &                 chr,ex,L,x,y,Nx,Ny)
-        call axi_reg_phi(phi1_np1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,chr,ex,L,x,y,Nx,Ny)
+        call axi_reg_fb(fb_t_np1,fb_x_np1,fb_y_np1,chr,ex,L,x,y,Nx,Ny)
 
         return
         end
