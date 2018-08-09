@@ -87,4 +87,14 @@ num_even_vars_x0max := 0
 num_odd_vars_x0max := 30
 odd_vars_x0max := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_ty" "gb_xy" "gb_yy" "omega" "fb_t" "fb_x" "fb_y" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_ty_t" "gb_xy_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "fb_y_t" "Hb_t" "Hb_x" "Hb_y" "Hb_t_t" "Hb_x_t" "Hb_y_t" ]
 
+num_even_vars_x1min := 22
+even_vars_x1min := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_yy" "omega" "fb_t" "fb_x" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_odd_vars_x1min := 8
+odd_vars_x1min := [ "gb_ty" "gb_xy" "fb_y" "gb_ty_t" "gb_xy_t" "fb_y_t" "Hb_y" "Hb_y_t" ]
+
+num_even_vars_x1max := 22
+even_vars_x1max := [ "phi1" "phi1_t" "gb_tt" "gb_tx" "gb_xx" "psi" "gb_yy" "omega" "fb_t" "fb_x" "gb_tt_t" "gb_tx_t" "gb_xx_t" "psi_t" "gb_yy_t" "omega_t" "fb_t_t" "fb_x_t" "Hb_t" "Hb_x" "Hb_t_t" "Hb_x_t" ]
+num_odd_vars_x1max := 8
+odd_vars_x1max := [ "gb_ty" "gb_xy" "fb_y" "gb_ty_t" "gb_xy_t" "fb_y_t" "Hb_y" "Hb_y_t" ]
+
 #-----------------------------------------------------
