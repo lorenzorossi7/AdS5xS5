@@ -1,5 +1,5 @@
 c----------------------------------------------------------------------
-c miscellaneous numerical routines for AdS5D1p1
+c miscellaneous numerical routines for AdS5xS5
 c----------------------------------------------------------------------
 
 c-----------------------------------------------------------------------
@@ -34,12 +34,12 @@ c-----------------------------------------------------------------------
         else if (i.eq.Nx.or.chr(i+1,j).eq.ex) then
            if (i.ge.2.and.chr(i-1,j).ne.ex) then
               f_x=(f(i,j)-f(i-1,j))/dx
-!              write(*,*) 'df1_int: warning ... i=Nx first order'
+!              write(*,*) 'df1_int_x: warning ... i=Nx first order'
 !              write(*,*) '    i,Nx,dx=',i,Nx,dx
            else
               if (first) then
                  first=.false.
-                 write(*,*) 'df1_int: error in chr stencil (B)'
+                 write(*,*) 'df1_int_x: error in chr stencil (B)'
                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                  write(*,*) '    (first error only)'
               end if
@@ -52,7 +52,7 @@ c-----------------------------------------------------------------------
            else
               if (first) then
                  first=.false.
-                 write(*,*) 'df1_int: error in chr stencil (C)'
+                 write(*,*) 'df1_int_x: error in chr stencil (C)'
                  write(*,*) '    i,j,Nx,Ny,dx=',i,j,Nx,Ny,dx
                  write(*,*) '    (first error only)'
               end if
@@ -63,6 +63,68 @@ c-----------------------------------------------------------------------
 
         return
         end
+ 
+!----------------------------------------------------------------------
+        subroutine df1_int_y(f,f_y,dy,i,j,chr,ex,Nx,Ny)
+
+        implicit none
+        integer Nx,Ny,i,j
+        real*8 f(Nx,Ny),chr(Nx,Ny),ex,f_y,dy
+        logical first
+        save first
+        data first/.true./
+
+        !--------------------------------------------------------------
+
+        if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+           if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
+              f_y=(-f(i,j)+f(i,j+1))/dy
+!              write(*,*) 'df1_int_y: warning ... j=1 first order'
+!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+           else
+              if (first) then
+                 first=.false.
+                 write(*,*) 'df1_int_y: error in chr stencil (D)'
+                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                 write(*,*) '    (first error only)'
+              end if
+              f_y=0
+              return
+           end if
+        else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+           if (j.ge.2.and.chr(i,j-1).ne.ex) then
+              f_y=(f(i,j)-f(i,j-1))/dy
+!              write(*,*) 'df1_int_y: warning ... j=Ny first order'
+!              write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+           else
+              if (first) then
+                 first=.false.
+                 write(*,*) 'df1_int_y: error in chr stencil (E)'
+                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                 write(*,*) '    (first error only)'
+              end if
+              f_y=0
+              return
+           end if
+        else
+           if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
+              f_y=(f(i,j+1)-f(i,j-1))/2/dy
+           else
+              if (first) then
+                 first=.false.
+                 write(*,*) 'df1_int_y: error in chr stencil (F)'
+                 write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                 write(*,*) '    (first error only)'
+              end if
+              f_y=0
+              return
+           end if
+        end if
+
+        f_y=0 !TEST!
+
+        return
+        end
 
 c----------------------------------------------------------------------
 c the following computes all first derivatives of f,
@@ -70,12 +132,12 @@ c at a point i at time level n.
 c
 c stencil reduces to first order on excision surface
 c----------------------------------------------------------------------
-        subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,
+        subroutine df1_int(f_np1,f_n,f_nm1,f_t,f_x,f_y,
      &                     dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
         implicit none
         integer Nx,Ny,i,j
         real*8 f_np1(Nx,Ny),f_n(Nx,Ny),f_nm1(Nx,Ny)
-        real*8 f_t,f_x,dx,dy,dt,ex,chr(Nx,Ny)
+        real*8 f_t,f_x,f_y,dx,dy,dt,ex,chr(Nx,Ny)
         character*(*) name
 
         logical ltrace,first
@@ -92,6 +154,7 @@ c----------------------------------------------------------------------
         f_t=(f_np1(i,j)-f_nm1(i,j))/2/dt
 
         call df1_int_x(f_n,f_x,dx,i,j,chr,ex,Nx,Ny)
+        call df1_int_y(f_n,f_y,dy,i,j,chr,ex,Nx,Ny)
 
         if (ltrace) then
            write(*,*) 'df1_int for ',name
@@ -107,13 +170,13 @@ c same as df1_int above, but computes all second derivatives as
 c well 
 c----------------------------------------------------------------------
         subroutine df2_int(f_np1,f_n,f_nm1,
-     &                     f_t,f_x,
-     &                     f_tt,f_tx,f_xx,
+     &                     f_t,f_x,f_y,
+     &                     f_tt,f_tx,f_ty,f_xx,f_xy,f_yy,
      &                     dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
         implicit none
         integer Nx,Ny,i,j
         real*8 f_np1(Nx,Ny),f_n(Nx,Ny),f_nm1(Nx,Ny)
-        real*8 f_t,f_x,f_tt,f_tx,f_xx
+        real*8 f_t,f_x,f_y,f_tt,f_tx,f_ty,f_xx,f_xy,f_yy
         real*8 dx,dy,dt,ex,chr(Nx,Ny)
         character*(*) name
         logical first
@@ -122,14 +185,18 @@ c----------------------------------------------------------------------
 
         logical ltrace
         parameter (ltrace=.false.)
-        real*8 f_x_np1,f_x_nm1
+        real*8 f_x_np1,f_x_nm1,f_y_np1,f_y_nm1
+        real*8 f_y_ip1,f_y_ip2
+        real*8 f_y_im1,f_y_im2
 
-        call df1_int(f_np1,f_n,f_nm1,f_t,f_x,
+        call df1_int(f_np1,f_n,f_nm1,f_t,f_x,f_y,
      &               dx,dy,dt,i,j,chr,ex,Nx,Ny,name)
 
         f_tt=(f_np1(i,j)-2*f_n(i,j)+f_nm1(i,j))/dt/dt 
 
         f_xx=0
+        f_xy=0
+        f_yy=0
 
         if (chr(i,j).eq.ex) then
           write(*,*) 'df2_int: error ... point excised'
@@ -138,13 +205,18 @@ c----------------------------------------------------------------------
 
         call df1_int_x(f_np1,f_x_np1,dx,i,j,chr,ex,Nx,Ny)
         call df1_int_x(f_nm1,f_x_nm1,dx,i,j,chr,ex,Nx,Ny)
+
         f_tx=(f_x_np1-f_x_nm1)/2/dt
+
+        call df1_int_y(f_np1,f_y_np1,dy,i,j,chr,ex,Nx,Ny)
+        call df1_int_y(f_nm1,f_y_nm1,dy,i,j,chr,ex,Nx,Ny)
+
+        f_ty=(f_y_np1-f_y_nm1)/2/dt
 
         !i
 
         if (i.eq.1.or.(chr(i-1,j).eq.ex)) then
-          if (i.ge.(Nx-1).or.
-     &        chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
+          if (i.ge.(Nx-1).or.chr(i+1,j).eq.ex.or.chr(i+2,j).eq.ex) then
             if (first) then
               first=.false.
               write(*,*) 'df2_int: error in chr (A)'
@@ -153,7 +225,12 @@ c----------------------------------------------------------------------
             end if
             return
           end if
+
           f_xx=(f_n(i+2,j)-2*f_n(i+1,j)+f_n(i,j))/dx/dx 
+
+          call df1_int_y(f_n,f_y_ip1,dy,i+1,j,chr,ex,Nx,Ny)
+          call df1_int_y(f_n,f_y_ip2,dy,i+2,j,chr,ex,Nx,Ny)
+          f_xy=(-3*f_y+4*f_y_ip1-f_y_ip2)/2/dx
 
         else if (i.eq.Nx.or.(chr(i+1,j).eq.ex)) then
           if (i.le.2.or.
@@ -166,9 +243,15 @@ c----------------------------------------------------------------------
             end if
             return
           end if
+
           f_xx=(f_n(i,j)-2*f_n(i-1,j)+f_n(i-2,j))/dx/dx 
 
+          call df1_int_y(f_n,f_y_im1,dy,i-1,j,chr,ex,Nx,Ny)
+          call df1_int_y(f_n,f_y_im2,dy,i-2,j,chr,ex,Nx,Ny)
+          f_xy=(3*f_y-4*f_y_ip1+f_y_ip2)/2/dx
+
         else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
+
           f_xx=(f_n(i+1,j)-2*f_n(i,j)+f_n(i-1,j))/dx/dx 
 
         else
@@ -181,12 +264,59 @@ c----------------------------------------------------------------------
           return
         end if
 
+        !j
+
+        if (j.eq.1.or.(chr(i,j-1).eq.ex)) then
+          if (j.ge.(Ny-1).or.chr(i,j+1).eq.ex.or.chr(i,j+2).eq.ex) then
+            if (first) then
+              first=.false.
+              write(*,*) 'df2_int: error in chr (D)'
+              write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
+              write(*,*) '    (first error only)'
+            end if
+            return
+          end if
+
+          f_yy=(f_n(i,j+2)-2*f_n(i,j+1)+f_n(i,j))/dy/dy 
+
+        else if (j.eq.Ny.or.(chr(i,j+1).eq.ex)) then
+          if (j.le.2.or.
+     &        chr(i,j-1).eq.ex.or.chr(i,j-2).eq.ex) then
+            if (first) then
+              first=.false.
+              write(*,*) 'df2_int: error in chr (E)'
+              write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
+              write(*,*) '    (first error only)'
+            end if
+            return
+          end if
+
+          f_yy=(f_n(i,j)-2*f_n(i,j-1)+f_n(i,j-2))/dy/dy 
+
+        else if (chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex) then
+
+          f_yy=(f_n(i,j+1)-2*f_n(i,j)+f_n(i,j-1))/dy/dy 
+
+        else
+          if (first) then
+            first=.false.
+            write(*,*) 'df2_int: error in chr (F)'
+            write(*,*) '    i,j,Nx,Ny,dx,dy=',i,j,Nx,Ny,dx,dy
+            write(*,*) '    (first error only)'
+          end if
+          return
+        end if
+
         if (ltrace) then
            write(*,*) 'df2_int for ',name
            write(*,*) ' f_tt=',f_tt
            write(*,*) ' f_tx=',f_tx
            write(*,*) ' f_xx=',f_xx
         end if
+
+        f_ty=0 !TEST!
+        f_xy=0 !TEST!
+        f_yy=0 !TEST!
 
         return
         end
@@ -579,64 +709,73 @@ c----------------------------------------------------------------------
 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
-     &       gb_tt_t,gb_tt_x,
-     &       gb_tt_tt,gb_tt_tx,gb_tt_xx,
+     &       gb_tt_t,gb_tt_x,gb_tt_y,
+     &       gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &       gb_tt_xx,gb_tt_xy,gb_tt_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
         call df2_int(gb_tx_np1,gb_tx_n,gb_tx_nm1,
-     &       gb_tx_t,gb_tx_x,
-     &       gb_tx_tt,gb_tx_tx,gb_tx_xx,
+     &       gb_tx_t,gb_tx_x,gb_tx_y,
+     &       gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &       gb_tx_xx,gb_tx_xy,gb_tx_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
         call df2_int(gb_ty_np1,gb_ty_n,gb_ty_nm1,
-     &       gb_ty_t,gb_ty_x,
-     &       gb_ty_tt,gb_ty_tx,gb_ty_xx,
+     &       gb_ty_t,gb_ty_x,gb_ty_y,
+     &       gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &       gb_ty_xx,gb_ty_xy,gb_ty_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
         call df2_int(gb_xx_np1,gb_xx_n,gb_xx_nm1,
-     &       gb_xx_t,gb_xx_x,
-     &       gb_xx_tt,gb_xx_tx,gb_xx_xx,
+     &       gb_xx_t,gb_xx_x,gb_xx_y,
+     &       gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &       gb_xx_xx,gb_xx_xy,gb_xx_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
         call df2_int(gb_xy_np1,gb_xy_n,gb_xy_nm1,
-     &       gb_xy_t,gb_xy_x,
-     &       gb_xy_tt,gb_xy_tx,gb_xy_xx,
+     &       gb_xy_t,gb_xy_x,gb_xy_y,
+     &       gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &       gb_xy_xx,gb_xy_xy,gb_xy_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
         call df2_int(gb_yy_np1,gb_yy_n,gb_yy_nm1,
-     &       gb_yy_t,gb_yy_x,
-     &       gb_yy_tt,gb_yy_tx,gb_yy_xx,
+     &       gb_yy_t,gb_yy_x,gb_yy_y,
+     &       gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &       gb_yy_xx,gb_yy_xy,gb_yy_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
         call df2_int(psi_np1,psi_n,psi_nm1,
-     &       psi_t,psi_x,
-     &       psi_tt,psi_tx,psi_xx,
+     &       psi_t,psi_x,psi_y,
+     &       psi_tt,psi_tx,psi_ty,
+     &       psi_xx,psi_xy,psi_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
         call df2_int(omega_np1,omega_n,omega_nm1,
-     &       omega_t,omega_x,
-     &       omega_tt,omega_tx,omega_xx,
+     &       omega_t,omega_x,omega_y,
+     &       omega_tt,omega_tx,omega_ty,
+     &       omega_xx,omega_xy,omega_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
         ! calculate fbar derivatives
         call df1_int(fb_t_np1,fb_t_n,fb_t_nm1,
-     &       fb_t_t,fb_t_x,
+     &       fb_t_t,fb_t_x,fb_t_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_t')
         call df1_int(fb_x_np1,fb_x_n,fb_x_nm1,
-     &       fb_x_t,fb_x_x,
+     &       fb_x_t,fb_x_x,fb_x_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_x')
         call df1_int(fb_y_np1,fb_y_n,fb_y_nm1,
-     &       fb_y_t,fb_y_x,
+     &       fb_y_t,fb_y_x,fb_y_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_y')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
-     &       Hb_t_t,Hb_t_x,
+     &       Hb_t_t,Hb_t_x,Hb_t_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_t')
         call df1_int(Hb_x_np1,Hb_x_n,Hb_x_nm1,
-     &       Hb_x_t,Hb_x_x,
+     &       Hb_x_t,Hb_x_x,Hb_x_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_x')
         call df1_int(Hb_y_np1,Hb_y_n,Hb_y_nm1,
-     &       Hb_y_t,Hb_y_x,
+     &       Hb_y_t,Hb_y_x,Hb_y_y,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'Hb_y')
 
         ! calculate phi1 derivatives
         call df2_int(phi1_np1,phi1_n,phi1_nm1,
-     &       phi1_t,phi1_x,
-     &       phi1_tt,phi1_tx,phi1_xx,
+     &       phi1_t,phi1_x,phi1_y,
+     &       phi1_tt,phi1_tx,phi1_ty,
+     &       phi1_xx,phi1_xy,phi1_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
         ! give values to the metric, using sin(theta1)=sin(theta2)=1 w.l.o.g 
