@@ -1264,12 +1264,13 @@ c----------------------------------------------------------------------
                   gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
                 end if
 
-                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
-     &            efe_J(1,3).eq.0) then
-                  dump=.true.
-                else
-                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
-                end if
+!TEST!
+!                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
+!     &            efe_J(1,3).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
+!                end if
 
                 if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
      &            efe_J(2,2).eq.0) then
@@ -1278,6 +1279,7 @@ c----------------------------------------------------------------------
                   gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
                 end if
 
+!TEST!
 !                if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
 !     &            efe_J(2,3).eq.0) then
 !                  dump=.true.
