@@ -159,7 +159,7 @@ c----------------------------------------------------------------------
 
         real*8 H0_t_ads0,H0_x_ads0,H0_y_ads0
 
-        real*8 dgb_J,ddgb_J,ddgb_J_tx
+        real*8 dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty
         real*8 dfb_J
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
         real*8 dc_J
@@ -205,7 +205,7 @@ c----------------------------------------------------------------------
 
         data H0_t_ads0,H0_x_ads0,H0_y_ads0/0.0,0.0,0.0/
 
-        data dgb_J,ddgb_J,ddgb_J_tx/0.0,0.0,0.0/
+        data dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty/0.0,0.0,0.0,0.0/
         data dfb_J/0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
         data dc_J/0.0/
@@ -619,7 +619,7 @@ c----------------------------------------------------------------------
      &                 .and.((chr(i+1,j).ne.ex
      &                 .and.chr(i+2,j).ne.ex
      &                 .and.chr(i+3,j).ne.ex))) then
-                      ddgb_J_tx=-1/dt/dx
+                      ddgb_J_tx=-1d0/dt/dx
                    else if (i.le.(Nx-2)
      &                      .and.((chr(i+1,j).ne.ex
      &                      .and.chr(i+2,j).ne.ex))) then
@@ -661,11 +661,58 @@ c----------------------------------------------------------------------
                    end if
                 end if
 
+                if ((j.eq.1).or.(chr(i,j-1).eq.ex)) then
+                   if (j.le.(Ny-3)
+     &                 .and.((chr(i,j+1).ne.ex
+     &                 .and.chr(i,j+2).ne.ex
+     &                 .and.chr(i,j+3).ne.ex))) then
+                      ddgb_J_ty=-1d0/dt/dy
+                   else if (j.le.(Ny-2).and.((chr(i,j+1).ne.ex
+     &                      .and.chr(i,j+2).ne.ex))) then
+                      ddgb_J_ty=-3d0/4d0/dt/dy
+                   else if (j.le.(Ny-1).and.chr(i,j+1).ne.ex) then
+                      ddgb_J_ty=-1d0/2d0/dt/dy
+                   else
+                      write(*,*) 'g_evo_opt: error in chr stencil (D)'
+                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                      write(*,*) '    (first error only)'
+                      ddgb_J_ty=0
+                   end if
+                else if ((j.eq.Ny).or.(chr(i,j+1).eq.ex)) then
+                   if (j.ge.4
+     &                 .and.((chr(i,j-1).ne.ex
+     &                 .and.chr(i,j-2).ne.ex
+     &                 .and.chr(i,j-3).ne.ex))) then
+                      ddgb_J_ty=1d0/dt/dy
+                   else if (j.ge.3.and.((chr(i,j-1).ne.ex
+     &                      .and.chr(i,j-2).ne.ex))) then
+                      ddgb_J_ty=3d0/4d0/dt/dy
+                   else if (j.ge.2.and.chr(i,j-1).ne.ex) then
+                      ddgb_J_ty=1d0/2d0/dt/dy
+                   else
+                      write(*,*) 'g_evo_opt: error in chr stencil (E)'
+                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                      write(*,*) '    (first error only)'
+                      ddgb_J_ty=0
+                   end if
+                else
+                   if ((chr(i,j+1).ne.ex.and.chr(i,j-1).ne.ex)) then
+                      ddgb_J_ty=0
+                   else
+                      write(*,*) 'g_evo_opt: error in chr stencil (F)'
+                      write(*,*) '    i,j,Nx,Ny,dy=',i,j,Nx,Ny,dy
+                      write(*,*) '    (first error only)'
+                      ddgb_J_ty=0
+                   end if
+                end if
+
                 efe_J(1,1)=    -0.5d0*(
      &                            g0_uu(1,1)*ddgb_J
      &                                      *(1-x0**2)
      &                            -4*x0*g0_uu(1,2)*dgb_J
      &                            +2*g0_uu(1,2)*ddgb_J_tx
+     &                                      *(1-x0**2)
+     &                            +2*g0_uu(1,3)*ddgb_J_ty
      &                                      *(1-x0**2)
      &                                )
      &                      
@@ -720,6 +767,8 @@ c----------------------------------------------------------------------
      &                          -4*x0*g0_uu(1,2)*dgb_J
      &                          +2*g0_uu(1,2)*ddgb_J_tx
      &                                    *(1-x0**2)
+     &                          +2*g0_uu(1,3)*ddgb_J_ty
+     &                                    *(1-x0**2)
      &                              )
      &                       
      &                       -0.5d0*(
@@ -755,11 +804,57 @@ c----------------------------------------------------------------------
      &                           cuuuu(1,3,3,2)*dlll(3,2,3))
      &                              )
 
+                efe_J(1,3)=  -0.5d0*(
+     &                          g0_uu(1,1)*ddgb_J
+     &                                    *(1-x0**2)**2
+     &                          -4*(2)*x0*g0_uu(1,2)*dgb_J
+     &                                    *(1-x0**2)
+     &                          +2*g0_uu(1,2)*ddgb_J_tx
+     &                                    *(1-x0**2)**2
+     &                          +2*g0_uu(1,3)*ddgb_J_ty
+     &                                    *(1-x0**2)**2
+     &                              )
+     &
+     &                       -0.5d0*(
+     &                          -dgb_J*(1-x0**2)**2*
+     &                          (g0_uu(1,1)*g0_uu(1,3)*g0_ll_x(3,1,1)+
+     &                           g0_uu(1,1)*g0_uu(2,3)*g0_ll_x(3,1,2)+
+     &                           g0_uu(1,1)*g0_uu(3,3)*g0_ll_x(3,1,3)+
+     &                           g0_uu(2,1)*g0_uu(1,3)*g0_ll_x(3,2,1)+
+     &                           g0_uu(2,1)*g0_uu(2,3)*g0_ll_x(3,2,2)+
+     &                           g0_uu(2,1)*g0_uu(3,3)*g0_ll_x(3,2,3)+
+     &                           g0_uu(3,1)*g0_uu(1,3)*g0_ll_x(3,3,1)+
+     &                           g0_uu(3,1)*g0_uu(2,3)*g0_ll_x(3,3,2)+
+     &                           g0_uu(3,1)*g0_uu(3,3)*g0_ll_x(3,3,3))
+     &                          +dgb_J*(1-x0**2)**2*
+     &                          (g0_uu_x(1,1,1))
+     &                              )
+     &
+     &                       -0.5d0*(
+     &                          dgb_J*(1-x0**2)**2*
+     &                          (g0_uu_x(3,1,3))
+     &                              )
+     &
+     &                       -      (
+     &                          0.5d0*dgb_J*(1-x0**2)**2*
+     &                          (cuuuu(1,1,1,3)*dlll(1,3,1)+
+     &                           cuuuu(1,1,2,3)*dlll(2,3,1)+
+     &                           cuuuu(1,1,3,3)*dlll(3,3,1)+
+     &                           cuuuu(1,2,1,3)*dlll(1,3,2)+
+     &                           cuuuu(1,2,2,3)*dlll(2,3,2)+
+     &                           cuuuu(1,2,3,3)*dlll(3,3,2)+
+     &                           cuuuu(1,3,1,3)*dlll(1,3,3)+
+     &                           cuuuu(1,3,2,3)*dlll(2,3,3)+
+     &                           cuuuu(1,3,3,3)*dlll(3,3,3))
+     &                              )
+
                 efe_J(2,2)=-0.5d0*(
      &                        g0_uu(1,1)*ddgb_J
      &                                  *(1-x0**2)
      &                        -4*x0*g0_uu(1,2)*dgb_J
      &                        +2*g0_uu(1,2)*ddgb_J_tx
+     &                                  *(1-x0**2)
+     &                        +2*g0_uu(1,2)*ddgb_J_ty
      &                                  *(1-x0**2)
      &                            )
      &                  
@@ -821,12 +916,83 @@ c----------------------------------------------------------------------
      &                         cuuuu(2,3,3,1)*dlll(3,2,3))
      &                            )
 
+                  efe_J(2,3)=-0.5d0*(
+     &                          g0_uu(1,1)*ddgb_J
+     &                                    *(1-x0**2)**2
+     &                          -4*(2)*x0*g0_uu(1,2)*dgb_J
+     &                                    *(1-x0**2)
+     &                          +2*g0_uu(1,2)*ddgb_J_tx
+     &                                    *(1-x0**2)**2
+     &                          +2*g0_uu(1,3)*ddgb_J_ty
+     &                                    *(1-x0**2)**2
+     &                              )
+     &
+     &                       -0.5d0*(
+     &                          +dgb_J*(1-x0**2)**2*
+     &                          (g0_uu_x(2,1,2))
+     &                              )
+     &
+     &                       -0.5d0*(
+     &                          +dgb_J*(1-x0**2)**2*
+     &                          (g0_uu_x(3,1,3))
+     &                              )
+     &
+     &                       +      (
+     &                          -0.5d0*dgb_J*(1-x0**2)**2*
+     &                          ((Hads_l(1)+A_l(1))*g0_uu(1,1)+
+     &                           (Hads_l(2)+A_l(2))*g0_uu(2,1)+
+     &                           (Hads_l(3)+A_l(3))*g0_uu(3,1))
+     &                              )
+     &
+     &                       -      (
+     &                          0.25d0*dgb_J*(1-x0**2)**2*
+     &                          (cuuuu(1,2,1,1)*dlll(1,2,1)+
+     &                           cuuuu(1,2,1,2)*dlll(1,2,2)+
+     &                           cuuuu(1,2,1,3)*dlll(1,2,3)+
+     &                           cuuuu(2,2,1,1)*dlll(2,2,1)+
+     &                           cuuuu(2,2,1,2)*dlll(2,2,2)+
+     &                           cuuuu(2,2,1,3)*dlll(2,2,3)+
+     &                           cuuuu(3,2,1,1)*dlll(3,2,1)+
+     &                           cuuuu(3,2,1,2)*dlll(3,2,2)+
+     &                           cuuuu(3,2,1,3)*dlll(3,2,3)+
+     &                           cuuuu(1,1,2,1)*dlll(1,2,1)-
+     &                           cuuuu(1,1,2,2)*dlll(1,2,2)-
+     &                           cuuuu(1,1,2,3)*dlll(1,2,3)-
+     &                           cuuuu(2,1,2,1)*dlll(2,2,1)-
+     &                           cuuuu(2,1,2,2)*dlll(2,2,2)-
+     &                           cuuuu(2,1,2,3)*dlll(2,2,3)-
+     &                           cuuuu(3,1,2,1)*dlll(3,2,1)-
+     &                           cuuuu(3,1,2,2)*dlll(3,2,2)-
+     &                           cuuuu(3,1,2,3)*dlll(3,2,3)
+     &                         +
+     &                           cuuuu(1,1,1,3)*dlll(1,3,1)+
+     &                           cuuuu(1,1,2,3)*dlll(2,3,1)+
+     &                           cuuuu(1,1,3,3)*dlll(3,3,1)+
+     &                           cuuuu(1,2,1,3)*dlll(1,3,2)+
+     &                           cuuuu(1,2,2,3)*dlll(2,3,2)+
+     &                           cuuuu(1,2,3,3)*dlll(3,3,2)+
+     &                           cuuuu(1,3,1,3)*dlll(1,3,3)+
+     &                           cuuuu(1,3,2,3)*dlll(2,3,3)+
+     &                           cuuuu(1,3,3,3)*dlll(3,3,3)+
+     &                           cuuuu(3,1,1,1)*dlll(1,3,1)-
+     &                           cuuuu(3,1,2,1)*dlll(2,3,1)-
+     &                           cuuuu(3,1,3,1)*dlll(3,3,1)-
+     &                           cuuuu(3,2,1,1)*dlll(1,3,2)-
+     &                           cuuuu(3,2,2,1)*dlll(2,3,2)-
+     &                           cuuuu(3,2,3,1)*dlll(3,3,2)-
+     &                           cuuuu(3,3,1,1)*dlll(1,3,3)-
+     &                           cuuuu(3,3,2,1)*dlll(2,3,3)-
+     &                           cuuuu(3,3,3,1)*dlll(3,3,3))
+     &                              )
+
                 efe_J(3,3)=    -0.5d0*(
      &                            g0_uu(1,1)*ddgb_J
      &                                          *(1-x0**2)**3
      &                            +2*(3*(-2*x0))*g0_uu(1,2)*dgb_J
      &                                          *(1-x0**2)**2
      &                            +2*g0_uu(1,2)*ddgb_J_tx
+     &                                          *(1-x0**2)**3
+     &                            +2*g0_uu(1,3)*ddgb_J_ty
      &                                          *(1-x0**2)**3
      &                                )
      &                      
