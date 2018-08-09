@@ -97,11 +97,11 @@ c----------------------------------------------------------------------
                 gb_tt(1,j)=(4*gb_tt(2,j)-gb_tt(3,j))/3
                 gb_ty(1,j)=(4*gb_ty(2,j)-gb_ty(3,j))/3
                 gb_xx(1,j)=(4*gb_xx(2,j)-gb_xx(3,j))/3
-                gb_xy(1,j)=(4*gb_xy(2,j)-gb_xy(3,j))/3
                 gb_yy(1,j)=(4*gb_yy(2,j)-gb_yy(3,j))/3
                 psi(1,j)=(4*psi(2,j)-psi(3,j))/3
                 omega(1,j)=(4*omega(2,j)-omega(3,j))/3
                 gb_tx(1,j)=0
+                gb_xy(1,j)=0
               else
                 write(*,*) 'WARNING axi_reg_g'
               end if
@@ -156,10 +156,10 @@ c----------------------------------------------------------------------
                 gb_xx(i,Ny)=(4*gb_xx(i,Ny-1)-gb_xx(i,Ny-2))/3
                 gb_yy(i,Ny)=(4*gb_yy(i,Ny-1)-gb_yy(i,Ny-2))/3
                 gb_tx(i,Ny)=(4*gb_tx(i,Ny-1)-gb_tx(i,Ny-2))/3
+                psi(i,Ny)=(4*psi(i,Ny-1)-psi(i,Ny-2))/3
+                omega(i,Ny)=(4*omega(i,Ny-1)-omega(i,Ny-2))/3
                 gb_ty(i,Ny)=0
                 gb_xy(i,Ny)=0
-                psi(i,Ny)=0
-                omega(i,Ny)=0
               else
                 !write(*,*) 'WARNING axi_reg_g extras'
               end if
