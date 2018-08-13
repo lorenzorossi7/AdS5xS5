@@ -199,9 +199,11 @@ c----------------------------------------------------------------------
               end do
 
               ! here have \box{x}_a = Hads_a + (1-x0**2)**2*H0_a
+              !           \box{x}_m = Hads_m + (1-x0**2)**3*H0_m
+              ! for x^a=(t,x,\Omega_3), x^m=(y,\Omega_4)
               Hb_t_n(i,j)=(boxx_l(1)-Hads_l(1))/(1-x0**2)**2
               Hb_x_n(i,j)=(boxx_l(2)-Hads_l(2))/(1-x0**2)**2
-              Hb_y_n(i,j)=(boxx_l(3)-Hads_l(3))/(1-x0**2)**2
+              Hb_y_n(i,j)=(boxx_l(3)-Hads_l(3))/(1-x0**2)**3
 
             end if
           end do
