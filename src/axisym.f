@@ -25,7 +25,7 @@ c----------------------------------------------------------------------
           do j=1,Ny
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
-                phi(1,j)=(4*phi(2,j)-phi(3,j))/3
+                phi(1,j)=phi(2,j)+(phi(2,j)-phi(3,j))/3d0
               else
                 write(*,*) 'WARNING axi_reg_phi'
               end if
@@ -39,7 +39,7 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,1).ne.ex) then
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
-                phi(i,1)=(4*phi(i,2)-phi(i,3))/3
+                phi(i,1)=phi(i,2)+(phi(i,2)-phi(i,3))/3d0
               else
                 write(*,*) 'WARNING axi_reg_phi'
               end if
@@ -53,7 +53,8 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,Ny).ne.ex) then
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
-                phi(i,Ny)=(4*phi(i,Ny-1)-phi(i,Ny-2))/3
+                phi(i,Ny)=phi(i,Ny-1)
+     &                   +(4*phi(i,Ny-1)-phi(i,Ny-2))/3d0
               else
                 write(*,*) 'WARNING axi_reg_phi'
               end if
@@ -94,12 +95,12 @@ c----------------------------------------------------------------------
           do j=1,Ny
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
-                gb_tt(1,j)=(4*gb_tt(2,j)-gb_tt(3,j))/3
-                gb_ty(1,j)=(4*gb_ty(2,j)-gb_ty(3,j))/3
-                gb_xx(1,j)=(4*gb_xx(2,j)-gb_xx(3,j))/3
-                gb_yy(1,j)=(4*gb_yy(2,j)-gb_yy(3,j))/3
-                psi(1,j)=(4*psi(2,j)-psi(3,j))/3
-                omega(1,j)=(4*omega(2,j)-omega(3,j))/3
+                gb_tt(1,j)=gb_tt(2,j)+(gb_tt(2,j)-gb_tt(3,j))/3d0  
+                gb_ty(1,j)=gb_ty(2,j)+(gb_ty(2,j)-gb_ty(3,j))/3d0
+                gb_xx(1,j)=gb_xx(2,j)+(gb_xx(2,j)-gb_xx(3,j))/3d0
+                gb_yy(1,j)=gb_yy(2,j)+(gb_yy(2,j)-gb_yy(3,j))/3d0
+                psi(1,j)  =psi(2,j)  +(psi(2,j)  -psi(3,j)  )/3d0
+                omega(1,j)=omega(2,j)+(omega(2,j)-omega(3,j))/3d0
                 gb_tx(1,j)=0
                 gb_xy(1,j)=0
               else
@@ -123,12 +124,12 @@ c----------------------------------------------------------------------
             if (chr(i,1).ne.ex) then
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex)
      &        then
-                gb_tt(i,1)=(4*gb_tt(i,2)-gb_tt(i,3))/3
-                gb_xx(i,1)=(4*gb_xx(i,2)-gb_xx(i,3))/3
-                gb_yy(i,1)=(4*gb_yy(i,2)-gb_yy(i,3))/3
-                gb_tx(i,1)=(4*gb_tx(i,2)-gb_tx(i,3))/3
-                psi(i,1)=(4*psi(i,2)-psi(i,3))/3
-                omega(i,1)=(4*omega(i,2)-omega(i,3))/3
+                gb_tt(i,1)=gb_tt(i,2)+(gb_tt(i,2)-gb_tt(i,3))/3d0 
+                gb_xx(i,1)=gb_xx(i,2)+(gb_xx(i,2)-gb_xx(i,3))/3d0
+                gb_yy(i,1)=gb_yy(i,2)+(gb_yy(i,2)-gb_yy(i,3))/3d0
+                gb_tx(i,1)=gb_tx(i,2)+(gb_tx(i,2)-gb_tx(i,3))/3d0
+                psi(i,1)  =psi(i,2)  +(psi(i,2)  -psi(i,3)  )/3d0
+                omega(i,1)=omega(i,2)+(omega(i,2)-omega(i,3))/3d0
                 gb_ty(i,1)=0
                 gb_xy(i,1)=0                
               else
@@ -152,12 +153,18 @@ c----------------------------------------------------------------------
             if (chr(i,Ny).ne.ex) then
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex)
      &        then
-                gb_tt(i,Ny)=(4*gb_tt(i,Ny-1)-gb_tt(i,Ny-2))/3
-                gb_xx(i,Ny)=(4*gb_xx(i,Ny-1)-gb_xx(i,Ny-2))/3
-                gb_yy(i,Ny)=(4*gb_yy(i,Ny-1)-gb_yy(i,Ny-2))/3
-                gb_tx(i,Ny)=(4*gb_tx(i,Ny-1)-gb_tx(i,Ny-2))/3
-                psi(i,Ny)=(4*psi(i,Ny-1)-psi(i,Ny-2))/3
-                omega(i,Ny)=(4*omega(i,Ny-1)-omega(i,Ny-2))/3
+                gb_tt(i,Ny)=gb_tt(i,Ny-1)
+     &                     +(gb_tt(i,Ny-1)-gb_tt(i,Ny-2))/3d0 
+                gb_xx(i,Ny)=gb_xx(i,Ny-1)
+     &                     +(gb_xx(i,Ny-1)-gb_xx(i,Ny-2))/3d0
+                gb_yy(i,Ny)=gb_yy(i,Ny-1)
+     &                     +(gb_yy(i,Ny-1)-gb_yy(i,Ny-2))/3d0
+                gb_tx(i,Ny)=gb_tx(i,Ny-1)
+     &                     +(gb_tx(i,Ny-1)-gb_tx(i,Ny-2))/3d0
+                psi(i,Ny)  =psi(i,Ny-1)  
+     &                     +(psi(i,Ny-1)  -psi(i,Ny-2)  )/3d0
+                omega(i,Ny)=omega(i,Ny-1)
+     &                     +(omega(i,Ny-1)-omega(i,Ny-2))/3d0
                 gb_ty(i,Ny)=0
                 gb_xy(i,Ny)=0
               else
@@ -205,8 +212,8 @@ c----------------------------------------------------------------------
           do j=1,Ny
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
-                Hb_t(1,j)=(4*Hb_t(2,j)-Hb_t(3,j))/3
-                Hb_y(1,j)=(4*Hb_y(2,j)-Hb_y(3,j))/3
+                Hb_t(1,j)=Hb_t(2,j)+(Hb_t(2,j)-Hb_t(3,j))/3d0 
+                Hb_y(1,j)=Hb_y(2,j)+(Hb_y(2,j)-Hb_y(3,j))/3d0
                 Hb_x(1,j)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
@@ -223,8 +230,8 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,1).ne.ex) then
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
-                Hb_t(i,1)=(4*Hb_t(i,2)-Hb_t(i,3))/3
-                Hb_x(i,1)=(4*Hb_x(i,2)-Hb_x(i,3))/3
+                Hb_t(i,1)=Hb_t(i,2)+(Hb_t(i,2)-Hb_t(i,3))/3d0 
+                Hb_x(i,1)=Hb_x(i,2)+(Hb_x(i,2)-Hb_x(i,3))/3d0
                 Hb_y(i,1)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
@@ -241,8 +248,10 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,Ny).ne.ex) then
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
-                Hb_t(i,Ny)=(4*Hb_t(i,Ny-1)-Hb_t(i,Ny-2))/3
-                Hb_x(i,Ny)=(4*Hb_x(i,Ny-1)-Hb_x(i,Ny-2))/3
+                Hb_t(i,Ny)=Hb_t(i,Ny-1)
+     &                    +(Hb_t(i,Ny-1)-Hb_t(i,Ny-2))/3d0 
+                Hb_x(i,Ny)=Hb_x(i,Ny-1)
+     &                    +(Hb_x(i,Ny-1)-Hb_x(i,Ny-2))/3d0
                 Hb_y(i,Ny)=0
               else
                 write(*,*) 'WARNING axi_reg_Hb'
@@ -285,8 +294,8 @@ c----------------------------------------------------------------------
           do j=1,Ny
             if (chr(1,j).ne.ex) then
               if (chr(2,j).ne.ex.and.chr(3,j).ne.ex) then
-                f_t(1,j)=(4*f_t(2,j)-f_t(3,j))/3
-                f_y(1,j)=(4*f_y(2,j)-f_y(3,j))/3
+                f_t(1,j)=f_t(2,j)+(f_t(2,j)-f_t(3,j))/3d0 
+                f_y(1,j)=f_y(2,j)+(f_y(2,j)-f_y(3,j))/3d0
                 f_x(1,j)=0
               else
                 write(*,*) 'WARNING axi_reg_fb'
@@ -303,8 +312,8 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,1).ne.ex) then
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
-                f_t(i,1)=(4*f_t(i,2)-f_t(i,3))/3
-                f_x(i,1)=(4*f_x(i,2)-f_x(i,3))/3
+                f_t(i,1)=f_t(i,2)+(f_t(i,2)-f_t(i,3))/3d0 
+                f_x(i,1)=f_x(i,2)+(f_x(i,2)-f_x(i,3))/3d0
                 f_y(i,1)=0
               else
                 write(*,*) 'WARNING axi_reg_fb'
@@ -321,8 +330,10 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,Ny).ne.ex) then
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
-                f_t(i,Ny)=(4*f_t(i,Ny-1)-f_t(i,Ny-2))/3
-                f_x(i,Ny)=(4*f_x(i,Ny-1)-f_x(i,Ny-2))/3
+                f_t(i,Ny)=f_t(i,Ny-1)
+     &                   +(f_t(i,Ny-1)-f_t(i,Ny-2))/3d0 
+                f_x(i,Ny)=f_x(i,Ny-1)
+     &                   +(f_x(i,Ny-1)-f_x(i,Ny-2))/3d0
                 f_y(i,Ny)=0
               else
                 write(*,*) 'WARNING axi_reg_fb'
