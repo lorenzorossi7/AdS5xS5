@@ -1230,26 +1230,44 @@ c----------------------------------------------------------------------
      &              ( n_l(1)*g0_uu(1,1)*dc_J*(1-x0**2)
      &                -(1+rho_cd)*g0_ll(1,2)*n_u(2)*g0_uu(1,1)*
      &                            dc_J*(1-x0**2) )
+                cd_J_ll(1,3)=-kappa_cd*
+     &              ( n_l(1)*g0_uu(1,1)*dc_J*(1-x0**2)**2
+     &                -(1+rho_cd)*g0_ll(1,3)*n_u(3)*g0_uu(1,1)*
+     &                            dc_J*(1-x0**2)**2 )
                 cd_J_ll(2,2)=-kappa_cd*
      &              ( 2*n_l(2)*g0_uu(1,2)*dc_J*(1-x0**2)
      &                -(1+rho_cd)*g0_ll(2,2)*
      &                (-n_u(1)*0.5d0*g0_uu(2,2)*dc_J*(1-x0**2)
-     &                 +n_u(2)*g0_uu(1,2)*dc_J*(1-x0**2)) ) 
-                cd_J_ll(3,3)=-kappa_cd*(1+rho_cd)*
-     &                ( n_u(1)*0.5d0*g0_uu(3,3)*dc_J*(1-x0**2)**3 )
+     &                 +n_u(2)*g0_uu(1,2)*dc_J*(1-x0**2)) )
+                cd_J_ll(2,3)=-kappa_cd*
+     &              ( n_l(2)*g0_uu(1,2)*dc_J*(1-x0**2)**2
+     &               +n_l(3)*g0_uu(1,3)*dc_J*(1-x0**2)**2
+     &                -(1+rho_cd)*g0_ll(2,3)*
+     &                (-n_u(1)*0.5d0*g0_uu(2,3)*dc_J*(1-x0**2)**2
+     &                 +n_u(2)*g0_uu(1,3)*dc_J*(1-x0**2)**2
+     &                 +n_u(3)*g0_uu(1,2)*dc_J*(1-x0**2)**2) )
+                cd_J_ll(3,3)=-kappa_cd*
+     &              ( 2*n_l(3)*g0_uu(1,3)*dc_J*(1-x0**2)**3
+     &                -(1+rho_cd)*g0_ll(3,3)*
+     &                (-n_u(1)*0.5d0*g0_uu(3,3)*dc_J*(1-x0**2)**3
+     &                 +n_u(3)*g0_uu(1,3)*dc_J*(1-x0**2)**3) )
  
                 if (kappa_cd.ne.0) then
                   efe(1,1)=efe(1,1)+cd_ll(1,1)
                   efe(1,2)=efe(1,2)+cd_ll(1,2)
+                  efe(1,3)=efe(1,3)+cd_ll(1,3)
                   efe(2,2)=efe(2,2)+cd_ll(2,2)
+                  efe(2,3)=efe(2,3)+cd_ll(2,3)
                   efe(3,3)=efe(3,3)+cd_ll(3,3)
                   efe_J(1,1)=efe_J(1,1)+cd_J_ll(1,1)
                   efe_J(1,2)=efe_J(1,2)+cd_J_ll(1,2)
+                  efe_J(1,3)=efe_J(1,3)+cd_J_ll(1,3)
                   efe_J(2,2)=efe_J(2,2)+cd_J_ll(2,2)
+                  efe_J(2,3)=efe_J(2,3)+cd_J_ll(2,3)
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
-                ! update gbars 
+               ! update gbars
                 if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
      &            efe_J(1,1).eq.0) then
                   dump=.true.
