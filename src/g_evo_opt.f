@@ -1341,7 +1341,9 @@ c----------------------------------------------------------------------
                 gb_res(i,j) =
      &            max(abs(efe(1,1)/efe_J(1,1)),
      &                abs(efe(1,2)/efe_J(1,2)),
+     &                abs(efe(1,3)/efe_J(1,3)),
      &                abs(efe(2,2)/efe_J(2,2)),
+     &                abs(efe(2,3)/efe_J(2,3)),
      &                abs(efe(3,3)/efe_J(3,3)),
      &                abs(afe/afe_J),
      &                abs(bfe/bfe_J))
