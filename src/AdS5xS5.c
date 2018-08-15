@@ -927,7 +927,7 @@ void check_nan_(real *x, int *is_nan)
 int lin_zero_bnd_all=1;
 real AdS5xS5_evo_residual(void)
 {
-   real l2norm=0,l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_phi1;
+   real l2norm=0,l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_fb;
    int is_nan;
 
    ldptr();
@@ -943,16 +943,16 @@ real AdS5xS5_evo_residual(void)
    l2norm_gb  =norm_l2(gb_res,mask,chr);
    l2norm_hb_t=norm_l2(hb_t_res,mask,chr);
    l2norm_hb_i=norm_l2(hb_i_res,mask,chr);
-   l2norm_phi1=norm_l2(fb_res,mask,chr);
+   l2norm_fb=norm_l2(fb_res,mask,chr);
 
-   l2norm=l2norm_gb+l2norm_hb_t+l2norm_hb_i+l2norm_phi1;
+   l2norm=l2norm_gb+l2norm_hb_t+l2norm_hb_i+l2norm_fb;
 
    check_nan_(&l2norm,&is_nan);
 
    if (is_nan)
    {
-      printf("\nl2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, l2norm_phi1=%lf\n",
-              l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_phi1);
+      printf("\nl2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, l2norm_fb=%lf\n",
+              l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_fb);
       printf("Nx=%i,Ny=%i,L=%i\n",Nx,Ny,g_L);
       AMRD_stop("l2norm is nan ... stopping","");
       l2norm=0;
