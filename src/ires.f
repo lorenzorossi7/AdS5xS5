@@ -40,7 +40,8 @@ c----------------------------------------------------------------------
         real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
-        integer dimA,dimB
+        real*8 dimA,dimB
+
         integer is,ie
         integer js,je
         integer a,b,c,d,e,f,g,h
@@ -158,8 +159,8 @@ c----------------------------------------------------------------------
         dy=(y(2)-y(1))
 
         ! set dimensions of S3 and S4 subspaces
-        dimA=3
-        dimB=4
+        dimA=3d0 
+        dimB=4d0
 
         ! initialize 
         do i=1,Nx
@@ -228,7 +229,8 @@ c----------------------------------------------------------------------
                 ! calculate efe_all_ires function at point i,j
                 efe_all_ires(i,j)=
      &          max(abs(efe_ires(1,1)),abs(efe_ires(1,2)),
-     &              abs(efe_ires(2,2)),abs(efe_ires(3,3)))
+     &              abs(efe_ires(1,3)),abs(efe_ires(2,2)),
+     &              abs(efe_ires(2,3)),abs(efe_ires(3,3)))
 
             end if
 

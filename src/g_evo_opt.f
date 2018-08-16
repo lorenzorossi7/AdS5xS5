@@ -164,7 +164,7 @@ c----------------------------------------------------------------------
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
         real*8 dc_J
 
-        integer dimA,dimB
+        real*8 dimA,dimB
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
@@ -286,8 +286,8 @@ c----------------------------------------------------------------------
         dy=y(2)-y(1)
 
         ! set dimensions of S3 and S4 subspaces
-        dimA=3
-        dimB=4
+        dimA=3d0 
+        dimB=4d0
 
         ! set index bounds for main loop
         is=2
@@ -505,10 +505,10 @@ c----------------------------------------------------------------------
                 ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
                 !--------------------------------------------------------------------------
 
-                afe=(dimA-1)+sA+tA
+                afe=(dimA-1d0)+sA+tA
 
                 !--------------------------------------------------------------------------
-                ! bfe      = (d_B-1)
+                ! bfe      = (dimB-1)
                 !            -g^ab ( (gB_,ab - G^c_ba gB_,c)/2 + (dimB-2)*(gB_,a gB_,b)/(4 gB) 
                 !                                              +     dimA*(gA_,a gB_,b)/(4 gA) )
                 !            -gB*(g^ab f1_a f1_b)/4
@@ -516,7 +516,7 @@ c----------------------------------------------------------------------
                 ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
                 !--------------------------------------------------------------------------
 
-                bfe=(dimB-1)+sB+tB
+                bfe=(dimB-1d0)+sB+tB
 
                 !---------------------------------------------------------------- 
                 ! ffe_t = -sqrtdetg g^tt f_t,t 
@@ -1075,11 +1075,11 @@ c----------------------------------------------------------------------
      &                +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
      &                +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
      &                +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
-     &                -g0_uu(1,1)*(2*dgb_J*gA_x(1))/(4*gA)*(dimA-2)
-     &                -g0_uu(1,2)*(dgb_J*gA_x(2))/(4*gA)*(dimA-2)
-     &                -g0_uu(1,3)*(dgb_J*gA_x(3))/(4*gA)*(dimA-2)
-     &                -g0_uu(2,1)*(gA_x(2)*dgb_J)/(4*gA)*(dimA-2)
-     &                -g0_uu(3,1)*(gA_x(3)*dgb_J)/(4*gA)*(dimA-2)
+     &                -g0_uu(1,1)*(2*dgb_J*gA_x(1))/(4*gA)*(dimA-2d0)
+     &                -g0_uu(1,2)*(dgb_J*gA_x(2))/(4*gA)*(dimA-2d0)
+     &                -g0_uu(1,3)*(dgb_J*gA_x(3))/(4*gA)*(dimA-2d0)
+     &                -g0_uu(2,1)*(gA_x(2)*dgb_J)/(4*gA)*(dimA-2d0)
+     &                -g0_uu(3,1)*(gA_x(3)*dgb_J)/(4*gA)*(dimA-2d0)
      &                -g0_uu(1,1)*(dgb_J*gB_x(1))/(4*gB)*dimB
      &                -g0_uu(1,2)*(dgb_J*gB_x(2))/(4*gB)*dimB
      &                -g0_uu(1,3)*(dgb_J*gB_x(3))/(4*gB)*dimB
@@ -1102,11 +1102,11 @@ c----------------------------------------------------------------------
      &                +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
      &                +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
      &                +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
-     &                -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2)
-     &                -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2)
-     &                -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2)
-     &                -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2)
-     &                -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2)
+     &                -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2d0)
+     &                -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2d0)
+     &                -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2d0)
+     &                -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2d0)
+     &                -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2d0)
      &                -g0_uu(1,1)*dgb_J*gA_x(1)/(4*gA)*dimA 
      &                -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
      &                -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA 
@@ -1245,7 +1245,7 @@ c----------------------------------------------------------------------
      &                -(1+rho_cd)*g0_ll(2,3)*
      &                (-n_u(1)*0.5d0*g0_uu(2,3)*dc_J*(1-x0**2)**2
      &                 +n_u(2)*g0_uu(1,3)*dc_J*(1-x0**2)**2
-     &                 +n_u(3)*g0_uu(1,2)*dc_J*(1-x0**2)**2) )
+     &                 +n_u(3)*g0_uu(1,2)*dc_J*(1-x0**2)**2) ) 
                 cd_J_ll(3,3)=-kappa_cd*
      &              ( 2*n_l(3)*g0_uu(1,3)*dc_J*(1-x0**2)**3
      &                -(1+rho_cd)*g0_ll(3,3)*
@@ -1267,7 +1267,7 @@ c----------------------------------------------------------------------
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
-               ! update gbars
+                ! update gbars 
                 if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
      &            efe_J(1,1).eq.0) then
                   dump=.true.
