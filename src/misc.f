@@ -1086,7 +1086,7 @@ c----------------------------------------------------------------------
      &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)*cos(PI*y0/L)*2*PI/L
      &            +omega_y*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
      &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(2*PI*y0/L)*PI/L
-        gB_xx(3,3)=!gB_ads_yy 
+        gB_xx(3,3)=gB_ads_yy 
      &            +omega_yy*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
      &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L 
