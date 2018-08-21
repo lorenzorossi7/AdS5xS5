@@ -242,6 +242,32 @@ c----------------------------------------------------------------------
      &                phi10_x,phi10_xx,
      &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
 
+!TEST! COMMENTING THIS OUT MAKES ONLY-GB_TY and ONLY-GB_XY UNSTABLE,
+!      BUT tB, BELOW, DOES NOT APPEAR IN EITHER GB_TY OR GB_XY EQNS!
+!        g0_uu(3,3)=
+!     &         (g0_ll(1,1)*g0_ll(2,2))
+!     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+!     &           -g0_ll(1,1)*g0_ll(2,3)**2
+!     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+!
+!        tB=-gB*g0_uu(1,1)*f1_l(1)*f1_l(1)/4
+!     &     -gB*g0_uu(1,2)*f1_l(1)*f1_l(2)/4
+!     &     -gB*g0_uu(1,3)*f1_l(1)*f1_l(3)/4
+!     &     -gB*g0_uu(2,1)*f1_l(2)*f1_l(1)/4
+!     &     -gB*g0_uu(2,2)*f1_l(2)*f1_l(2)/4
+!     &     -gB*g0_uu(2,3)*f1_l(2)*f1_l(3)/4
+!     &     -gB*g0_uu(3,1)*f1_l(3)*f1_l(1)/4
+!     &     -gB*g0_uu(3,2)*f1_l(3)*f1_l(2)/4
+!     &     -gB*g0_uu(3,3)*f1_l(3)*f1_l(3)/4
+!
+!        g0_uu(3,3)=
+!     &         (g0_ll(1,1)*g0_ll(2,2)-g0_ll(1,2)**2)
+!     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+!     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+!     &           -g0_ll(1,1)*g0_ll(2,3)**2
+!     &           -g0_ll(1,2)**2*g0_ll(3,3)
+!     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+
               ! initial first time derivatives; gb_ii_t_n,Hb_i_t_n,phi1_t_n were set in AdS5xS5_free_data()
 
               ! need this in h0_ll_tt,psi_tt,omega_tt,phi10_tt calculations
@@ -504,9 +530,17 @@ c----------------------------------------------------------------------
      &         -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
      &         -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
      &
-     &         +(dimB-1d0)
+!     &         +(dimB-1d0)
      &
-     &         +tB
+     &         -gB*g0_uu(1,1)*f1_l(1)*f1_l(1)/4
+     &         -gB*g0_uu(1,2)*f1_l(1)*f1_l(2)/4
+     &         -gB*g0_uu(1,3)*f1_l(1)*f1_l(3)/4
+     &         -gB*g0_uu(2,1)*f1_l(2)*f1_l(1)/4
+     &         -gB*g0_uu(2,2)*f1_l(2)*f1_l(2)/4
+     &         -gB*g0_uu(2,3)*f1_l(2)*f1_l(3)/4
+     &         -gB*g0_uu(3,1)*f1_l(3)*f1_l(1)/4
+     &         -gB*g0_uu(3,2)*f1_l(3)*f1_l(2)/4
+     &         -gB*g0_uu(3,3)*(fb_y_n(i,j)*(1-x0**2)**3)**2/4
      &                )
 
               ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 

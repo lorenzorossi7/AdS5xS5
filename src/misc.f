@@ -121,7 +121,7 @@ c-----------------------------------------------------------------------
            end if
         end if
 
-!        f_y=0 !TEST!
+        f_y=0 !TEST!
 
         return
         end
@@ -314,9 +314,9 @@ c----------------------------------------------------------------------
            write(*,*) ' f_xx=',f_xx
         end if
 
-!        f_ty=0 !TEST!
-!        f_xy=0 !TEST!
-!        f_yy=0 !TEST!
+        f_ty=0 !TEST!
+        f_xy=0 !TEST!
+        f_yy=0 !TEST!
 
         return
         end
@@ -1086,11 +1086,20 @@ c----------------------------------------------------------------------
      &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)*cos(PI*y0/L)*2*PI/L
      &            +omega_y*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
      &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(2*PI*y0/L)*PI/L
-        gB_xx(3,3)=gB_ads_yy 
+        gB_xx(3,3)=!gB_ads_yy 
      &            +omega_yy*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
      &            +omega_y*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L 
      &            +omega0*(1-x0**2)**3*cos(2*PI*y0/L)*2*PI**2/L**2
+
+!TEST!
+!       if (gB_x(1).ne.0) then
+!         write(*,*) 'x,y=',x0,y0
+!       end if
+!TEST!
+!       if (omega_np1(i,j)-omega_nm1(i,j).ne.0) then
+!         write(*,*) 'np1,nm1=',omega_np1(i,j),omega_nm1(i,j)
+!       end if
 
         do a=1,2
           do b=a+1,3
@@ -1504,6 +1513,10 @@ c----------------------------------------------------------------------
           end do
         end do
 
+!TEST!
+!        gB_x(1)=0
+!        gB_xx(1,3)=0
+
         ! calculate s0_ll,t0_ll,ricci_ll,sA,sB,tA,tB
         do a=1,3
           do b=1,3
@@ -1728,6 +1741,16 @@ c----------------------------------------------------------------------
      &     -gA*g0_uu(3,2)*g0_uu(3,3)*f2_ll(3,3)*f2_ll(2,3)/8
      &     -gA*g0_uu(3,3)*g0_uu(3,3)*f2_ll(3,3)*f2_ll(3,3)/8
 
+!TEST! COMMENTING THIS OUT MAKES ONLY-GB_TY and ONLY-GB_XY UNSTABLE,
+!      BUT tB, BELOW, DOES NOT APPEAR IN EITHER GB_TY OR GB_XY EQNS!
+!        g0_uu(3,3)=
+!     &         (g0_ll(1,1)*g0_ll(2,2))!-g0_ll(1,2)**2)
+!     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+!!     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+!     &           -g0_ll(1,1)*g0_ll(2,3)**2
+!!     &           -g0_ll(1,2)**2*g0_ll(3,3)
+!     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+
         tB=-gB*g0_uu(1,1)*f1_l(1)*f1_l(1)/4
      &     -gB*g0_uu(1,2)*f1_l(1)*f1_l(2)/4
      &     -gB*g0_uu(1,3)*f1_l(1)*f1_l(3)/4
@@ -1737,6 +1760,15 @@ c----------------------------------------------------------------------
      &     -gB*g0_uu(3,1)*f1_l(3)*f1_l(1)/4
      &     -gB*g0_uu(3,2)*f1_l(3)*f1_l(2)/4
      &     -gB*g0_uu(3,3)*f1_l(3)*f1_l(3)/4
+
+!TEST! RESETS BACK TO WHAT g0_UU(3,3) PHYSICALLY SHOULD BE
+        g0_uu(3,3)=
+     &         (g0_ll(1,1)*g0_ll(2,2)-g0_ll(1,2)**2)
+     &         /(-g0_ll(1,3)**2*g0_ll(2,2)
+     &           +g0_ll(1,2)*g0_ll(1,3)*g0_ll(2,3)*2
+     &           -g0_ll(1,1)*g0_ll(2,3)**2
+     &           -g0_ll(1,2)**2*g0_ll(3,3)
+     &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
 
 !         if (x(i).eq.0.5d0) then
 !           write(*,*) '(dimB-1)+sB+tB=',(dimB-1)+sB+tB

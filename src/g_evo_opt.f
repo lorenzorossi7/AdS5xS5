@@ -1267,34 +1267,34 @@ c----------------------------------------------------------------------
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
-                ! update gbars 
-                if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
-     &            efe_J(1,1).eq.0) then
-                  dump=.true.
-                else
-                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
-                end if
-
-                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
-     &            efe_J(1,2).eq.0) then
-                  dump=.true.
-                else
-                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
-                end if
-
+!                ! update gbars 
+!                if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
+!     &            efe_J(1,1).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
+!                end if
+!
+!                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
+!     &            efe_J(1,2).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
+!                end if
+!
                 if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
      &            efe_J(1,3).eq.0) then
                   dump=.true.
                 else
                   gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
                 end if
-
-                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
-     &            efe_J(2,2).eq.0) then
-                  dump=.true.
-                else
-                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
-                end if
+!
+!                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
+!     &            efe_J(2,2).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
+!                end if
 
                 if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
      &            efe_J(2,3).eq.0) then
@@ -1303,20 +1303,20 @@ c----------------------------------------------------------------------
                   gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
                 end if
 
-                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
-     &            efe_J(3,3).eq.0) then
-                  dump=.true.
-                else
-                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
-                end if
-
-                ! update psi
-                if (is_nan(afe).or.is_nan(afe_J).or.
-     &            afe_J.eq.0) then
-                  dump=.true.
-                else
-                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
-                end if
+!                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
+!     &            efe_J(3,3).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
+!                end if
+!
+!                ! update psi
+!                if (is_nan(afe).or.is_nan(afe_J).or.
+!     &            afe_J.eq.0) then
+!                  dump=.true.
+!                else
+!                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
+!                end if
 
 !TEST!
 !                ! update omega
@@ -1327,48 +1327,50 @@ c----------------------------------------------------------------------
 !                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
 !                end if
 
-                ! update fbars 
-                if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
-     &            ffe_J(1).eq.0) then
-                  dump=.true.
-                else
-                  fb_t_np1(i,j)=fb_t_np1(i,j)-ffe(1)/ffe_J(1)
-                end if
+!                ! update fbars 
+!                if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
+!     &            ffe_J(1).eq.0) then
+!                  dump=.true.
+!                else
+!                  fb_t_np1(i,j)=fb_t_np1(i,j)-ffe(1)/ffe_J(1)
+!                end if
+!
+!                if (is_nan(ffe(2)).or.is_nan(ffe_J(2)).or.
+!     &            ffe_J(2).eq.0) then
+!                  dump=.true.
+!                else
+!                  fb_x_np1(i,j)=fb_x_np1(i,j)-ffe(2)/ffe_J(2)
+!                end if
+!
+!                if (is_nan(ffe(3)).or.is_nan(ffe_J(3)).or.
+!     &            ffe_J(3).eq.0) then
+!                  dump=.true.
+!                else
+!                  fb_y_np1(i,j)=fb_y_np1(i,j)-ffe(3)/ffe_J(3)
+!                end if
+!
+!                ! update phi1 
+!                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
+!                  dump=.true.
+!                else
+!                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
+!                end if
 
-                if (is_nan(ffe(2)).or.is_nan(ffe_J(2)).or.
-     &            ffe_J(2).eq.0) then
-                  dump=.true.
-                else
-                  fb_x_np1(i,j)=fb_x_np1(i,j)-ffe(2)/ffe_J(2)
-                end if
-
-                if (is_nan(ffe(3)).or.is_nan(ffe_J(3)).or.
-     &            ffe_J(3).eq.0) then
-                  dump=.true.
-                else
-                  fb_y_np1(i,j)=fb_y_np1(i,j)-ffe(3)/ffe_J(3)
-                end if
-
-                ! update phi1 
-                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
-                  dump=.true.
-                else
-                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
-                end if
-
-                gb_res(i,j) =
-     &            max(abs(efe(1,1)/efe_J(1,1)),
-     &                abs(efe(1,2)/efe_J(1,2)),
-     &                abs(efe(1,3)/efe_J(1,3)),
-     &                abs(efe(2,2)/efe_J(2,2)),
-     &                abs(efe(2,3)/efe_J(2,3)),
-     &                abs(efe(3,3)/efe_J(3,3)),
-     &                abs(afe/afe_J),
-     &                abs(bfe/bfe_J))
-                fb_res(i,j)=
-     &            max(abs(ffe(1)/ffe_J(1)),
-     &                abs(ffe(2)/ffe_J(2)),
-     &                abs(ffe(3)/ffe_J(3)))
+!                gb_res(i,j) =
+!     &            max(abs(efe(1,1)/efe_J(1,1)),
+!     &                abs(efe(1,2)/efe_J(1,2)),
+!     &                abs(efe(1,3)/efe_J(1,3)),
+!     &                abs(efe(2,2)/efe_J(2,2)),
+!     &                abs(efe(2,3)/efe_J(2,3)),
+!     &                abs(efe(3,3)/efe_J(3,3)),
+!     &                abs(afe/afe_J),
+!     &                abs(bfe/bfe_J))
+                gb_res(i,j)=max(abs(efe(1,3)/efe_J(1,3)),
+     &                          abs(efe(2,3)/efe_J(2,3)))
+!                fb_res(i,j)=
+!     &            max(abs(ffe(1)/ffe_J(1)),
+!     &                abs(ffe(2)/ffe_J(2)),
+!     &                abs(ffe(3)/ffe_J(3)))
                 cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
