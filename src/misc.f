@@ -513,7 +513,7 @@ c----------------------------------------------------------------------
      &                  sqrtdetg,sqrtdetg_x,
      &                  sqrtdetgads,sqrtdetgads_x,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
-     &                  hA,hB,hA_x,hB_x,hA_xx,hB_xx,
+     &                  hA,hB,hAu,hBu,hA_x,hB_x,hA_xx,hB_xx,
      &                  sqrtdeth,sqrtdeth_x,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
@@ -572,8 +572,8 @@ c----------------------------------------------------------------------
         real*8 gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
         real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
-        real*8 hA,hA_x(3),hA_xx(3,3) 
-        real*8 hB,hB_x(3),hB_xx(3,3)
+        real*8 hA,hAu,hA_x(3),hA_xx(3,3) 
+        real*8 hB,hBu,hB_x(3),hB_xx(3,3)
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
@@ -1251,6 +1251,9 @@ c----------------------------------------------------------------------
 
         hA=psi0*(1-x0**2)*x0**2
         hB=omega0*(1-x0**2)**3*sin(PI*y0/L)**2 
+
+        hAu=1/gA-1/gAads
+        hBu=1/gB-1/gBads
 
         hA_x(1)   =gA_x(1)-gAads_x(1) 
         hA_x(2)   =gA_x(2)-gAads_x(2)
