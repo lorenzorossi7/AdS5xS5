@@ -511,8 +511,10 @@ c----------------------------------------------------------------------
      &                  gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                  sqrtdetg,sqrtdetg_x,
+     &                  sqrtdetgads,sqrtdetgads_x,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  hA,hB,hA_x,hB_x,hA_xx,hB_xx,
+     &                  sqrtdeth,sqrtdeth_x,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
@@ -584,6 +586,8 @@ c----------------------------------------------------------------------
         real*8 sA,sB,tA,tB
         real*8 levicivi3(3,3,3),vol(3,3,3),vol_x(3,3,3,3)
         real*8 sqrtdetg,sqrtdetg_x(3)
+        real*8 sqrtdetgads,sqrtdetgads_x(3)
+        real*8 sqrtdeth,sqrtdeth_x(3)
         real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
 
         real*8 efe(3,3),efest(3,3)
@@ -1345,6 +1349,13 @@ c----------------------------------------------------------------------
      &                  -g0_ll(1,3)*g0_ll(2,2)*g0_ll(3,1)
      &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
      &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2)))
+       sqrtdetgads=sqrt(abs(gads_ll(1,1)*gads_ll(2,2)*gads_ll(3,3)
+     &                     +gads_ll(1,2)*gads_ll(2,3)*gads_ll(3,1)
+     &                     +gads_ll(1,3)*gads_ll(2,1)*gads_ll(3,2)
+     &                     -gads_ll(1,3)*gads_ll(2,2)*gads_ll(3,1)
+     &                     -gads_ll(1,2)*gads_ll(2,1)*gads_ll(3,3)
+     &                     -gads_ll(1,1)*gads_ll(2,3)*gads_ll(3,2)))
+       sqrtdeth=sqrtdetg-sqrtdetgads
 
        ! define derivatives sqrt(|detg|),x = 1/2/sqrt(|detg|) (detg/|detg|) detg,x
        do a=1,3
@@ -1379,6 +1390,37 @@ c----------------------------------------------------------------------
      &                  -g0_ll(1,2)*g0_ll(2,1)*g0_ll(3,3)
      &                  -g0_ll(1,1)*g0_ll(2,3)*g0_ll(3,2))
      &              /2.0d0/sqrtdetg
+         sqrtdetgads_x(a)= (gads_ll_x(1,1,a)*gads_ll(2,2)*gads_ll(3,3)
+     &                     +gads_ll_x(1,2,a)*gads_ll(2,3)*gads_ll(3,1)
+     &                     +gads_ll_x(1,3,a)*gads_ll(2,1)*gads_ll(3,2)
+     &                     -gads_ll_x(1,3,a)*gads_ll(2,2)*gads_ll(3,1)
+     &                     -gads_ll_x(1,2,a)*gads_ll(2,1)*gads_ll(3,3)
+     &                     -gads_ll_x(1,1,a)*gads_ll(2,3)*gads_ll(3,2)
+     &                     +gads_ll(1,1)*gads_ll_x(2,2,a)*gads_ll(3,3)
+     &                     +gads_ll(1,2)*gads_ll_x(2,3,a)*gads_ll(3,1)
+     &                     +gads_ll(1,3)*gads_ll_x(2,1,a)*gads_ll(3,2)
+     &                     -gads_ll(1,3)*gads_ll_x(2,2,a)*gads_ll(3,1)
+     &                     -gads_ll(1,2)*gads_ll_x(2,1,a)*gads_ll(3,3)
+     &                     -gads_ll(1,1)*gads_ll_x(2,3,a)*gads_ll(3,2)
+     &                     +gads_ll(1,1)*gads_ll(2,2)*gads_ll_x(3,3,a)
+     &                     +gads_ll(1,2)*gads_ll(2,3)*gads_ll_x(3,1,a)
+     &                     +gads_ll(1,3)*gads_ll(2,1)*gads_ll_x(3,2,a)
+     &                     -gads_ll(1,3)*gads_ll(2,2)*gads_ll_x(3,1,a)
+     &                     -gads_ll(1,2)*gads_ll(2,1)*gads_ll_x(3,3,a)
+     &                     -gads_ll(1,1)*gads_ll(2,3)*gads_ll_x(3,2,a))
+     &                    *(gads_ll(1,1)*gads_ll(2,2)*gads_ll(3,3)
+     &                     +gads_ll(1,2)*gads_ll(2,3)*gads_ll(3,1)
+     &                     +gads_ll(1,3)*gads_ll(2,1)*gads_ll(3,2)
+     &                     -gads_ll(1,3)*gads_ll(2,2)*gads_ll(3,1)
+     &                     -gads_ll(1,2)*gads_ll(2,1)*gads_ll(3,3)
+     &                     -gads_ll(1,1)*gads_ll(2,3)*gads_ll(3,2))
+     &                 /abs(gads_ll(1,1)*gads_ll(2,2)*gads_ll(3,3)
+     &                     +gads_ll(1,2)*gads_ll(2,3)*gads_ll(3,1)
+     &                     +gads_ll(1,3)*gads_ll(2,1)*gads_ll(3,2)
+     &                     -gads_ll(1,3)*gads_ll(2,2)*gads_ll(3,1)
+     &                     -gads_ll(1,2)*gads_ll(2,1)*gads_ll(3,3)
+     &                     -gads_ll(1,1)*gads_ll(2,3)*gads_ll(3,2))
+     &                 /2.0d0/sqrtdetgads
        end do
 
        ! define volume form in in (t,x,y) subsector

@@ -98,6 +98,8 @@ c----------------------------------------------------------------------
         real*8 f2_ll(3,3),f2_ll_x(3,3,3)
         real*8 sA,sB,tA,tB
         real*8 sqrtdetg,sqrtdetg_x(3)
+        real*8 sqrtdetgads,sqrtdetgads_x(3)
+        real*8 sqrtdeth,sqrtdeth_x(3)
 
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
@@ -141,6 +143,8 @@ c----------------------------------------------------------------------
         data f2_ll,f2_ll_x/9*0.0,27*0.0/
         data sA,sB,tA,tB/0.0,0.0,0.0,0.0/
         data sqrtdetg,sqrtdetg_x/0.0,3*0.0/
+        data sqrtdetgads,sqrtdetgads_x/0.0,3*0.0/
+        data sqrtdeth,sqrtdeth_x/0.0,3*0.0/
 
         data A_l,Hads_l/3*0.0,3*0.0/
         data A_l_x,Hads_l_x/9*0.0,9*0.0/
@@ -214,8 +218,10 @@ c----------------------------------------------------------------------
      &                gA,gB,gA_x,gB_x,gA_xx,gB_xx,
      &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                sqrtdetg,sqrtdetg_x,
+     &                sqrtdetgads,sqrtdetgads_x,
      &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                hA,hB,hA_x,hB_x,hA_xx,hB_xx,
+     &                sqrtdeth,sqrtdeth_x,
      &                A_l,A_l_x,Hads_l,Hads_l_x,
      &                gamma_ull,gamma_ull_x,
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
