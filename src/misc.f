@@ -512,6 +512,7 @@ c----------------------------------------------------------------------
      &                  gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                  sqrtdetg,sqrtdetg_x,
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
+     &                  hA,hB,hA_x,hB_x,hA_xx,hB_xx,
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
@@ -569,6 +570,8 @@ c----------------------------------------------------------------------
         real*8 gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
         real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 hA,hA_x(3),hA_xx(3,3) 
+        real*8 hB,hB_x(3),hB_xx(3,3)
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
@@ -645,7 +648,7 @@ c----------------------------------------------------------------------
         dy=(y(2)-y(1))
 
         x0=x(i)
-        y0=L/2  !NOTE: change this to y0=y(j) when we add y-dependence
+        y0=y(j)  
 
         ! set dimensions of S3 and S4 subspaces
         dimA=3d0 
@@ -661,7 +664,7 @@ c----------------------------------------------------------------------
         gA_ads0=x0**2/(1-x0)**2
 
         ! set gBads values
-        gB_ads0=L**2*sin(PI*y0/L)**2
+        gB_ads0=L**2!*sin(PI*y0/L)**2 !y-dependence
 
         ! set f1ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
@@ -705,7 +708,7 @@ c----------------------------------------------------------------------
         gA_ads_xx=(2+4*x0)/(1-x0)**4
  
         ! set gBads derivatives
-        gB_ads_yy=2*PI**2*cos(2*PI*y0/L)
+        gB_ads_yy=2*PI**2*(-1)!*cos(2*PI*y0/L) !y-dependence
 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -1033,7 +1036,7 @@ c----------------------------------------------------------------------
         end do
 
         gA=gA_ads0+psi0*(1-x0**2)*x0**2
-        gB=gB_ads0+omega0*(1-x0**2)**3*sin(PI*y0/L)**2
+        gB=gB_ads0+omega0*(1-x0**2)**3*sin(PI*y0/L)**2 
 
         gA_x(1)   =0
      &            +psi_t*(1-x0**2)*x0**2
@@ -1061,7 +1064,7 @@ c----------------------------------------------------------------------
      &            +psi_yy*(1-x0**2)*x0**2
 
         gB_x(1)   =0
-     &            +omega_t*(1-x0**2)**3*sin(PI*y0/L)**2
+     &            +omega_t*(1-x0**2)**3*sin(PI*y0/L)**2 
         gB_x(2)   =0
      &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
@@ -1241,6 +1244,29 @@ c----------------------------------------------------------------------
             end do
           end do
         end do
+
+        hA=psi0*(1-x0**2)*x0**2
+        hB=omega0*(1-x0**2)**3*sin(PI*y0/L)**2 
+
+        hA_x(1)   =gA_x(1)-gAads_x(1) 
+        hA_x(2)   =gA_x(2)-gAads_x(2)
+        hA_x(3)   =gA_x(3)-gAads_x(3)
+        hA_xx(1,1)=gA_xx(1,1)-gAads_xx(1,1) 
+        hA_xx(1,2)=gA_xx(1,2)-gAads_xx(1,2)
+        hA_xx(1,3)=gA_xx(1,3)-gAads_xx(1,3)
+        hA_xx(2,2)=gA_xx(2,2)-gAads_xx(2,2)
+        hA_xx(2,3)=gA_xx(2,3)-gAads_xx(2,3)
+        hA_xx(3,3)=gA_xx(3,3)-gAads_xx(3,3)
+
+        hB_x(1)   =gB_x(1)-gBads_x(1) 
+        hB_x(2)   =gB_x(2)-gBads_x(2)
+        hB_x(3)   =gB_x(3)-gBads_x(3)
+        hB_xx(1,1)=gB_xx(1,1)-gBads_xx(1,1) 
+        hB_xx(1,2)=gB_xx(1,2)-gBads_xx(1,2)
+        hB_xx(1,3)=gB_xx(1,3)-gBads_xx(1,3)
+        hB_xx(2,2)=gB_xx(2,2)-gBads_xx(2,2)
+        hB_xx(2,3)=gB_xx(2,3)-gBads_xx(2,3)
+        hB_xx(3,3)=gB_xx(3,3)-gBads_xx(3,3)
 
         ! give values to the gh source functions
         A_l(1)=Hb_t0*(1-x0**2)**2 

@@ -59,6 +59,8 @@ c----------------------------------------------------------------------
         real*8 gBads,gBads_x(3),gBads_xx(3,3)
         real*8 h0_ll(3,3),h0_uu(3,3)
         real*8 h0_ll_x(3,3,3),h0_uu_x(3,3,3),h0_ll_xx(3,3,3,3)
+        real*8 hA,hA_x(3),hA_xx(3,3)
+        real*8 hB,hB_x(3),hB_xx(3,3)
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
@@ -114,6 +116,9 @@ c----------------------------------------------------------------------
         data gAads,gBads/0.0,0.0/
         data gAads_x,gBads_x/3*0.0,3*0.0/
         data gAads_xx,gBads_xx/9*0.0,9*0.0/
+        data hA,hB/0.0,0.0/
+        data hA_x,hB_x/3*0.0,3*0.0/
+        data hA_xx,hB_xx/9*0.0,9*0.0/
 
         !---------------------------------------------------------------
 
@@ -171,6 +176,7 @@ c----------------------------------------------------------------------
      &                gAads,gBads,gAads_x,gBads_x,gAads_xx,gBads_xx,
      &                sqrtdetg,sqrtdetg_x,
      &                h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
+     &                hA,hB,hA_x,hB_x,hA_xx,hB_xx,
      &                A_l,A_l_x,Hads_l,Hads_l_x,
      &                gamma_ull,gamma_ull_x,
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
