@@ -587,7 +587,10 @@ c----------------------------------------------------------------------
         real*8 f1ads_l(3),f1ads_l_x(3,3),f2ads_ll(3,3),f2ads_ll_x(3,3,3)
         real*8 h1_l(3),h1_l_x(3,3),h2_ll(3,3),h2_ll_x(3,3,3)
         real*8 sA,sB,tA,tB
-        real*8 levicivi3(3,3,3),vol(3,3,3),vol_x(3,3,3,3)
+        real*8 levicivi3(3,3,3)
+        real*8 vol(3,3,3),vol_x(3,3,3,3)
+        real*8 volads(3,3,3),volads_x(3,3,3,3)
+        real*8 volh(3,3,3),volh_x(3,3,3,3)
         real*8 sqrtdetg,sqrtdetg_x(3)
         real*8 sqrtdetgads,sqrtdetgads_x(3)
         real*8 sqrtdeth,sqrtdeth_x(3)
@@ -1434,8 +1437,12 @@ c----------------------------------------------------------------------
           do b=1,3
             do c=1,3
               vol(a,b,c)=levicivi3(a,b,c)*sqrtdetg
+              volads(a,b,c)=levicivi3(a,b,c)*sqrtdetgads
+              volh(a,b,c)=vol(a,b,c)-volads(a,b,c)
               do d=1,3
                 vol_x(a,b,c,d)=levicivi3(a,b,c)*sqrtdetg_x(d)
+                volads_x(a,b,c,d)=levicivi3(a,b,c)*sqrtdetgads_x(d)
+                volh_x(a,b,c,d)=vol_x(a,b,c,d)-volads_x(a,b,c,d)
               end do
             end do
           end do
@@ -1499,11 +1506,53 @@ c----------------------------------------------------------------------
      &                   -vol(2,3,1)*f1_l(3)*g0_uu_x(1,3,c)
         end do
 
+        f1ads_l(3)   =f1_y_ads0
+
+        f2ads_ll(1,2)=-vol(1,2,3)*f1ads_l(3)*gads_uu(3,3)
+        f2ads_ll(1,3)=-vol(1,3,2)*f1ads_l(3)*gads_uu(2,3)
+        f2ads_ll(2,3)=-vol(2,3,1)*f1ads_l(3)*gads_uu(1,3)
+
+        do c=1,3
+          f2ads_ll_x(1,2,c)=-volads_x(1,2,3,c)*f1ads_l(3)*gads_uu(3,3)
+     &                      -volads(1,2,3)*f1ads_l(3)*gads_uu_x(3,3,c)
+          f2ads_ll_x(1,3,c)=-volads_x(1,3,2,c)*f1ads_l(3)*gads_uu(2,3)
+     &                      -volads(1,3,2)*f1ads_l(3)*gads_uu_x(2,3,c)
+          f2ads_ll_x(2,3,c)=-volads_x(2,3,1,c)*f1ads_l(3)*gads_uu(1,3)
+     &                      -volads(2,3,1)*f1ads_l(3)*gads_uu_x(1,3,c)
+        end do
+
+        h1_l(1)   =fb_t0*(1-x0**2)**3
+        h1_l(2)   =fb_x0*(1-x0**2)**3
+        h1_l(3)   =fb_y0*(1-x0**2)**3
+        h2_ll(1,2)=f2_ll(1,2)-f2ads_ll(1,2) 
+        h2_ll(1,3)=f2_ll(1,3)-f2ads_ll(1,3)
+        h2_ll(2,3)=f2_ll(2,3)-f2ads_ll(2,3)
+
+        h1_l_x(1,1)=fb_t_t*(1-x0**2)**3
+        h1_l_x(1,2)=fb_t_x*(1-x0**2)**3
+        h1_l_x(1,3)=fb_t_y*(1-x0**2)**3
+        h1_l_x(2,1)=fb_x_t*(1-x0**2)**3
+        h1_l_x(2,2)=fb_x_x*(1-x0**2)**3
+        h1_l_x(2,3)=fb_x_y*(1-x0**2)**3
+        h1_l_x(3,1)=fb_y_t*(1-x0**2)**3
+        h1_l_x(3,2)=fb_y_x*(1-x0**2)**3
+        h1_l_x(3,3)=fb_y_y*(1-x0**2)**3
+
+        do c=1,3
+          h2_ll_x(1,2,c)=f2_ll_x(1,2,c)-f2ads_ll_x(1,2,c) 
+          h2_ll_x(1,3,c)=f2_ll_x(1,3,c)-f2ads_ll_x(1,3,c)
+          h2_ll_x(2,3,c)=f2_ll_x(2,3,c)-f2ads_ll_x(2,3,c)
+        end do
+
         do a=1,2
           do b=a+1,3
             f2_ll(b,a)=-f2_ll(a,b)
+            f2ads_ll(b,a)=-f2ads_ll(a,b)
+            h2_ll(b,a)=-h2_ll(a,b)
             do c=1,3
               f2_ll_x(b,a,c)=f2_ll_x(a,b,c)
+              f2ads_ll_x(b,a,c)=f2ads_ll_x(a,b,c)
+              h2_ll_x(b,a,c)=h2_ll_x(a,b,c)
             end do
           end do
         end do
