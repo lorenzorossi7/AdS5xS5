@@ -523,6 +523,7 @@ c----------------------------------------------------------------------
      &                  h1_l,h1_l_x,h2_ll,h2_ll_x,
      &                  sA,sB,tA,tB,
      &                  phi10_x,phi10_xx,
+     &                  gammagg,gammahh,gammagh,gammahg,dlll,cuuuu,
      &                  x,y,dt,chr,L,ex,Nx,Ny,i,j)
         implicit none
 
@@ -594,6 +595,10 @@ c----------------------------------------------------------------------
         real*8 sqrtdetgads,sqrtdetgads_x(3)
         real*8 sqrtdeth,sqrtdeth_x(3)
         real*8 riccibar_ll(3,3),riccibar_lu(3,3),riccibar
+
+        real*8 gammagg(3,3,3),gammahh(3,3,3)
+        real*8 gammagh(3,3,3),gammahg(3,3,3)
+        real*8 cuuuu(3,3,3,3),dlll(3,3,3)
 
         real*8 efe(3,3),efest(3,3)
         real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
@@ -673,6 +678,7 @@ c----------------------------------------------------------------------
         gA_ads0=x0**2/(1-x0)**2
 
         ! set gBads values
+!        gB_ads0=L**2*sin(PI*y0/L)**2 
         gB_ads0=L**2!*sin(PI*y0/L)**2 !y-dependence
 
         ! set f1ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
@@ -717,6 +723,7 @@ c----------------------------------------------------------------------
         gA_ads_xx=(2+4*x0)/(1-x0)**4
  
         ! set gBads derivatives
+!        gB_ads_yy=2*PI**2*(-1)*cos(2*PI*y0/L) 
         gB_ads_yy=2*PI**2*(-1)!*cos(2*PI*y0/L) !y-dependence
 
         ! calculate gbar derivatives
@@ -1878,6 +1885,46 @@ c----------------------------------------------------------------------
      &           -g0_ll(1,1)*g0_ll(2,3)**2
      &           -g0_ll(1,2)**2*g0_ll(3,3)
      &           +g0_ll(1,1)*g0_ll(2,2)*g0_ll(3,3))
+
+        ! computes auxiliary objects at point i,j,k
+        do a=1,3
+          do b=1,3
+            do c=1,3
+              dlll(a,b,c)=
+     &            g0_ll_x(b,c,a)-g0_ll_x(a,b,c)+g0_ll_x(c,a,b)
+              gammagg(a,b,c)=0
+              gammahh(a,b,c)=0
+              gammagh(a,b,c)=0
+              gammahg(a,b,c)=0
+              do d=1,3
+                gammagg(a,b,c)=gammagg(a,b,c)
+     &                         +0.5d0*gads_uu(a,d)
+     &                              *(gads_ll_x(c,d,b)
+     &                               -gads_ll_x(b,c,d)
+     &                               +gads_ll_x(d,b,c))
+                gammahh(a,b,c)=gammahh(a,b,c)
+     &                         +0.5d0*h0_uu(a,d)
+     &                              *(h0_ll_x(c,d,b)
+     &                               -h0_ll_x(b,c,d)
+     &                               +h0_ll_x(d,b,c))
+                gammagh(a,b,c)=gammagh(a,b,c)
+     &                         +0.5d0*gads_uu(a,d)
+     &                              *(h0_ll_x(c,d,b)
+     &                               -h0_ll_x(b,c,d)
+     &                               +h0_ll_x(d,b,c))
+                gammahg(a,b,c)=gammahg(a,b,c)
+     &                         +0.5d0*h0_uu(a,d)
+     &                              *(gads_ll_x(c,d,b)
+     &                               -gads_ll_x(b,c,d)
+     &                               +gads_ll_x(d,b,c))
+                cuuuu(a,b,c,d)=gads_uu(a,b)*gads_uu(c,d)+
+     &                         h0_uu(a,b)*h0_uu(c,d)+
+     &                         gads_uu(a,b)*h0_uu(c,d)+
+     &                         h0_uu(a,b)*gads_uu(c,d)
+              end do
+            end do
+          end do
+        end do
 
 !         if (x(i).eq.0.5d0) then
 !           write(*,*) '(dimB-1)+sB+tB=',(dimB-1)+sB+tB

@@ -146,7 +146,6 @@ c----------------------------------------------------------------------
         real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
         real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
         real*8 term9(3,3)
-        real*8 cuuuu(3,3,3,3),dlll(3,3,3)
  
         real*8 ndotc,n_l(3),n_u(3),c_l(3)
         real*8 cd_ll(3,3),cd_J_ll(3,3)
@@ -196,6 +195,10 @@ c----------------------------------------------------------------------
         real*8 sqrtdetgads,sqrtdetgads_x(3)
         real*8 sqrtdeth,sqrtdeth_x(3)
 
+        real*8 gammagg(3,3,3),gammahh(3,3,3)
+        real*8 gammagh(3,3,3),gammahg(3,3,3)
+        real*8 cuuuu(3,3,3,3),dlll(3,3,3)
+
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
@@ -213,9 +216,6 @@ c----------------------------------------------------------------------
         data dfb_J/0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
         data dc_J/0.0/
-
-        data dlll/27*0.0/
-        data cuuuu/81*0.0/
 
         data term1,term2/9*0.0,9*0.0/
         data term3,term4/9*0.0,9*0.0/
@@ -292,6 +292,11 @@ c----------------------------------------------------------------------
         data hA_x,hB_x/3*0.0,3*0.0/
         data hA_xx,hB_xx/9*0.0,9*0.0/
 
+        data gammagg,gammahh/27*0.0,27*0.0/
+        data gammagh,gammahg/27*0.0,27*0.0/
+        data dlll/27*0.0/
+        data cuuuu/81*0.0/
+
         !--------------------------------------------------------------
         if (ltrace) write(*,*) 'gb_psi_evo ... N=',Nx
 
@@ -363,23 +368,8 @@ c----------------------------------------------------------------------
      &                  h1_l,h1_l_x,h2_ll,h2_ll_x,
      &                  sA,sB,tA,tB,
      &                  phi10_x,phi10_xx,
+     &                  gammagg,gammahh,gammagh,gammahg,dlll,cuuuu,
      &                  x,y,dt,chr,L,ex,Nx,Ny,i,j)
-
-                ! computes auxiliary objects at point i
-                do a=1,3
-                  do b=1,3
-                    do c=1,3
-                      dlll(a,b,c)=
-     &                    g0_ll_x(b,c,a)-g0_ll_x(a,b,c)+g0_ll_x(c,a,b)
-                      do d=1,3
-                        cuuuu(a,b,c,d)=gads_uu(a,b)*gads_uu(c,d)+
-     &                                 h0_uu(a,b)*h0_uu(c,d)+
-     &                                 gads_uu(a,b)*h0_uu(c,d)+
-     &                                 h0_uu(a,b)*gads_uu(c,d)
-                      end do
-                    end do
-                  end do
-                end do
 
                 do c=1,3
                   boxx_u(c)=-( gamma_ull(c,1,1)*g0_uu(1,1)+
@@ -1306,6 +1296,7 @@ c----------------------------------------------------------------------
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
+!analytic removal psi
                 ! update gbars 
                 if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
      &            efe_J(1,1).eq.0) then
@@ -1413,6 +1404,7 @@ c----------------------------------------------------------------------
      &                abs(efe(2,3)/efe_J(2,3)),
      &                abs(efe(3,3)/efe_J(3,3)),
      &                abs(afe/afe_J))
+!                gb_res(i,j)=abs(afe/afe_J) !analytic removal psi
                 fb_res(i,j)=
      &            max(abs(ffe(1)/ffe_J(1)),
      &                abs(ffe(2)/ffe_J(2)),

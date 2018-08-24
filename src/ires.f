@@ -101,6 +101,10 @@ c----------------------------------------------------------------------
         real*8 sqrtdetgads,sqrtdetgads_x(3)
         real*8 sqrtdeth,sqrtdeth_x(3)
 
+        real*8 gammagg(3,3,3),gammahh(3,3,3)
+        real*8 gammagh(3,3,3),gammahg(3,3,3)
+        real*8 cuuuu(3,3,3,3),dlll(3,3,3)
+
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
@@ -165,6 +169,11 @@ c----------------------------------------------------------------------
         data hAu,hBu/0.0,0.0/
         data hA_x,hB_x/3*0.0,3*0.0/
         data hA_xx,hB_xx/9*0.0,9*0.0/
+
+        data gammagg,gammahh/27*0.0,27*0.0/
+        data gammagh,gammahg/27*0.0,27*0.0/
+        data dlll/27*0.0/
+        data cuuuu/81*0.0/
 
 !----------------------------------------------------------------------
         
@@ -234,6 +243,7 @@ c----------------------------------------------------------------------
      &                h1_l,h1_l_x,h2_ll,h2_ll_x,
      &                sA,sB,tA,tB,
      &                phi10_x,phi10_xx,
+     &                gammagg,gammahh,gammagh,gammahg,dlll,cuuuu,
      &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
 
                 ! calculates efe_ires functions at point i,j
