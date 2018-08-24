@@ -93,7 +93,6 @@ c----------------------------------------------------------------------
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
 
-        real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 f1_l(3),f1_l_x(3,3),f2_ll(3,3),f2_ll_x(3,3,3)
         real*8 f1ads_l(3),f1ads_l_x(3,3),f2ads_ll(3,3),f2ads_ll_x(3,3,3)
         real*8 h1_l(3),h1_l_x(3,3),h2_ll(3,3),h2_ll_x(3,3,3)
@@ -139,7 +138,6 @@ c----------------------------------------------------------------------
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
         data riemann_ulll/81*0.0/
 
-        data s0_ll,t0_ll/9*0.0,9*0.0/
         data f1_l,f1_l_x/3*0.0,9*0.0/
         data f2_ll,f2_ll_x/9*0.0,27*0.0/
         data f1ads_l,f1ads_l_x/3*0.0,9*0.0/
@@ -231,7 +229,7 @@ c----------------------------------------------------------------------
      &                A_l,A_l_x,Hads_l,Hads_l_x,
      &                gamma_ull,gamma_ull_x,
      &                riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &                s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &                f1_l,f1_l_x,f2_ll,f2_ll_x,
      &                f1ads_l,f1ads_l_x,f2ads_ll,f2ads_ll_x,
      &                h1_l,h1_l_x,h2_ll,h2_ll_x,
      &                sA,sB,tA,tB,
@@ -242,7 +240,18 @@ c----------------------------------------------------------------------
                 !(efe_ires_ab=G_ab+fterm_ab)
                 do a=1,3
                   do b=a,3
-                    efe_ires(a,b)=ricci_ll(a,b)+t0_ll(a,b)
+                    efe_ires(a,b)=ricci_ll(a,b)
+     &                           -(f1_l(a)*f1_l(b)
+     &                            +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                            +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                            +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                            +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                            +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                            +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                            +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                            +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                            +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                            )/4
                   end do
                 end do
 

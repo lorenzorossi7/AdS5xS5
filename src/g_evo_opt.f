@@ -188,7 +188,6 @@ c----------------------------------------------------------------------
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
 
-        real*8 s0_ll(3,3),t0_ll(3,3)
         real*8 f1_l(3),f1_l_x(3,3),f2_ll(3,3),f2_ll_x(3,3,3)
         real*8 f1ads_l(3),f1ads_l_x(3,3),f2ads_ll(3,3),f2ads_ll_x(3,3,3)
         real*8 h1_l(3),h1_l_x(3,3),h2_ll(3,3),h2_ll_x(3,3,3)
@@ -265,7 +264,6 @@ c----------------------------------------------------------------------
         data ricci_ll,ricci_lu/9*0.0,9*0.0/
         data riemann_ulll/81*0.0/
 
-        data s0_ll,t0_ll/9*0.0,9*0.0/
         data f1_l,f1_l_x/3*0.0,9*0.0/
         data f2_ll,f2_ll_x/9*0.0,27*0.0/
         data f1ads_l,f1ads_l_x/3*0.0,9*0.0/
@@ -360,7 +358,7 @@ c----------------------------------------------------------------------
      &                  A_l,A_l_x,Hads_l,Hads_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
-     &                  s0_ll,t0_ll,f1_l,f1_l_x,f2_ll,f2_ll_x,
+     &                  f1_l,f1_l_x,f2_ll,f2_ll_x,
      &                  f1ads_l,f1ads_l_x,f2ads_ll,f2ads_ll_x,
      &                  h1_l,h1_l_x,h2_ll,h2_ll_x,
      &                  sA,sB,tA,tB,
@@ -505,9 +503,30 @@ c----------------------------------------------------------------------
      &                            gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                              )
      &
-                    term8(a,b)=s0_ll(a,b)
+                    term8(a,b)=-dimA*( (gA_xx(a,b)
+     &                                 -gamma_ull(1,b,a)*gA_x(1)
+     &                                 -gamma_ull(2,b,a)*gA_x(2)
+     &                                 -gamma_ull(3,b,a)*gA_x(3)
+     &                                 )/(2*gA)
+     &                               - (gA_x(a)*gA_x(b))/(4*gA**2) )
+     &                         -dimB*( (gB_xx(a,b)
+     &                                 -gamma_ull(1,b,a)*gB_x(1)
+     &                                 -gamma_ull(2,b,a)*gB_x(2)
+     &                                 -gamma_ull(3,b,a)*gB_x(3)
+     &                                 )/(2*gB)
+     &                               - (gB_x(a)*gB_x(b))/(4*gB**2) )
      &
-                    term9(a,b)=t0_ll(a,b)
+                    term9(a,b)=-(f1_l(a)*f1_l(b)
+     &                          +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
+     &                          +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
+     &                          +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
+     &                          +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
+     &                          +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
+     &                          +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
+     &                          +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
+     &                          +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
+     &                          +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                          )/4
      &
                     efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
