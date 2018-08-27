@@ -501,6 +501,12 @@ c----------------------------------------------------------------------
      &         +tA
      &                )
 
+!uncommenting analytic removal terms below would analytically remove pure ads5xs5 terms but 
+!neglecting the h^{-1}*g contribution, and so implicitly assumes that h^{-1}=0
+!i.e. that g0_uu(3,3)==gads_uu(3,3) for the initial data being used,
+!this is analytically true for bh initial data for which g0_uu(3,3)=1/PI^2=gads_uu(3,3) 
+!but the g0_uu(3,3) computed via tensor_init() has imperfect cancellations which 
+
               ! 0 = bfe
               gB_tt=2/g0_uu(1,1)*
      &                (
@@ -511,7 +517,7 @@ c----------------------------------------------------------------------
      &         -g0_uu(2,3)*gB_xx(2,3)/2
      &         -g0_uu(3,1)*gB_xx(3,1)/2
      &         -g0_uu(3,2)*gB_xx(3,2)/2
-     &         -g0_uu(3,3)*(gB_xx(3,3)-gBads_xx(3,3))/2 !analytic removal
+     &         -g0_uu(3,3)*gB_xx(3,3)/2!*(gB_xx(3,3)-gBads_xx(3,3))/2 !analytic removal
      &         +g0_uu(1,1)*gamma_ull(1,1,1)*gB_x(1)/2
      &         +g0_uu(1,2)*gamma_ull(1,2,1)*gB_x(1)/2
      &         +g0_uu(1,3)*gamma_ull(1,3,1)*gB_x(1)/2
@@ -558,7 +564,7 @@ c----------------------------------------------------------------------
      &         -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
      &         -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
      &
-!     &         +(dimB-1d0) !analytic removal
+     &         +(dimB-1d0) !analytic removal
      &
      &         -gB*g0_uu(1,1)*f1_l(1)*f1_l(1)/4
      &         -gB*g0_uu(1,2)*f1_l(1)*f1_l(2)/4
@@ -568,7 +574,7 @@ c----------------------------------------------------------------------
      &         -gB*g0_uu(2,3)*f1_l(2)*f1_l(3)/4
      &         -gB*g0_uu(3,1)*f1_l(3)*f1_l(1)/4
      &         -gB*g0_uu(3,2)*f1_l(3)*f1_l(2)/4
-     &         -gB*g0_uu(3,3)*(fb_y_n(i,j)*(1-x0**2)**3)**2/4 !analytic removal
+     &         -gB*g0_uu(3,3)*f1_l(3)*f1_l(3)/4!*(fb_y_n(i,j)*(1-x0**2)**3)**2/4 !analytic removal
      &                )
 
               ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
