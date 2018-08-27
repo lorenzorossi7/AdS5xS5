@@ -790,6 +790,17 @@ void AdS5xS5_t0_cnst_data(void)
    if (AMRD_id_pl_method==3 && phi1_nm1)
    {
 
+     init_hb_(gb_tt_np1,gb_tt_n,gb_tt_nm1,
+              gb_tx_np1,gb_tx_n,gb_tx_nm1,
+              gb_ty_np1,gb_ty_n,gb_ty_nm1,
+              gb_xx_np1,gb_xx_n,gb_xx_nm1,
+              gb_xy_np1,gb_xy_n,gb_xy_nm1,
+              gb_yy_np1,gb_yy_n,gb_yy_nm1,
+              psi_np1,psi_n,psi_nm1,
+              omega_np1,omega_n,omega_nm1,
+              Hb_t_n,Hb_x_n,Hb_y_n,
+              &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny);
+
      init_nm1_(gb_tt_np1,gb_tt_n,gb_tt_nm1,gb_tt_t_n,
                gb_tx_np1,gb_tx_n,gb_tx_nm1,gb_tx_t_n,
                gb_ty_np1,gb_ty_n,gb_ty_nm1,gb_ty_t_n,
@@ -822,17 +833,6 @@ void AdS5xS5_t0_cnst_data(void)
 //       Hb_y_np1[i]=Hb_y_nm1[i]=Hb_y_n[i];
 //       phi1_np1[i]=phi1_nm1[i]=phi1[i];
 //     }
-
-     init_hb_(gb_tt_np1,gb_tt_n,gb_tt_nm1,
-              gb_tx_np1,gb_tx_n,gb_tx_nm1,
-              gb_ty_np1,gb_ty_n,gb_ty_nm1,
-              gb_xx_np1,gb_xx_n,gb_xx_nm1,
-              gb_xy_np1,gb_xy_n,gb_xy_nm1,
-              gb_yy_np1,gb_yy_n,gb_yy_nm1,
-              psi_np1,psi_n,psi_nm1,
-              omega_np1,omega_n,omega_nm1,
-              Hb_t_n,Hb_x_n,Hb_y_n,
-              &AdS_L,phys_bdy,x,y,&dt,chr,&AMRD_ex,&Nx,&Ny);
 
      // store initial source functions
      for (i=0; i<size; i++)
