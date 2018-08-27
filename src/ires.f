@@ -105,6 +105,11 @@ c----------------------------------------------------------------------
         real*8 gammagh(3,3,3),gammahg(3,3,3)
         real*8 cuuuu(3,3,3,3),dlll(3,3,3)
 
+!TEST!
+        real*8 term1(3,3),term2(3,3),term3(3,3),term4(3,3)
+        real*8 term5(3,3),term6(3,3),term7(3,3),term8(3,3)
+        real*8 term9(3,3)
+
         !--------------------------------------------------------------
         ! initialize fixed-size variables 
         !--------------------------------------------------------------
@@ -264,6 +269,98 @@ c----------------------------------------------------------------------
      &                            )/4
                   end do
                 end do
+
+!TEST!
+!                do a=1,3
+!                  do b=a,3
+!
+!                    term1(a,b)=-0.5d0*(
+!     &                            gads_uu(1,1)*gads_ll_xx(a,b,1,1)+
+!     &                            gads_uu(2,2)*gads_ll_xx(a,b,2,2)+
+!     &                            gads_uu(3,3)*gads_ll_xx(a,b,3,3)+
+!     &                         2*(gads_uu(1,2)*gads_ll_xx(a,b,1,2)+
+!     &                            gads_uu(1,3)*gads_ll_xx(a,b,1,3)+
+!     &                            gads_uu(2,3)*gads_ll_xx(a,b,2,3))
+!     &                                )
+!     &
+!                    term2(a,b)=-0.5d0*(
+!     &                            gads_uu_x(1,1,a)* gads_ll_x(b,1,1) +
+!     &                            gads_uu_x(1,2,a)*(gads_ll_x(b,1,2) +
+!     &                                              gads_ll_x(b,2,1))+
+!     &                            gads_uu_x(1,3,a)*(gads_ll_x(b,1,3) +
+!     &                                              gads_ll_x(b,3,1))+
+!     &                            gads_uu_x(2,2,a)* gads_ll_x(b,2,2) +
+!     &                            gads_uu_x(2,3,a)*(gads_ll_x(b,2,3) +
+!     &                                              gads_ll_x(b,3,2))+
+!     &                            gads_uu_x(3,3,a)* gads_ll_x(b,3,3)
+!     &                              )
+!     &
+!                    term3(a,b)=-0.5d0*(
+!     &                            gads_uu_x(1,1,b)* gads_ll_x(a,1,1) +
+!     &                            gads_uu_x(1,2,b)*(gads_ll_x(a,1,2) +
+!     &                                              gads_ll_x(a,2,1))+
+!     &                            gads_uu_x(1,3,b)*(gads_ll_x(a,1,3) +
+!     &                                              gads_ll_x(a,3,1))+
+!     &                            gads_uu_x(2,2,b)* gads_ll_x(a,2,2) +
+!     &                            gads_uu_x(2,3,b)*(gads_ll_x(a,2,3) +
+!     &                                              gads_ll_x(a,3,2))+
+!     &                            gads_uu_x(3,3,b)* gads_ll_x(a,3,3)
+!     &                              )
+!     &
+!                    term4(a,b)=-0.5d0*(Hads_l_x(a,b))
+!     &
+!                    term5(a,b)=-0.5d0*(Hads_l_x(b,a))
+!     &
+!                    term6(a,b)=     (
+!     &                            (Hads_l(1))*gammagg(1,a,b)+
+!     &                            (Hads_l(2))*gammagg(2,a,b)+
+!     &                            (Hads_l(3))*gammagg(3,a,b)
+!     &                              )
+!                    term7(a,b)=    -(
+!     &                            gammagg(1,1,b)*gammagg(1,1,a)+
+!     &                            gammagg(1,2,b)*gammagg(2,1,a)+
+!     &                            gammagg(1,3,b)*gammagg(3,1,a)+
+!     &                            gammagg(2,1,b)*gammagg(1,2,a)+
+!     &                            gammagg(2,2,b)*gammagg(2,2,a)+
+!     &                            gammagg(2,3,b)*gammagg(3,2,a)+
+!     &                            gammagg(3,1,b)*gammagg(1,3,a)+
+!     &                            gammagg(3,2,b)*gammagg(2,3,a)+
+!     &                            gammagg(3,3,b)*gammagg(3,3,a)
+!     &                              )
+!     &
+!                    term8(a,b)=-dimA*( (gAads_xx(a,b)
+!     &                                 -gammagg(1,b,a)*gAads_x(1)
+!     &                                 -gammagg(2,b,a)*gAads_x(2)
+!     &                                 -gammagg(3,b,a)*gAads_x(3)
+!     &                                 )/(2*gAads)
+!     &                               - (gAads_x(a)*gAads_x(b))
+!     &                                  /(4*gAads**2) )
+!     &                         -dimB*( (gBads_xx(a,b)
+!     &                                 -gammagg(1,b,a)*gBads_x(1)
+!     &                                 -gammagg(2,b,a)*gBads_x(2)
+!     &                                 -gammagg(3,b,a)*gBads_x(3)
+!     &                                 )/(2*gBads)
+!     &                               - (gBads_x(a)*gBads_x(b))
+!     &                                  /(4*gBads**2) )
+!     &
+!                    term9(a,b)=-(f1ads_l(a)*f1ads_l(b)
+!     &                         +gads_uu(1,1)*f2ads_ll(a,1)*f2ads_ll(b,1)
+!     &                         +gads_uu(1,2)*f2ads_ll(a,1)*f2ads_ll(b,2)
+!     &                         +gads_uu(1,3)*f2ads_ll(a,1)*f2ads_ll(b,3)
+!     &                         +gads_uu(2,1)*f2ads_ll(a,2)*f2ads_ll(b,1)
+!     &                         +gads_uu(2,2)*f2ads_ll(a,2)*f2ads_ll(b,2)
+!     &                         +gads_uu(2,3)*f2ads_ll(a,2)*f2ads_ll(b,3)
+!     &                         +gads_uu(3,1)*f2ads_ll(a,3)*f2ads_ll(b,1)
+!     &                         +gads_uu(3,2)*f2ads_ll(a,3)*f2ads_ll(b,2)
+!     &                         +gads_uu(3,3)*f2ads_ll(a,3)*f2ads_ll(b,3)
+!     &                         )/4
+!     &
+!               efe_ires(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
+!     &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
+!     &                      +term9(a,b)
+!
+!                  end do
+!                end do
 
                 ! calculate efe_all_ires function at point i,j
                 efe_all_ires(i,j)=

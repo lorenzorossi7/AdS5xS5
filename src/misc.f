@@ -1514,9 +1514,9 @@ c----------------------------------------------------------------------
 
         f1ads_l(3)   =f1_y_ads0
 
-        f2ads_ll(1,2)=-vol(1,2,3)*f1ads_l(3)*gads_uu(3,3)
-        f2ads_ll(1,3)=-vol(1,3,2)*f1ads_l(3)*gads_uu(2,3)
-        f2ads_ll(2,3)=-vol(2,3,1)*f1ads_l(3)*gads_uu(1,3)
+        f2ads_ll(1,2)=-volads(1,2,3)*f1ads_l(3)*gads_uu(3,3)
+        f2ads_ll(1,3)=-volads(1,3,2)*f1ads_l(3)*gads_uu(2,3)
+        f2ads_ll(2,3)=-volads(2,3,1)*f1ads_l(3)*gads_uu(1,3)
 
         do c=1,3
           f2ads_ll_x(1,2,c)=-volads_x(1,2,3,c)*f1ads_l(3)*gads_uu(3,3)
