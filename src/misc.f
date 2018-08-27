@@ -641,7 +641,7 @@ c----------------------------------------------------------------------
 
         real*8 gA_ads0,gB_ads0
         real*8 gA_ads_x,gA_ads_xx        
-        real*8 gB_ads_yy
+        real*8 gB_ads_y,gB_ads_yy
 
         real*8 fb_t_t,fb_t_x,fb_t_y 
         real*8 fb_x_t,fb_x_x,fb_x_y
@@ -678,8 +678,7 @@ c----------------------------------------------------------------------
         gA_ads0=x0**2/(1-x0)**2
 
         ! set gBads values
-!        gB_ads0=L**2*sin(PI*y0/L)**2 
-        gB_ads0=L**2!*sin(PI*y0/L)**2 !y-dependence
+        gB_ads0=L**2*sin(PI*y0/L)**2 !y-dependence
 
         ! set f1ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
@@ -723,8 +722,8 @@ c----------------------------------------------------------------------
         gA_ads_xx=(2+4*x0)/(1-x0)**4
  
         ! set gBads derivatives
-!        gB_ads_yy=2*PI**2*(-1)*cos(2*PI*y0/L) 
-        gB_ads_yy=2*PI**2*(-1)!*cos(2*PI*y0/L) !y-dependence
+        gB_ads_y =L*PI*sin(2*PI*y0/L)
+        gB_ads_yy=2*PI**2*cos(2*PI*y0/L) !y-dependence
 
         ! calculate gbar derivatives
         call df2_int(gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -1084,7 +1083,7 @@ c----------------------------------------------------------------------
         gB_x(2)   =0
      &            +omega_x*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega0*3*(1-x0**2)**2*(-2*x0)*sin(PI*y0/L)**2
-        gB_x(3)   =0
+        gB_x(3)   =gB_ads_y
      &            +omega_y*(1-x0**2)**3*sin(PI*y0/L)**2
      &            +omega0*(1-x0**2)**3*sin(2*PI*y0/L)*PI/L
         gB_xx(1,1)=0
@@ -1178,6 +1177,7 @@ c----------------------------------------------------------------------
 
         gBads=gB_ads0
 
+        gBads_x(3)   =gB_ads_y
         gBads_xx(3,3)=gB_ads_yy
 
         ! give values to the metric deviation, using sin(theta1)=sin(theta2)=1 w.l.o.g 
