@@ -312,9 +312,9 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,1).ne.ex) then
               if (chr(i,2).ne.ex.and.chr(i,3).ne.ex) then
-                f_t(i,1)=f_t(i,2)+(f_t(i,2)-f_t(i,3))/3d0 
-                f_x(i,1)=f_x(i,2)+(f_x(i,2)-f_x(i,3))/3d0
-                f_y(i,1)=0
+                f_t(i,1)=0
+                f_x(i,1)=0
+                f_y(i,1)=f_y(i,2)+(f_y(i,2)-f_y(i,3))/3d0
               else
                 write(*,*) 'WARNING axi_reg_fb'
               end if
@@ -330,11 +330,10 @@ c----------------------------------------------------------------------
           do i=1,Nx
             if (chr(i,Ny).ne.ex) then
               if (chr(i,Ny-1).ne.ex.and.chr(i,Ny-2).ne.ex) then
-                f_t(i,Ny)=f_t(i,Ny-1)
-     &                   +(f_t(i,Ny-1)-f_t(i,Ny-2))/3d0 
-                f_x(i,Ny)=f_x(i,Ny-1)
-     &                   +(f_x(i,Ny-1)-f_x(i,Ny-2))/3d0
-                f_y(i,Ny)=0
+                f_t(i,Ny)=0
+                f_x(i,Ny)=0
+                f_y(i,Ny)=f_y(i,Ny-1)
+     &                   +(f_y(i,Ny-1)-f_y(i,Ny-2))/3d0
               else
                 write(*,*) 'WARNING axi_reg_fb'
               end if
