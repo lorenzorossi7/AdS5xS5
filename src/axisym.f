@@ -129,7 +129,7 @@ c----------------------------------------------------------------------
                 gb_yy(i,1)=gb_yy(i,2)+(gb_yy(i,2)-gb_yy(i,3))/3d0
                 gb_tx(i,1)=gb_tx(i,2)+(gb_tx(i,2)-gb_tx(i,3))/3d0
                 psi(i,1)  =psi(i,2)  +(psi(i,2)  -psi(i,3)  )/3d0
-                omega(i,1)=omega(i,2)+(omega(i,2)-omega(i,3))/3d0
+                omega(i,1)=gb_yy(i,1)/PI**2
                 gb_ty(i,1)=0
                 gb_xy(i,1)=0                
               else
@@ -163,8 +163,7 @@ c----------------------------------------------------------------------
      &                     +(gb_tx(i,Ny-1)-gb_tx(i,Ny-2))/3d0
                 psi(i,Ny)  =psi(i,Ny-1)  
      &                     +(psi(i,Ny-1)  -psi(i,Ny-2)  )/3d0
-                omega(i,Ny)=omega(i,Ny-1)
-     &                     +(omega(i,Ny-1)-omega(i,Ny-2))/3d0
+                omega(i,Ny)=gb_yy(i,Ny)/PI**2
                 gb_ty(i,Ny)=0
                 gb_xy(i,Ny)=0
               else

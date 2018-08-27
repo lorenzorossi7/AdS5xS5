@@ -633,7 +633,7 @@ c----------------------------------------------------------------------
               gb_xy_tt=h0_ll_tt(2,3)/(1-x0**2)**2
               gb_yy_tt=h0_ll_tt(3,3)/(1-x0**2)**3
               psi_tt=gA_tt/(1-x0**2)/x0**2
-              omega_tt=gB_tt/(1-x0**2)**3
+              omega_tt=gB_tt/(1-x0**2)**3/sin(PI*y0/L)**2
               phi1_tt =phi10_tt/(1-x0**2)**3
 
               ! initialize past time level by O(h^3) expansion
