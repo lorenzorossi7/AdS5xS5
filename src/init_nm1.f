@@ -501,10 +501,10 @@ c----------------------------------------------------------------------
      &         +tA
      &                )
 
-!uncommenting analytic removal terms below would analytically remove pure ads5xs5 terms but 
+!uncommenting Analytic removal terms below would Analytically remove pure ads5xs5 terms but 
 !neglecting the h^{-1}*g contribution, and so implicitly assumes that h^{-1}=0
 !i.e. that g0_uu(3,3)==gads_uu(3,3) for the initial data being used,
-!this is analytically true for bh initial data for which g0_uu(3,3)=1/PI^2=gads_uu(3,3) 
+!this is Analytically true for bh initial data for which g0_uu(3,3)=1/PI^2=gads_uu(3,3) 
 !but the g0_uu(3,3) computed via tensor_init() has imperfect cancellations which 
 
               ! 0 = bfe
@@ -536,15 +536,15 @@ c----------------------------------------------------------------------
      &         +g0_uu(3,1)*gamma_ull(2,1,3)*gB_x(2)/2
      &         +g0_uu(3,2)*gamma_ull(2,2,3)*gB_x(2)/2
      &         +g0_uu(3,3)*gamma_ull(2,3,3)*gB_x(2)/2
-     &         +g0_uu(1,1)*gamma_ull(3,1,1)*gB_x(3)/2
-     &         +g0_uu(1,2)*gamma_ull(3,2,1)*gB_x(3)/2
-     &         +g0_uu(1,3)*gamma_ull(3,3,1)*gB_x(3)/2
-     &         +g0_uu(2,1)*gamma_ull(3,1,2)*gB_x(3)/2
-     &         +g0_uu(2,2)*gamma_ull(3,2,2)*gB_x(3)/2
-     &         +g0_uu(2,3)*gamma_ull(3,3,2)*gB_x(3)/2
-     &         +g0_uu(3,1)*gamma_ull(3,1,3)*gB_x(3)/2
-     &         +g0_uu(3,2)*gamma_ull(3,2,3)*gB_x(3)/2
-     &         +g0_uu(3,3)*gamma_ull(3,3,3)*gB_x(3)/2
+     &         +g0_uu(1,1)*gamma_ull(3,1,1)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2 !analytic removal
+     &         +g0_uu(1,2)*gamma_ull(3,2,1)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(1,3)*gamma_ull(3,3,1)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(2,1)*gamma_ull(3,1,2)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(2,2)*gamma_ull(3,2,2)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(2,3)*gamma_ull(3,3,2)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(3,1)*gamma_ull(3,1,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(3,2)*gamma_ull(3,2,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
+     &         +g0_uu(3,3)*gamma_ull(3,3,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
      &         -g0_uu(1,1)*(gB_x(1)*gB_x(1))/(4*gB)*(dimB-2d0)
      &         -g0_uu(1,2)*(gB_x(1)*gB_x(2))/(4*gB)*(dimB-2d0)
      &         -g0_uu(1,3)*(gB_x(1)*gB_x(3))/(4*gB)*(dimB-2d0)
@@ -553,13 +553,15 @@ c----------------------------------------------------------------------
      &         -g0_uu(2,3)*(gB_x(2)*gB_x(3))/(4*gB)*(dimB-2d0)
      &         -g0_uu(3,1)*(gB_x(3)*gB_x(1))/(4*gB)*(dimB-2d0)
      &         -g0_uu(3,2)*(gB_x(3)*gB_x(2))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2d0)
+     &         -g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2d0)!*(gB_x(3)-gBads_x(3))
+!     &                    *(gB_x(3)-gBads_x(3))/(4*gB)*(dimB-2d0) !analytic removal
      &         -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gA)*dimA
      &         -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gA)*dimA
      &         -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gA)*dimA
      &         -g0_uu(2,1)*(gA_x(2)*gB_x(1))/(4*gA)*dimA
      &         -g0_uu(2,2)*(gA_x(2)*gB_x(2))/(4*gA)*dimA
-     &         -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gA)*dimA
+     &         -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gA)*dimA!*(gA_x(2)-gBads_x(2))
+!     &                    *(gB_x(3)-gBads_x(3))/(4*gA)*(dimA-2d0) !analytic removal
      &         -g0_uu(3,1)*(gA_x(3)*gB_x(1))/(4*gA)*dimA
      &         -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
      &         -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
