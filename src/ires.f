@@ -96,7 +96,6 @@ c----------------------------------------------------------------------
         real*8 f1_l(3),f1_l_x(3,3),f2_ll(3,3),f2_ll_x(3,3,3)
         real*8 f1ads_l(3),f1ads_l_x(3,3),f2ads_ll(3,3),f2ads_ll_x(3,3,3)
         real*8 h1_l(3),h1_l_x(3,3),h2_ll(3,3),h2_ll_x(3,3,3)
-        real*8 sA,sB,tA,tB
         real*8 sqrtdetg,sqrtdetg_x(3)
         real*8 sqrtdetgads,sqrtdetgads_x(3)
         real*8 sqrtdeth,sqrtdeth_x(3)
@@ -153,7 +152,6 @@ c----------------------------------------------------------------------
         data f2ads_ll,f2ads_ll_x/9*0.0,27*0.0/
         data h1_l,h1_l_x/3*0.0,9*0.0/
         data h2_ll,h2_ll_x/9*0.0,27*0.0/
-        data sA,sB,tA,tB/0.0,0.0,0.0,0.0/
         data sqrtdetg,sqrtdetg_x/0.0,3*0.0/
         data sqrtdetgads,sqrtdetgads_x/0.0,3*0.0/
         data sqrtdeth,sqrtdeth_x/0.0,3*0.0/
@@ -246,7 +244,6 @@ c----------------------------------------------------------------------
      &                f1_l,f1_l_x,f2_ll,f2_ll_x,
      &                f1ads_l,f1ads_l_x,f2ads_ll,f2ads_ll_x,
      &                h1_l,h1_l_x,h2_ll,h2_ll_x,
-     &                sA,sB,tA,tB,
      &                phi10_x,phi10_xx,
      &                gammagg,gammahh,gammagh,gammahg,dlll,cuuuu,
      &                x,y,dt,chr,L,ex,Nx,Ny,i,j)
