@@ -515,7 +515,7 @@ c----------------------------------------------------------------------
      &                  h0_ll,h0_uu,h0_ll_x,h0_uu_x,h0_ll_xx,
      &                  hA,hB,hAu,hBu,hA_x,hB_x,hA_xx,hB_xx,
      &                  sqrtdeth,sqrtdeth_x,
-     &                  A_l,A_l_x,Hads_l,Hads_l_x,
+     &                  H0_l,H0_l_x,Hads_l,Hads_l_x,A_l,A_l_x,
      &                  gamma_ull,gamma_ull_x,
      &                  riemann_ulll,ricci_ll,ricci_lu,ricci,
      &                  f1_l,f1_l_x,f2_ll,f2_ll_x,
@@ -579,6 +579,7 @@ c----------------------------------------------------------------------
         real*8 gamma_ull(3,3,3),gamma_ull_x(3,3,3,3)
         real*8 riemann_ulll(3,3,3,3)
         real*8 ricci_ll(3,3),ricci_lu(3,3),ricci
+        real*8 H0_l(3),H0_l_x(3,3)
         real*8 Hads_l(3),Hads_l_x(3,3),A_l(3),A_l_x(3,3)
         real*8 phi10_x(3),phi10_xx(3,3)
 
@@ -1285,7 +1286,7 @@ c----------------------------------------------------------------------
         hB_xx(2,3)=gB_xx(2,3)-gBads_xx(2,3)
         hB_xx(3,3)=gB_xx(3,3)-gBads_xx(3,3)
 
-        ! give values to the gh source functions
+        ! give values to the gh source function deviations
         A_l(1)=Hb_t0*(1-x0**2)**2 
         A_l(2)=Hb_x0*(1-x0**2)**2
         A_l(3)=Hb_y0*(1-x0**2)**3
@@ -1310,6 +1311,20 @@ c----------------------------------------------------------------------
 
         ! give values to the ads gh source function derivatives
         Hads_l_x(2,2)=8*x0*(1-x0)/(1-2*x0*(1-x0))**2
+
+        ! give values to the full gh source functions
+        H0_l(1)=          A_l(1)
+        H0_l(2)=Hads_l(2)+A_l(2)
+        H0_l(3)=          A_l(3)
+        H0_l_x(1,1)=              A_l_x(1,1)
+        H0_l_x(1,2)=              A_l_x(1,2)
+        H0_l_x(1,3)=              A_l_x(1,3)
+        H0_l_x(2,1)=              A_l_x(2,1)
+        H0_l_x(2,2)=Hads_l_x(2,2)+A_l_x(2,2)
+        H0_l_x(2,3)=              A_l_x(2,3)
+        H0_l_x(3,1)=              A_l_x(3,1)
+        H0_l_x(3,2)=              A_l_x(3,2)
+        H0_l_x(3,3)=              A_l_x(3,3)
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3
