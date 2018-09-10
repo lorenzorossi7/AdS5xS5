@@ -1460,15 +1460,15 @@ c----------------------------------------------------------------------
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
-!analytic removal psi
-!                ! update gbars 
-!                if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
-!     &            efe_J(1,1).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
-!                end if
-!
+!analytic removal gbtt
+                ! update gbars 
+                if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
+     &            efe_J(1,1).eq.0) then
+                  dump=.true.
+                else
+                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
+                end if
+
 !                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
 !     &            efe_J(1,2).eq.0) then
 !                  dump=.true.
@@ -1503,14 +1503,14 @@ c----------------------------------------------------------------------
 !                else
 !                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
 !                end if
-
-                ! update psi
-                if (is_nan(afe).or.is_nan(afe_J).or.
-     &            afe_J.eq.0) then
-                  dump=.true.
-                else
-                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
-                end if
+!
+!                ! update psi
+!                if (is_nan(afe).or.is_nan(afe_J).or.
+!     &            afe_J.eq.0) then
+!                  dump=.true.
+!                else
+!                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
+!                end if
 
 !TEST!
 !                ! update omega
@@ -1568,7 +1568,7 @@ c----------------------------------------------------------------------
 !     &                abs(efe(2,3)/efe_J(2,3)),
 !     &                abs(efe(3,3)/efe_J(3,3)),
 !     &                abs(afe/afe_J))
-                gb_res(i,j)=abs(afe/afe_J) !analytic removal psi
+                gb_res(i,j)=abs(efe(1,1)/efe_J(1,1)) !analytic removal gbtt
 !                fb_res(i,j)=
 !     &            max(abs(ffe(1)/ffe_J(1)),
 !     &                abs(ffe(2)/ffe_J(2)),

@@ -300,12 +300,18 @@ c-----------------------------------------------------------------------
                   Hb_y0=Hb_y_0(i,j)
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
-     &                   +psi_np1(i,j)*3.0d0
-     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
+!     &                   +psi_np1(i,j)*3.0d0
+!     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
+!     &                    /2/dy
+!     &                    *cos(PI*y0)/sin(PI*y0)/PI
+!     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
+!     &                    /dy/dy
+!     &                    /4/PI**2
+     &                   +(gb_tt_np1(i,j+1)-gb_tt_np1(i,j-1))
      &                    /2/dy
      &                    *cos(PI*y0)/sin(PI*y0)/PI
-     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
-     &                    /dy/dy
+     &                   +(gb_tt_np1(i,j+1)-2*gb_tt_np1(i,j)
+     &                    +gb_tt_np1(i,j-1))/dy/dy
      &                    /4/PI**2
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
 
