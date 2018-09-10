@@ -1619,7 +1619,10 @@ c----------------------------------------------------------------------
               else 
                 gb_tt_np1(i,j) = 0
                 gb_tx_np1(i,j) = 0
+                gb_ty_np1(i,j) = 0
                 gb_xx_np1(i,j) = 0
+                gb_xy_np1(i,j) = 0
+                gb_yy_np1(i,j) = 0
                 psi_np1(i,j)   = 0
                 omega_np1(i,j) = 0
                 phi1_np1(i,j)  = 0 
