@@ -179,6 +179,14 @@ c----------------------------------------------------------------------
                   Hb_t0=Hb_t_0(i,j)
 
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
+     &                   +gb_ty_np1(i,j)
+     &                    *cos(PI*y0)/sin(PI*y0)*4d0/PI
+     &                   +(gb_tx_np1(i,j+1)-gb_tx_np1(i,j-1))
+     &                    /2/dy
+     &                    *cos(PI*y0)/sin(PI*y0)*0.4d0/PI
+     &                   +(gb_tx_np1(i,j+1)-2*gb_tx_np1(i,j)
+     &                    +gb_tx_np1(i,j-1))/dy/dy
+     &                    /10/PI**2
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
@@ -299,21 +307,37 @@ c-----------------------------------------------------------------------
                   Hb_x0=Hb_x_0(i,j)
                   Hb_y0=Hb_y_0(i,j)
 
-                  F_x_np1=gb_xx_np1(i,j)*2.0d0
-!     &                   +psi_np1(i,j)*3.0d0
-!     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
-!     &                    /2/dy
-!     &                    *cos(PI*y0)/sin(PI*y0)/PI
-!     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
-!     &                    /dy/dy
-!     &                    /4/PI**2
-     &                   +(gb_tt_np1(i,j+1)-gb_tt_np1(i,j-1))
+                  F_x_np1=fb_y_np1(i,j)*4.0d0/PI
+     &                   +psi_np1(i,j)*3.0d0
+     &                   +omega_np1(i,j)*16.0d0
+     &                   +gb_xx_np1(i,j)*2.0d0
+     &                   +gb_xy_np1(i,j)
+     &                    *cos(PI*y0)/sin(PI*y0)*4d0/PI
+     &                   -gb_yy_np1(i,j)
+     &                    *8d0/PI**2
+     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
      &                    /2/dy
      &                    *cos(PI*y0)/sin(PI*y0)/PI
-     &                   +(gb_tt_np1(i,j+1)-2*gb_tt_np1(i,j)
-     &                    +gb_tt_np1(i,j-1))/dy/dy
+     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
+     &                    /dy/dy
      &                    /4/PI**2
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
+     &                   -omega_np1(i,j)
+     &                    *3d0*PI/sin(PI*y0)/cos(PI*y0)
+     &                   +gb_yy_np1(i,j)
+     &                    *3d0/PI/sin(PI*y0)/cos(PI*y0)
+     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
+     &                    /2/dy
+     &                    *0.375d0
+     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))
+     &                    /2/dy
+     &                    *4d0
+     &                   -fb_y_np1(i,j)*2.0d0
+     &                    *sin(PI*y0)/cos(PI*y0)
+     &                   -(omega_np1(i,j+1)-2*omega_np1(i,j)
+     &                                     +omega_np1(i,j-1))
+     &                    /dy/dy
+     &                    *sin(PI*y0)/cos(PI*y0)/2/PI
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
