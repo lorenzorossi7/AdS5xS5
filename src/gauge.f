@@ -145,6 +145,28 @@ c----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0)
 
         !--------------------------------------------------------------
+        ! the following are first and second time derivatives of *n*
+        ! level variables, and as these are the only derivatives we
+        ! use we drop any _n identifier
+        !--------------------------------------------------------------
+        real*8 gb_tt_t,gb_tt_x,gb_tt_y
+        real*8 gb_tt_tt,gb_tt_tx,gb_tt_ty,gb_tt_xx,gb_tt_xy,gb_tt_yy
+        real*8 gb_tx_t,gb_tx_x,gb_tx_y
+        real*8 gb_tx_tt,gb_tx_tx,gb_tx_ty,gb_tx_xx,gb_tx_xy,gb_tx_yy
+        real*8 gb_ty_t,gb_ty_x,gb_ty_y
+        real*8 gb_ty_tt,gb_ty_tx,gb_ty_ty,gb_ty_xx,gb_ty_xy,gb_ty_yy
+        real*8 gb_xx_t,gb_xx_x,gb_xx_y
+        real*8 gb_xx_tt,gb_xx_tx,gb_xx_ty,gb_xx_xx,gb_xx_xy,gb_xx_yy
+        real*8 gb_xy_t,gb_xy_x,gb_xy_y
+        real*8 gb_xy_tt,gb_xy_tx,gb_xy_ty,gb_xy_xx,gb_xy_xy,gb_xy_yy
+        real*8 gb_yy_t,gb_yy_x,gb_yy_y
+        real*8 gb_yy_tt,gb_yy_tx,gb_yy_ty,gb_yy_xx,gb_yy_xy,gb_yy_yy
+        real*8 psi_t,psi_x,psi_y
+        real*8 psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy
+        real*8 omega_t,omega_x,omega_y
+        real*8 omega_tt,omega_tx,omega_ty,omega_xx,omega_xy,omega_yy
+
+        !--------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
@@ -178,7 +200,55 @@ c----------------------------------------------------------------------
                   y0=y(j)
                   Hb_t0=Hb_t_0(i,j)
 
+                  ! calculate gbar derivatives for np1 time level
+                  call df2_int(gb_tt_np1,gb_tt_np1,gb_tt_np1,
+     &                 gb_tt_t,gb_tt_x,gb_tt_y,
+     &                 gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &                 gb_tt_xx,gb_tt_xy,gb_tt_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
+                  call df2_int(gb_tx_np1,gb_tx_np1,gb_tx_np1,
+     &                 gb_tx_t,gb_tx_x,gb_tx_y,
+     &                 gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &                 gb_tx_xx,gb_tx_xy,gb_tx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+                  call df2_int(gb_ty_np1,gb_ty_np1,gb_ty_np1,
+     &                 gb_ty_t,gb_ty_x,gb_ty_y,
+     &                 gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &                 gb_ty_xx,gb_ty_xy,gb_ty_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
+                  call df2_int(gb_xx_np1,gb_xx_np1,gb_xx_np1,
+     &                 gb_xx_t,gb_xx_x,gb_xx_y,
+     &                 gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &                 gb_xx_xx,gb_xx_xy,gb_xx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+                  call df2_int(gb_xy_np1,gb_xy_np1,gb_xy_np1,
+     &                 gb_xy_t,gb_xy_x,gb_xy_y,
+     &                 gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &                 gb_xy_xx,gb_xy_xy,gb_xy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
+                  call df2_int(gb_yy_np1,gb_yy_np1,gb_yy_np1,
+     &                 gb_yy_t,gb_yy_x,gb_yy_y,
+     &                 gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &                 gb_yy_xx,gb_yy_xy,gb_yy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
+                  call df2_int(psi_np1,psi_np1,psi_np1,
+     &                 psi_t,psi_x,psi_y,
+     &                 psi_tt,psi_tx,psi_ty,
+     &                 psi_xx,psi_xy,psi_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
+                  call df2_int(omega_np1,omega_np1,omega_np1,
+     &                 omega_t,omega_x,omega_y,
+     &                 omega_tt,omega_tx,omega_ty,
+     &                 omega_xx,omega_xy,omega_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
+!     &                   +(gb_tx_np1(i,j+1)-gb_tx_np1(i,j-1))
+!     &                    /2/dy
+!     &                    *cos(PI*y0)/sin(PI*y0)*2.0d0/5/PI
+!     &                   +(gb_tx_np1(i,j+1)-2*gb_tx_np1(i,j)
+!     &                    +gb_tx_np1(i,j-1))/dy/dy
+!     &                    /10/PI**2
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
@@ -265,6 +335,28 @@ c-----------------------------------------------------------------------
         parameter (PI=3.141592653589793d0) 
 
         !--------------------------------------------------------------
+        ! the following are first and second time derivatives of *n*
+        ! level variables, and as these are the only derivatives we
+        ! use we drop any _n identifier
+        !--------------------------------------------------------------
+        real*8 gb_tt_t,gb_tt_x,gb_tt_y
+        real*8 gb_tt_tt,gb_tt_tx,gb_tt_ty,gb_tt_xx,gb_tt_xy,gb_tt_yy
+        real*8 gb_tx_t,gb_tx_x,gb_tx_y
+        real*8 gb_tx_tt,gb_tx_tx,gb_tx_ty,gb_tx_xx,gb_tx_xy,gb_tx_yy
+        real*8 gb_ty_t,gb_ty_x,gb_ty_y
+        real*8 gb_ty_tt,gb_ty_tx,gb_ty_ty,gb_ty_xx,gb_ty_xy,gb_ty_yy
+        real*8 gb_xx_t,gb_xx_x,gb_xx_y
+        real*8 gb_xx_tt,gb_xx_tx,gb_xx_ty,gb_xx_xx,gb_xx_xy,gb_xx_yy
+        real*8 gb_xy_t,gb_xy_x,gb_xy_y
+        real*8 gb_xy_tt,gb_xy_tx,gb_xy_ty,gb_xy_xx,gb_xy_xy,gb_xy_yy
+        real*8 gb_yy_t,gb_yy_x,gb_yy_y
+        real*8 gb_yy_tt,gb_yy_tx,gb_yy_ty,gb_yy_xx,gb_yy_xy,gb_yy_yy
+        real*8 psi_t,psi_x,psi_y
+        real*8 psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy
+        real*8 omega_t,omega_x,omega_y
+        real*8 omega_tt,omega_tx,omega_ty,omega_xx,omega_xy,omega_yy
+
+        !--------------------------------------------------------------
 
         dx=x(2)-x(1)
         dy=y(2)-y(1)
@@ -299,6 +391,48 @@ c-----------------------------------------------------------------------
                   Hb_x0=Hb_x_0(i,j)
                   Hb_y0=Hb_y_0(i,j)
 
+                  ! calculate gbar derivatives for np1 time level
+                  call df2_int(gb_tt_np1,gb_tt_np1,gb_tt_np1,
+     &                 gb_tt_t,gb_tt_x,gb_tt_y,
+     &                 gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &                 gb_tt_xx,gb_tt_xy,gb_tt_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
+                  call df2_int(gb_tx_np1,gb_tx_np1,gb_tx_np1,
+     &                 gb_tx_t,gb_tx_x,gb_tx_y,
+     &                 gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &                 gb_tx_xx,gb_tx_xy,gb_tx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+                  call df2_int(gb_ty_np1,gb_ty_np1,gb_ty_np1,
+     &                 gb_ty_t,gb_ty_x,gb_ty_y,
+     &                 gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &                 gb_ty_xx,gb_ty_xy,gb_ty_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
+                  call df2_int(gb_xx_np1,gb_xx_np1,gb_xx_np1,
+     &                 gb_xx_t,gb_xx_x,gb_xx_y,
+     &                 gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &                 gb_xx_xx,gb_xx_xy,gb_xx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+                  call df2_int(gb_xy_np1,gb_xy_np1,gb_xy_np1,
+     &                 gb_xy_t,gb_xy_x,gb_xy_y,
+     &                 gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &                 gb_xy_xx,gb_xy_xy,gb_xy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
+                  call df2_int(gb_yy_np1,gb_yy_np1,gb_yy_np1,
+     &                 gb_yy_t,gb_yy_x,gb_yy_y,
+     &                 gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &                 gb_yy_xx,gb_yy_xy,gb_yy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
+                  call df2_int(psi_np1,psi_np1,psi_np1,
+     &                 psi_t,psi_x,psi_y,
+     &                 psi_tt,psi_tx,psi_ty,
+     &                 psi_xx,psi_xy,psi_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
+                  call df2_int(omega_np1,omega_np1,omega_np1,
+     &                 omega_t,omega_x,omega_y,
+     &                 omega_tt,omega_tx,omega_ty,
+     &                 omega_xx,omega_xy,omega_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
 !     &                   +psi_np1(i,j)*3.0d0
 !     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
@@ -307,13 +441,16 @@ c-----------------------------------------------------------------------
 !     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
 !     &                    /dy/dy
 !     &                    /4/PI**2
-     &                   +(gb_tt_np1(i,j+1)-gb_tt_np1(i,j-1))
-     &                    /2/dy
-     &                    *cos(PI*y0)/sin(PI*y0)/PI
-     &                   +(gb_tt_np1(i,j+1)-2*gb_tt_np1(i,j)
-     &                    +gb_tt_np1(i,j-1))/dy/dy
-     &                    /4/PI**2
+     &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
+     &                   +gb_tt_yy/4/PI**2
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
+!     &                   -omega_np1(i,j)*3.0d0*PI/sin(PI*y0)/cos(PI*y0)
+!     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))
+!     &                    /2/dy
+!     &                    *4.0d0
+!     &                   -(omega_np1(i,j+1)-2*omega_np1(i,j)
+!     &                    +omega_np1(i,j-1))/dy/dy
+!     &                    *sin(PI*y0)/cos(PI*y0)/2/PI
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
