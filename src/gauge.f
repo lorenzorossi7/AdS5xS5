@@ -446,6 +446,7 @@ c-----------------------------------------------------------------------
 !     &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
 !     &                   +gb_tt_yy/4/PI**2
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
+     &                   +gb_xy_yy/8/PI**2
 !     &                   -omega_np1(i,j)*3.0d0*PI/sin(PI*y0)/cos(PI*y0)
 !     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))
 !     &                    /2/dy
