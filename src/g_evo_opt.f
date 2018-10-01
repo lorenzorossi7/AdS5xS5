@@ -1259,51 +1259,43 @@ c----------------------------------------------------------------------
 
                 afe_J=(
      &                -g0_uu(1,1)*ddgb_J/2
-     &                +g0_uu(1,1)*gamma_ull(1,1,1)*dgb_J/2
-     &                +g0_uu(1,2)*gamma_ull(1,2,1)*dgb_J/2
-     &                +g0_uu(1,3)*gamma_ull(1,3,1)*dgb_J/2
-     &                +g0_uu(2,1)*gamma_ull(1,1,2)*dgb_J/2
-     &                +g0_uu(2,2)*gamma_ull(1,2,2)*dgb_J/2
-     &                +g0_uu(2,3)*gamma_ull(1,3,2)*dgb_J/2
-     &                +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
-     &                +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
-     &                +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
-     &                -g0_uu(1,1)*(2*dgb_J*gA_x(1))/(4*gA)*(dimA-2d0)
-     &                -g0_uu(1,2)*(dgb_J*gA_x(2))/(4*gA)*(dimA-2d0)
-     &                -g0_uu(1,3)*(dgb_J*gA_x(3))/(4*gA)*(dimA-2d0)
-     &                -g0_uu(2,1)*(gA_x(2)*dgb_J)/(4*gA)*(dimA-2d0)
-     &                -g0_uu(3,1)*(gA_x(3)*dgb_J)/(4*gA)*(dimA-2d0)
-     &                -g0_uu(1,1)*(dgb_J*gB_x(1))/(4*gB)*dimB
-     &                -g0_uu(1,2)*(dgb_J*gB_x(2))/(4*gB)*dimB
-     &                -g0_uu(1,3)*(dgb_J*gB_x(3))/(4*gB)*dimB
+     &                -g0_uu(1,1)*H0_l(1)*dgb_J/2
+     &                -g0_uu(2,1)*H0_l(2)*dgb_J/2
+     &                -g0_uu(3,1)*H0_l(3)*dgb_J/2
+     &                -g0_uu(1,1)*2*dgb_J*gA_x(1)/(4*gA)*(dimA-2d0)
+     &                -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*(dimA-2d0)
+     &                -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*(dimA-2d0)
+     &                -g0_uu(2,1)*gA_x(2)*dgb_J/(4*gA)*(dimA-2d0)
+     &                -g0_uu(3,1)*gA_x(3)*dgb_J/(4*gA)*(dimA-2d0)
+     &                -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*dimB
+     &                -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*dimB
+     &                -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*dimB
+     &                -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*dimB
+     &                -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*dimB
      &                )*(1-x0**2)*x0**2
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of gB_np1->L.gB_np1 transformation
                 ! by differentiating L.gB wrt. gB_ij_np1 diag. entries
-                ! and remember: gB=gB_ads0+omega*(1-x0**2)**3
+                ! and remember: gB=gB_ads0+omega*(1-x0**2)**3*sin(PI*y0/L)**2
                 !---------------------------------------------------------------- 
 
                 bfe_J=(
      &                -g0_uu(1,1)*ddgb_J/2
-     &                +g0_uu(1,1)*gamma_ull(1,1,1)*dgb_J/2
-     &                +g0_uu(1,2)*gamma_ull(1,2,1)*dgb_J/2
-     &                +g0_uu(1,3)*gamma_ull(1,3,1)*dgb_J/2
-     &                +g0_uu(2,1)*gamma_ull(1,1,2)*dgb_J/2
-     &                +g0_uu(2,2)*gamma_ull(1,2,2)*dgb_J/2
-     &                +g0_uu(2,3)*gamma_ull(1,3,2)*dgb_J/2
-     &                +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
-     &                +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
-     &                +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
+     &                -g0_uu(1,1)*H0_l(1)*dgb_J/2
+     &                -g0_uu(2,1)*H0_l(2)*dgb_J/2
+     &                -g0_uu(3,1)*H0_l(3)*dgb_J/2
      &                -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2d0)
      &                -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2d0)
      &                -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2d0)
      &                -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2d0)
      &                -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2d0)
-     &                -g0_uu(1,1)*dgb_J*gA_x(1)/(4*gA)*dimA 
+     &                -g0_uu(1,1)*2*dgb_J*gA_x(1)/(4*gA)*dimA
      &                -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
-     &                -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA 
-     &                )*(1-x0**2)**3
+     &                -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA
+     &                -g0_uu(2,1)*gA_x(2)*dgb_J/(4*gA)*dimA
+     &                -g0_uu(3,1)*gA_x(3)*dgb_J/(4*gA)*dimA
+     &                )*(1-x0**2)**3*sin(PI*y0/L)**2
 
                 !----------------------------------------------------------------
                 ! computes diag. Jacobian of f_np1->L.f_np1 transformation
