@@ -1281,29 +1281,25 @@ c----------------------------------------------------------------------
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of gB_np1->L.gB_np1 transformation
                 ! by differentiating L.gB wrt. gB_ij_np1 diag. entries
-                ! and remember: gB=gB_ads0+omega*(1-x0**2)**3
+                ! and remember: gB=gB_ads0+omega*(1-x0**2)**3*sin(PI*y0/L)**2
                 !---------------------------------------------------------------- 
 
                 bfe_J=(
      &                -g0_uu(1,1)*ddgb_J/2
-     &                +g0_uu(1,1)*gamma_ull(1,1,1)*dgb_J/2
-     &                +g0_uu(1,2)*gamma_ull(1,2,1)*dgb_J/2
-     &                +g0_uu(1,3)*gamma_ull(1,3,1)*dgb_J/2
-     &                +g0_uu(2,1)*gamma_ull(1,1,2)*dgb_J/2
-     &                +g0_uu(2,2)*gamma_ull(1,2,2)*dgb_J/2
-     &                +g0_uu(2,3)*gamma_ull(1,3,2)*dgb_J/2
-     &                +g0_uu(3,1)*gamma_ull(1,1,3)*dgb_J/2
-     &                +g0_uu(3,2)*gamma_ull(1,2,3)*dgb_J/2
-     &                +g0_uu(3,3)*gamma_ull(1,3,3)*dgb_J/2
+     &                -g0_uu(1,1)*H0_l(1)*dgb_J/2
+     &                -g0_uu(2,1)*H0_l(2)*dgb_J/2
+     &                -g0_uu(3,1)*H0_l(3)*dgb_J/2
      &                -g0_uu(1,1)*2*dgb_J*gB_x(1)/(4*gB)*(dimB-2d0)
      &                -g0_uu(1,2)*dgb_J*gB_x(2)/(4*gB)*(dimB-2d0)
      &                -g0_uu(1,3)*dgb_J*gB_x(3)/(4*gB)*(dimB-2d0)
      &                -g0_uu(2,1)*gB_x(2)*dgb_J/(4*gB)*(dimB-2d0)
      &                -g0_uu(3,1)*gB_x(3)*dgb_J/(4*gB)*(dimB-2d0)
-     &                -g0_uu(1,1)*dgb_J*gA_x(1)/(4*gA)*dimA 
+     &                -g0_uu(1,1)*2*dgb_J*gA_x(1)/(4*gA)*dimA 
      &                -g0_uu(1,2)*dgb_J*gA_x(2)/(4*gA)*dimA
      &                -g0_uu(1,3)*dgb_J*gA_x(3)/(4*gA)*dimA 
-     &                )*(1-x0**2)**3
+     &                -g0_uu(2,1)*gA_x(2)*dgb_J/(4*gA)*dimA
+     &                -g0_uu(3,1)*gA_x(3)*dgb_J/(4*gA)*dimA 
+     &                )*(1-x0**2)**3*sin(PI*y0/L)**2
 
                 !----------------------------------------------------------------
                 ! computes diag. Jacobian of f_np1->L.f_np1 transformation
@@ -1460,7 +1456,7 @@ c----------------------------------------------------------------------
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
                 end if
 
-!analytic removal gbtx
+!analytic removal omega
 !                ! update gbars 
 !                if (is_nan(efe(1,1)).or.is_nan(efe_J(1,1)).or.
 !     &            efe_J(1,1).eq.0) then
@@ -1468,14 +1464,14 @@ c----------------------------------------------------------------------
 !                else
 !                  gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
 !                end if
-
-                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
-     &            efe_J(1,2).eq.0) then
-                  dump=.true.
-                else
-                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
-                end if
-
+!
+!                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
+!     &            efe_J(1,2).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
+!                end if
+!
 !                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
 !     &            efe_J(1,3).eq.0) then
 !                  dump=.true.
@@ -1513,14 +1509,14 @@ c----------------------------------------------------------------------
 !                end if
 
 !TEST!
-!                ! update omega
-!                if (is_nan(bfe).or.is_nan(bfe_J).or.
-!     &            bfe_J.eq.0) then
-!                  dump=.true.
-!                else
-!                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
-!                end if
-!
+                ! update omega
+                if (is_nan(bfe).or.is_nan(bfe_J).or.
+     &            bfe_J.eq.0) then
+                  dump=.true.
+                else
+                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
+                end if
+
 !                ! update fbars 
 !                if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
 !     &            ffe_J(1).eq.0) then
@@ -1568,7 +1564,7 @@ c----------------------------------------------------------------------
 !     &                abs(efe(2,3)/efe_J(2,3)),
 !     &                abs(efe(3,3)/efe_J(3,3)),
 !     &                abs(afe/afe_J))
-                gb_res(i,j)=abs(efe(1,2)/efe_J(1,2)) !analytic removal gbtx
+                gb_res(i,j)=abs(bfe/bfe_J) !analytic removal omega
 !                fb_res(i,j)=
 !     &            max(abs(ffe(1)/ffe_J(1)),
 !     &                abs(ffe(2)/ffe_J(2)),
