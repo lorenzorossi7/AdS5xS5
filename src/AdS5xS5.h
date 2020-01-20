@@ -262,6 +262,6 @@ void hb_i_evo_(real *res,
 void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi, real *omega, real* rhoa, real* rhob,
                real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, real *y, int *Nx, int *Ny);
 
-void init_schw(real *gb_tt, real *gb_tx, real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi, real *omega, real *ief_bh_r0, real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, real *y, int *Nx, int *Ny);
+void init_schw_(real *gb_tt, real *gb_tx, real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi, real *omega, real *ief_bh_r0, real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, real *y, int *Nx, int *Ny);
 
 #endif
