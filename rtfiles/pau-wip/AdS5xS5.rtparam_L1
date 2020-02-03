@@ -27,7 +27,7 @@ phi1_A_3 := 0.0
 
 #general#
  
-ief_bh_r0 := 0.5
+ief_bh_r0 := 10.0
 skip_constraints := 1
 
 #------ interpolation parameters (0:off,1:xy2pt,2:rho2pt,3:rho3pt) ---------
@@ -122,7 +122,7 @@ cp_restore_fname := "cp_L0_A"
 
 #------- solution related -------------------------------------------------
 
-steps := 10
+steps := 5
 evo_max_iter := 10
 evo_min_iter := 1
 evo_tol := 1.0e-9
