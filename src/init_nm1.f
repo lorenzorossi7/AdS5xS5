@@ -86,6 +86,8 @@ c----------------------------------------------------------------------
 
         real*8 x0,y0
 
+        real*8 grad_phi10_sq
+
         integer i,is,ie
         integer j,js,je
         integer a,b,c,d
@@ -179,6 +181,7 @@ c----------------------------------------------------------------------
 
         data phi10_x/3*0.0/
         data phi10_xx/9*0.0/
+        data grad_phi10_sq/0.0/
 
         data gA,gB/0.0,0.0/
         data gA_x,gB_x/3*0.0,3*0.0/
@@ -304,6 +307,19 @@ c----------------------------------------------------------------------
               Hb_x_t =Hb_x_t_n(i,j)
               Hb_y_t =Hb_y_t_n(i,j)
 
+              !----------------------------------------------------------------
+              ! grad_phi10_sq = g^ab phi1,a phi1,b
+              !----------------------------------------------------------------
+              grad_phi10_sq =  g0_uu(1,1)*phi10_x(1)*phi10_x(1)
+     &                        +g0_uu(1,2)*phi10_x(1)*phi10_x(2)
+     &                        +g0_uu(1,3)*phi10_x(1)*phi10_x(3)
+     &                        +g0_uu(2,1)*phi10_x(2)*phi10_x(1)
+     &                        +g0_uu(2,2)*phi10_x(2)*phi10_x(2)
+     &                        +g0_uu(2,3)*phi10_x(2)*phi10_x(3)
+     &                        +g0_uu(3,1)*phi10_x(3)*phi10_x(1)
+     &                        +g0_uu(3,2)*phi10_x(3)*phi10_x(2)
+     &                        +g0_uu(3,3)*phi10_x(3)*phi10_x(3)
+
               ! 0 = efe_ab
               do a=1,3
                 do b=a,3
@@ -383,29 +399,11 @@ c----------------------------------------------------------------------
      &                              gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                                )
      & 
-     &                           -dimA*( (gA_xx(a,b)
-     &                                   -gamma_ull(1,b,a)*gA_x(1)
-     &                                   -gamma_ull(2,b,a)*gA_x(2)
-     &                                   -gamma_ull(3,b,a)*gA_x(3)
-     &                                   )/(2*gA)
-     &                                 - (gA_x(a)*gA_x(b))/(4*gA**2) )
-     &                           -dimB*( (gB_xx(a,b)
-     &                                   -gamma_ull(1,b,a)*gB_x(1)
-     &                                   -gamma_ull(2,b,a)*gB_x(2)
-     &                                   -gamma_ull(3,b,a)*gB_x(3)
-     &                                   )/(2*gB)
-     &                                 - (gB_x(a)*gB_x(b))/(4*gB**2) )
+     &                           -dimA*(gA_x(a)*gA_x(b))/(4*gA**2)
+     &                           -dimB*(gB_x(a)*gB_x(b))/(4*gB**2)
      &
-     &                           -(f1_l(a)*f1_l(b)
-     &                            +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-     &                            +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-     &                            +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-     &                            +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-     &                            +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-     &                            +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-     &                            +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-     &                            +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-     &                            +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
+     &                           -(2*phi10_x(a)*phi10_x(b)
+     &                           -g0_ll(a,b)*grad_phi10_sq
      &                            )/4
      &                )
                 end do
@@ -449,108 +447,19 @@ c----------------------------------------------------------------------
      &         +g0_uu(3,1)*gamma_ull(3,1,3)*gA_x(3)/2
      &         +g0_uu(3,2)*gamma_ull(3,2,3)*gA_x(3)/2
      &         +g0_uu(3,3)*gamma_ull(3,3,3)*gA_x(3)/2
-     &         -g0_uu(1,1)*(gA_x(1)*gA_x(1))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(1,2)*(gA_x(1)*gA_x(2))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(1,3)*(gA_x(1)*gA_x(3))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(2,1)*(gA_x(2)*gA_x(1))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(2,2)*(gA_x(2)*gA_x(2))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(2,3)*(gA_x(2)*gA_x(3))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(3,1)*(gA_x(3)*gA_x(1))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(3,2)*(gA_x(3)*gA_x(2))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(3,3)*(gA_x(3)*gA_x(3))/(4*gA)*(dimA-2d0)
-     &         -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gB)*dimB
-     &         -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gB)*dimB
-     &         -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gB)*dimB
-     &         -g0_uu(2,1)*(gA_x(2)*gB_x(1))/(4*gB)*dimB
-     &         -g0_uu(2,2)*(gA_x(2)*gB_x(2))/(4*gB)*dimB
-     &         -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gB)*dimB
-     &         -g0_uu(3,1)*(gA_x(3)*gB_x(1))/(4*gB)*dimB
-     &         -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gB)*dimB
-     &         -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gB)*dimB
+     &         +g0_uu(1,1)*(gA_x(1)*gA_x(1))/(2*gA)
+     &         +g0_uu(1,2)*(gA_x(1)*gA_x(2))/(2*gA)
+     &         +g0_uu(1,3)*(gA_x(1)*gA_x(3))/(2*gA)
+     &         +g0_uu(2,1)*(gA_x(2)*gA_x(1))/(2*gA)
+     &         +g0_uu(2,2)*(gA_x(2)*gA_x(2))/(2*gA)
+     &         +g0_uu(2,3)*(gA_x(2)*gA_x(3))/(2*gA)
+     &         +g0_uu(3,1)*(gA_x(3)*gA_x(1))/(2*gA)
+     &         +g0_uu(3,2)*(gA_x(3)*gA_x(2))/(2*gA)
+     &         +g0_uu(3,3)*(gA_x(3)*gA_x(3))/(2*gA)
      &
      &         +(dimA-1d0)
      &
-     &         -gA*g0_uu(1,1)*g0_uu(1,1)*f2_ll(1,1)*f2_ll(1,1)/8
-     &         -gA*g0_uu(1,2)*g0_uu(1,1)*f2_ll(1,1)*f2_ll(2,1)/8
-     &         -gA*g0_uu(1,3)*g0_uu(1,1)*f2_ll(1,1)*f2_ll(3,1)/8
-     &         -gA*g0_uu(2,1)*g0_uu(1,1)*f2_ll(2,1)*f2_ll(1,1)/8
-     &         -gA*g0_uu(2,2)*g0_uu(1,1)*f2_ll(2,1)*f2_ll(2,1)/8
-     &         -gA*g0_uu(2,3)*g0_uu(1,1)*f2_ll(2,1)*f2_ll(3,1)/8
-     &         -gA*g0_uu(3,1)*g0_uu(1,1)*f2_ll(3,1)*f2_ll(1,1)/8
-     &         -gA*g0_uu(3,2)*g0_uu(1,1)*f2_ll(3,1)*f2_ll(2,1)/8
-     &         -gA*g0_uu(3,3)*g0_uu(1,1)*f2_ll(3,1)*f2_ll(3,1)/8
-     &         -gA*g0_uu(1,1)*g0_uu(1,2)*f2_ll(1,1)*f2_ll(1,2)/8 
-     &         -gA*g0_uu(1,2)*g0_uu(1,2)*f2_ll(1,1)*f2_ll(2,2)/8 
-     &         -gA*g0_uu(1,3)*g0_uu(1,2)*f2_ll(1,1)*f2_ll(3,2)/8 
-     &         -gA*g0_uu(2,1)*g0_uu(1,2)*f2_ll(2,1)*f2_ll(1,2)/8 
-     &         -gA*g0_uu(2,2)*g0_uu(1,2)*f2_ll(2,1)*f2_ll(2,2)/8 
-     &         -gA*g0_uu(2,3)*g0_uu(1,2)*f2_ll(2,1)*f2_ll(3,2)/8 
-     &         -gA*g0_uu(3,1)*g0_uu(1,2)*f2_ll(3,1)*f2_ll(1,2)/8 
-     &         -gA*g0_uu(3,2)*g0_uu(1,2)*f2_ll(3,1)*f2_ll(2,2)/8 
-     &         -gA*g0_uu(3,3)*g0_uu(1,2)*f2_ll(3,1)*f2_ll(3,2)/8 
-     &         -gA*g0_uu(1,1)*g0_uu(1,3)*f2_ll(1,1)*f2_ll(1,3)/8
-     &         -gA*g0_uu(1,2)*g0_uu(1,3)*f2_ll(1,1)*f2_ll(2,3)/8
-     &         -gA*g0_uu(1,3)*g0_uu(1,3)*f2_ll(1,1)*f2_ll(3,3)/8
-     &         -gA*g0_uu(2,1)*g0_uu(1,3)*f2_ll(2,1)*f2_ll(1,3)/8
-     &         -gA*g0_uu(2,2)*g0_uu(1,3)*f2_ll(2,1)*f2_ll(2,3)/8
-     &         -gA*g0_uu(2,3)*g0_uu(1,3)*f2_ll(2,1)*f2_ll(3,3)/8
-     &         -gA*g0_uu(3,1)*g0_uu(1,3)*f2_ll(3,1)*f2_ll(1,3)/8
-     &         -gA*g0_uu(3,2)*g0_uu(1,3)*f2_ll(3,1)*f2_ll(2,3)/8
-     &         -gA*g0_uu(3,3)*g0_uu(1,3)*f2_ll(3,1)*f2_ll(3,3)/8
-     &         -gA*g0_uu(1,1)*g0_uu(2,1)*f2_ll(1,2)*f2_ll(1,1)/8
-     &         -gA*g0_uu(1,2)*g0_uu(2,1)*f2_ll(1,2)*f2_ll(2,1)/8
-     &         -gA*g0_uu(1,3)*g0_uu(2,1)*f2_ll(1,2)*f2_ll(3,1)/8
-     &         -gA*g0_uu(2,1)*g0_uu(2,1)*f2_ll(2,2)*f2_ll(1,1)/8
-     &         -gA*g0_uu(2,2)*g0_uu(2,1)*f2_ll(2,2)*f2_ll(2,1)/8
-     &         -gA*g0_uu(2,3)*g0_uu(2,1)*f2_ll(2,2)*f2_ll(3,1)/8
-     &         -gA*g0_uu(3,1)*g0_uu(2,1)*f2_ll(3,2)*f2_ll(1,1)/8
-     &         -gA*g0_uu(3,2)*g0_uu(2,1)*f2_ll(3,2)*f2_ll(2,1)/8
-     &         -gA*g0_uu(3,3)*g0_uu(2,1)*f2_ll(3,2)*f2_ll(3,1)/8
-     &         -gA*g0_uu(1,1)*g0_uu(2,2)*f2_ll(1,2)*f2_ll(1,2)/8
-     &         -gA*g0_uu(1,2)*g0_uu(2,2)*f2_ll(1,2)*f2_ll(2,2)/8
-     &         -gA*g0_uu(1,3)*g0_uu(2,2)*f2_ll(1,2)*f2_ll(3,2)/8
-     &         -gA*g0_uu(2,1)*g0_uu(2,2)*f2_ll(2,2)*f2_ll(1,2)/8
-     &         -gA*g0_uu(2,2)*g0_uu(2,2)*f2_ll(2,2)*f2_ll(2,2)/8
-     &         -gA*g0_uu(2,3)*g0_uu(2,2)*f2_ll(2,2)*f2_ll(3,2)/8
-     &         -gA*g0_uu(3,1)*g0_uu(2,2)*f2_ll(3,2)*f2_ll(1,2)/8
-     &         -gA*g0_uu(3,2)*g0_uu(2,2)*f2_ll(3,2)*f2_ll(2,2)/8
-     &         -gA*g0_uu(3,3)*g0_uu(2,2)*f2_ll(3,2)*f2_ll(3,2)/8
-     &         -gA*g0_uu(1,1)*g0_uu(2,3)*f2_ll(1,2)*f2_ll(1,3)/8
-     &         -gA*g0_uu(1,2)*g0_uu(2,3)*f2_ll(1,2)*f2_ll(2,3)/8
-     &         -gA*g0_uu(1,3)*g0_uu(2,3)*f2_ll(1,2)*f2_ll(3,3)/8
-     &         -gA*g0_uu(2,1)*g0_uu(2,3)*f2_ll(2,2)*f2_ll(1,3)/8
-     &         -gA*g0_uu(2,2)*g0_uu(2,3)*f2_ll(2,2)*f2_ll(2,3)/8
-     &         -gA*g0_uu(2,3)*g0_uu(2,3)*f2_ll(2,2)*f2_ll(3,3)/8
-     &         -gA*g0_uu(3,1)*g0_uu(2,3)*f2_ll(3,2)*f2_ll(1,3)/8
-     &         -gA*g0_uu(3,2)*g0_uu(2,3)*f2_ll(3,2)*f2_ll(2,3)/8
-     &         -gA*g0_uu(3,3)*g0_uu(2,3)*f2_ll(3,2)*f2_ll(3,3)/8
-     &         -gA*g0_uu(1,1)*g0_uu(3,1)*f2_ll(1,3)*f2_ll(1,1)/8
-     &         -gA*g0_uu(1,2)*g0_uu(3,1)*f2_ll(1,3)*f2_ll(2,1)/8
-     &         -gA*g0_uu(1,3)*g0_uu(3,1)*f2_ll(1,3)*f2_ll(3,1)/8
-     &         -gA*g0_uu(2,1)*g0_uu(3,1)*f2_ll(2,3)*f2_ll(1,1)/8
-     &         -gA*g0_uu(2,2)*g0_uu(3,1)*f2_ll(2,3)*f2_ll(2,1)/8
-     &         -gA*g0_uu(2,3)*g0_uu(3,1)*f2_ll(2,3)*f2_ll(3,1)/8
-     &         -gA*g0_uu(3,1)*g0_uu(3,1)*f2_ll(3,3)*f2_ll(1,1)/8
-     &         -gA*g0_uu(3,2)*g0_uu(3,1)*f2_ll(3,3)*f2_ll(2,1)/8
-     &         -gA*g0_uu(3,3)*g0_uu(3,1)*f2_ll(3,3)*f2_ll(3,1)/8
-     &         -gA*g0_uu(1,1)*g0_uu(3,2)*f2_ll(1,3)*f2_ll(1,2)/8
-     &         -gA*g0_uu(1,2)*g0_uu(3,2)*f2_ll(1,3)*f2_ll(2,2)/8
-     &         -gA*g0_uu(1,3)*g0_uu(3,2)*f2_ll(1,3)*f2_ll(3,2)/8
-     &         -gA*g0_uu(2,1)*g0_uu(3,2)*f2_ll(2,3)*f2_ll(1,2)/8
-     &         -gA*g0_uu(2,2)*g0_uu(3,2)*f2_ll(2,3)*f2_ll(2,2)/8
-     &         -gA*g0_uu(2,3)*g0_uu(3,2)*f2_ll(2,3)*f2_ll(3,2)/8
-     &         -gA*g0_uu(3,1)*g0_uu(3,2)*f2_ll(3,3)*f2_ll(1,2)/8
-     &         -gA*g0_uu(3,2)*g0_uu(3,2)*f2_ll(3,3)*f2_ll(2,2)/8
-     &         -gA*g0_uu(3,3)*g0_uu(3,2)*f2_ll(3,3)*f2_ll(3,2)/8
-     &         -gA*g0_uu(1,1)*g0_uu(3,3)*f2_ll(1,3)*f2_ll(1,3)/8
-     &         -gA*g0_uu(1,2)*g0_uu(3,3)*f2_ll(1,3)*f2_ll(2,3)/8
-     &         -gA*g0_uu(1,3)*g0_uu(3,3)*f2_ll(1,3)*f2_ll(3,3)/8
-     &         -gA*g0_uu(2,1)*g0_uu(3,3)*f2_ll(2,3)*f2_ll(1,3)/8
-     &         -gA*g0_uu(2,2)*g0_uu(3,3)*f2_ll(2,3)*f2_ll(2,3)/8
-     &         -gA*g0_uu(2,3)*g0_uu(3,3)*f2_ll(2,3)*f2_ll(3,3)/8
-     &         -gA*g0_uu(3,1)*g0_uu(3,3)*f2_ll(3,3)*f2_ll(1,3)/8
-     &         -gA*g0_uu(3,2)*g0_uu(3,3)*f2_ll(3,3)*f2_ll(2,3)/8
-     &         -gA*g0_uu(3,3)*g0_uu(3,3)*f2_ll(3,3)*f2_ll(3,3)/8
+     &         +gA*grad_phi10_sq/4/gB**4
      &                )
 
 !uncommenting Analytic removal terms below would Analytically remove pure ads5xs5 terms but 
@@ -597,38 +506,20 @@ c----------------------------------------------------------------------
      &         +g0_uu(3,1)*gamma_ull(3,1,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
      &         +g0_uu(3,2)*gamma_ull(3,2,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
      &         +g0_uu(3,3)*gamma_ull(3,3,3)*gB_x(3)/2!*(gB_x(3)-gBads_x(3))/2
-     &         -g0_uu(1,1)*(gB_x(1)*gB_x(1))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(1,2)*(gB_x(1)*gB_x(2))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(1,3)*(gB_x(1)*gB_x(3))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(2,1)*(gB_x(2)*gB_x(1))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(2,2)*(gB_x(2)*gB_x(2))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(2,3)*(gB_x(2)*gB_x(3))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(3,1)*(gB_x(3)*gB_x(1))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(3,2)*(gB_x(3)*gB_x(2))/(4*gB)*(dimB-2d0)
-     &         -g0_uu(3,3)*(gB_x(3)*gB_x(3))/(4*gB)*(dimB-2d0)!*(gB_x(3)-gBads_x(3))
+     &         +g0_uu(1,1)*(gB_x(1)*gB_x(1))/(2*gB)
+     &         +g0_uu(1,2)*(gB_x(1)*gB_x(2))/(2*gB)
+     &         +g0_uu(1,3)*(gB_x(1)*gB_x(3))/(2*gB)
+     &         +g0_uu(2,1)*(gB_x(2)*gB_x(1))/(2*gB)
+     &         +g0_uu(2,2)*(gB_x(2)*gB_x(2))/(2*gB)
+     &         +g0_uu(2,3)*(gB_x(2)*gB_x(3))/(2*gB)
+     &         +g0_uu(3,1)*(gB_x(3)*gB_x(1))/(2*gB)
+     &         +g0_uu(3,2)*(gB_x(3)*gB_x(2))/(2*gB)
+     &         +g0_uu(3,3)*(gB_x(3)*gB_x(3))/(2*gB)!*(gB_x(3)-gBads_x(3))
 !     &                    *(gB_x(3)-gBads_x(3))/(4*gB)*(dimB-2d0) !analytic removal
-     &         -g0_uu(1,1)*(gA_x(1)*gB_x(1))/(4*gA)*dimA
-     &         -g0_uu(1,2)*(gA_x(1)*gB_x(2))/(4*gA)*dimA
-     &         -g0_uu(1,3)*(gA_x(1)*gB_x(3))/(4*gA)*dimA
-     &         -g0_uu(2,1)*(gA_x(2)*gB_x(1))/(4*gA)*dimA
-     &         -g0_uu(2,2)*(gA_x(2)*gB_x(2))/(4*gA)*dimA
-     &         -g0_uu(2,3)*(gA_x(2)*gB_x(3))/(4*gA)*dimA!*(gA_x(2)-gBads_x(2))
-!     &                    *(gB_x(3)-gBads_x(3))/(4*gA)*(dimA-2d0) !analytic removal
-     &         -g0_uu(3,1)*(gA_x(3)*gB_x(1))/(4*gA)*dimA
-     &         -g0_uu(3,2)*(gA_x(3)*gB_x(2))/(4*gA)*dimA
-     &         -g0_uu(3,3)*(gA_x(3)*gB_x(3))/(4*gA)*dimA
      &
      &         +(dimB-1d0) !analytic removal
      &
-     &         -gB*g0_uu(1,1)*f1_l(1)*f1_l(1)/4
-     &         -gB*g0_uu(1,2)*f1_l(1)*f1_l(2)/4
-     &         -gB*g0_uu(1,3)*f1_l(1)*f1_l(3)/4
-     &         -gB*g0_uu(2,1)*f1_l(2)*f1_l(1)/4
-     &         -gB*g0_uu(2,2)*f1_l(2)*f1_l(2)/4
-     &         -gB*g0_uu(2,3)*f1_l(2)*f1_l(3)/4
-     &         -gB*g0_uu(3,1)*f1_l(3)*f1_l(1)/4
-     &         -gB*g0_uu(3,2)*f1_l(3)*f1_l(2)/4
-     &         -gB*g0_uu(3,3)*f1_l(3)*f1_l(3)/4!*(fb_y_n(i,j)*(1-x0**2)**3)**2/4 !analytic removal
+     &         -grad_phi10_sq/4/gB**3
      &                )
 
               ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
