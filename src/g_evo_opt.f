@@ -60,6 +60,8 @@ c----------------------------------------------------------------------
 
         real*8 boxx_u(3),boxx_l(3)
 
+        real*8 f1_sq
+
         !--------------------------------------------------------------
         ! the following are first and second time derivatives of *n*
         ! level variables, and as these are the only derivatives we
