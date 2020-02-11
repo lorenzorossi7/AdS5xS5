@@ -483,7 +483,7 @@ c----------------------------------------------------------------------
      &
                     term9(a,b)=-(2*phi10_x(a)*phi10_x(b)
      &                          -g0_ll(a,b)*grad_phi1_sq
-     &                          )/4
+     &                          )/4/gB**4
      &
                     efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
