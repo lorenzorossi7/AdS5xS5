@@ -478,8 +478,8 @@ c----------------------------------------------------------------------
      &                            gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                              )
      &
-                    term8(a,b)=-dimA*( gA_x(a)*gA_x(b)/(4*gA**2) )
-     &                         -dimB*( gB_x(a)*gB_x(b)/(4*gB**2) )
+                    term8(a,b)=-dimA*gA_x(a)*gA_x(b)/(4*gA**2)
+     &                         -dimB*gB_x(a)*gB_x(b)/(4*gB**2)
      &
                     term9(a,b)=-(2*phi10_x(a)*phi10_x(b)
      &                          -g0_ll(a,b)*grad_phi1_sq

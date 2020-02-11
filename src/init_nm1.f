@@ -392,8 +392,8 @@ c----------------------------------------------------------------------
      &                              gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                                )
      &
-     &                           -dimA*(gA_x(a)*gA_x(b))/(4*gA**2) 
-     &                           -dimB*(gB_x(a)*gB_x(b))/(4*gB**2)
+     &                           -dimA*gA_x(a)*gA_x(b)/(4*gA**2) 
+     &                           -dimB*gB_x(a)*gB_x(b)/(4*gB**2)
      &
      &                           -(2*phi10_x(a)*phi10_x(b)
      &                           -g0_ll(a,b)*grad_phi1_sq
