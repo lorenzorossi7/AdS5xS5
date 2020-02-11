@@ -1323,18 +1323,44 @@ c----------------------------------------------------------------------
         Hads_l_x(2,2)=8*x0*(1-x0)/(1-2*x0*(1-x0))**2
 
         ! give values to the full gh source functions
-        H0_l(1)=          A_l(1)
-        H0_l(2)=Hads_l(2)+A_l(2)
-        H0_l(3)=          A_l(3)
-        H0_l_x(1,1)=              A_l_x(1,1)
-        H0_l_x(1,2)=              A_l_x(1,2)
-        H0_l_x(1,3)=              A_l_x(1,3)
-        H0_l_x(2,1)=              A_l_x(2,1)
-        H0_l_x(2,2)=Hads_l_x(2,2)+A_l_x(2,2)
-        H0_l_x(2,3)=              A_l_x(2,3)
-        H0_l_x(3,1)=              A_l_x(3,1)
-        H0_l_x(3,2)=              A_l_x(3,2)
-        H0_l_x(3,3)=              A_l_x(3,3)
+        H0_l(1)=A_l(1)
+!     &         +dimA*gA_x(1)/2/gA
+!     &         +dimB*gB_x(1)/2/gB
+        H0_l(2)=Hads_l(2)
+     &         +A_l(2)
+!     &         +dimA*gA_x(2)/2/gA
+!     &         +dimB*gB_x(2)/2/gB
+        H0_l(3)=A_l(3)
+!     &         +dimA*gA_x(3)/2/gA
+!     &         +dimB*gB_x(3)/2/gB
+        H0_l_x(1,1)=A_l_x(1,1)
+!     &             +(dimA/2)*(gA_xx(1,1)/gA-gA_x(1)*gA_x(1)/gA**2)
+!     &             +(dimB/2)*(gB_xx(1,1)/gB-gB_x(1)*gB_x(1)/gB**2)
+        H0_l_x(1,2)=A_l_x(1,2)
+!     &             +(dimA/2)*(gA_xx(1,2)/gA-gA_x(1)*gA_x(2)/gA**2)
+!     &             +(dimB/2)*(gB_xx(1,2)/gB-gB_x(1)*gB_x(2)/gB**2)
+        H0_l_x(1,3)=A_l_x(1,3)
+!     &             +(dimA/2)*(gA_xx(1,3)/gA-gA_x(1)*gA_x(3)/gA**2)
+!     &             +(dimB/2)*(gB_xx(1,3)/gB-gB_x(1)*gB_x(3)/gB**2)
+        H0_l_x(2,1)=A_l_x(2,1)
+!     &             +(dimA/2)*(gA_xx(2,1)/gA-gA_x(2)*gA_x(1)/gA**2)
+!     &             +(dimB/2)*(gB_xx(2,1)/gB-gB_x(2)*gB_x(1)/gB**2)
+        H0_l_x(2,2)=Hads_l_x(2,2)
+     &             +A_l_x(2,2)
+!     &             +(dimA/2)*(gA_xx(2,2)/gA-gA_x(2)*gA_x(2)/gA**2)
+!     &             +(dimB/2)*(gB_xx(2,2)/gB-gB_x(2)*gB_x(2)/gB**2)
+        H0_l_x(2,3)=A_l_x(2,3)
+!     &             +(dimA/2)*(gA_xx(2,3)/gA-gA_x(2)*gA_x(3)/gA**2)
+!     &             +(dimB/2)*(gB_xx(2,3)/gB-gB_x(2)*gB_x(3)/gB**2)
+        H0_l_x(3,1)=A_l_x(3,1)
+!     &             +(dimA/2)*(gA_xx(3,1)/gA-gA_x(3)*gA_x(1)/gA**2)
+!     &             +(dimB/2)*(gB_xx(3,1)/gB-gB_x(3)*gB_x(1)/gB**2)
+        H0_l_x(3,2)=A_l_x(3,2)
+!     &             +(dimA/2)*(gA_xx(3,2)/gA-gA_x(3)*gA_x(2)/gA**2)
+!     &             +(dimB/2)*(gB_xx(3,2)/gB-gB_x(3)*gB_x(2)/gB**2)
+        H0_l_x(3,3)=A_l_x(3,3)
+!     &             +(dimA/2)*(gA_xx(3,3)/gA-gA_x(3)*gA_x(3)/gA**2)
+!     &             +(dimB/2)*(gB_xx(3,3)/gB-gB_x(3)*gB_x(3)/gB**2)
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3

@@ -609,9 +609,8 @@ c----------------------------------------------------------------------
      &                 +2*f1_l(1)*gB_x(3)/gB-2*f1_l(3)*gB_x(1)/gB 
 
                 !--------------------------------------------------------------------------
-                ! phi1_res = g^ab phi1,ab + g^ab,a phi1,b + g^cb gamma^a_ab phi1,c  
-                !         (= g^ab phi1,ab - g^ab gamma^c_ab phi1,c)
-                !     +1.5d0/gA*g^ab gA,a phi1,b - 2.0d0/gB*g^ab gB,a phi1,b
+                ! phi1_res = g^ab phi1,ab - g^ab gamma^c_ab phi1,c
+                !           +1.5d0/gA*g^ab gA,a phi1,b - 2.0d0/gB*g^ab gB,a phi1,b
                 !--------------------------------------------------------------------------
                 phi1_res= phi10_xx(1,1)*g0_uu(1,1)+
      &                    phi10_xx(2,2)*g0_uu(2,2)+
@@ -619,44 +618,27 @@ c----------------------------------------------------------------------
      &                 2*(phi10_xx(1,2)*g0_uu(1,2)+
      &                    phi10_xx(1,3)*g0_uu(1,3)+
      &                    phi10_xx(2,3)*g0_uu(2,3))
-     &                +
-     &                    phi10_x(1)*g0_uu_x(1,1,1)+
-     &                    phi10_x(1)*g0_uu_x(2,1,2)+
-     &                    phi10_x(1)*g0_uu_x(3,1,3)+
-     &                    phi10_x(2)*g0_uu_x(1,2,1)+
-     &                    phi10_x(2)*g0_uu_x(2,2,2)+
-     &                    phi10_x(2)*g0_uu_x(3,2,3)+
-     &                    phi10_x(3)*g0_uu_x(1,3,1)+
-     &                    phi10_x(3)*g0_uu_x(2,3,2)+
-     &                    phi10_x(3)*g0_uu_x(3,3,3)
-     &                +
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(3,3,3)+
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(3,3,3)+
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(3,3,3)
+     &                  -
+     &                      phi10_x(1)*( gamma_ull(1,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(1,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(1,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(1,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(1,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(1,2,3)*g0_uu(2,3)) )
+     &                  -
+     &                      phi10_x(2)*( gamma_ull(2,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(2,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(2,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(2,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(2,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(2,2,3)*g0_uu(2,3)) )
+     &                  -
+     &                      phi10_x(3)*( gamma_ull(3,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(3,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(3,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(3,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(3,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(3,2,3)*g0_uu(2,3)) )
      &                +
      &                   1.5d0/gA*(
      &                    gA_x(1)*phi10_x(1)*g0_uu(1,1)+
