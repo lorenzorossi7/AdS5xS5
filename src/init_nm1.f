@@ -86,8 +86,6 @@ c----------------------------------------------------------------------
 
         real*8 x0,y0
 
-        real*8 grad_phi10_sq
-
         integer i,is,ie
         integer j,js,je
         integer a,b,c,d
@@ -103,6 +101,8 @@ c----------------------------------------------------------------------
         parameter (ltrace=.false.)
 
         real*8 dimA,dimB
+
+        real*8 grad_phi1_sq
 
         !--------------------------------------------------------------
         ! variables for tensor manipulations 
@@ -181,7 +181,6 @@ c----------------------------------------------------------------------
 
         data phi10_x/3*0.0/
         data phi10_xx/9*0.0/
-        data grad_phi10_sq/0.0/
 
         data gA,gB/0.0,0.0/
         data gA_x,gB_x/3*0.0,3*0.0/
@@ -307,18 +306,12 @@ c----------------------------------------------------------------------
               Hb_x_t =Hb_x_t_n(i,j)
               Hb_y_t =Hb_y_t_n(i,j)
 
-              !----------------------------------------------------------------
-              ! grad_phi10_sq = g^ab phi1,a phi1,b
-              !----------------------------------------------------------------
-              grad_phi10_sq =  g0_uu(1,1)*phi10_x(1)*phi10_x(1)
-     &                        +g0_uu(1,2)*phi10_x(1)*phi10_x(2)
-     &                        +g0_uu(1,3)*phi10_x(1)*phi10_x(3)
-     &                        +g0_uu(2,1)*phi10_x(2)*phi10_x(1)
-     &                        +g0_uu(2,2)*phi10_x(2)*phi10_x(2)
-     &                        +g0_uu(2,3)*phi10_x(2)*phi10_x(3)
-     &                        +g0_uu(3,1)*phi10_x(3)*phi10_x(1)
-     &                        +g0_uu(3,2)*phi10_x(3)*phi10_x(2)
-     &                        +g0_uu(3,3)*phi10_x(3)*phi10_x(3)
+              grad_phi1_sq=phi10_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                     phi10_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                     phi10_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                  2*(phi10_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                     phi10_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                     phi10_x(2)*phi10_x(3)*g0_uu(2,3))
 
               ! 0 = efe_ab
               do a=1,3
@@ -403,7 +396,7 @@ c----------------------------------------------------------------------
      &                           -dimB*(gB_x(a)*gB_x(b))/(4*gB**2)
      &
      &                           -(2*phi10_x(a)*phi10_x(b)
-     &                           -g0_ll(a,b)*grad_phi10_sq
+     &                           -g0_ll(a,b)*grad_phi1_sq
      &                            )/4
      &                )
                 end do
@@ -459,7 +452,7 @@ c----------------------------------------------------------------------
      &
      &         +(dimA-1d0)
      &
-     &         +gA*grad_phi10_sq/4/gB**4
+     &         +gA*grad_phi1_sq/4/gB**4
      &                )
 
 !uncommenting Analytic removal terms below would Analytically remove pure ads5xs5 terms but 
@@ -519,7 +512,7 @@ c----------------------------------------------------------------------
      &
      &         +(dimB-1d0) !analytic removal
      &
-     &         -grad_phi10_sq/4/gB**3
+     &         -grad_phi1_sq/4/gB**3
      &                )
 
               ! 0 = g^ab phi1,ab - g^ab gamma^c_ab phi1,c 
