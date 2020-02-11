@@ -655,6 +655,9 @@ c----------------------------------------------------------------------
         real*8 fb_t0,fb_x0,fb_y0
 
         real*8 f1_y_ads0
+
+        real*8 phi1_ads0
+        real*8 phi1_ads_y,phi1_ads_yy
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -683,6 +686,9 @@ c----------------------------------------------------------------------
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
         f1_y_ads0  = 4/L*PI
 
+        ! set phi1_ads values
+        phi1_ads0=(1.5d0/L*PI*y0-sin(2*PI*y0/L)+sin(4*PI*y0/L)/8)*L**4
+
         ! set gbar values
         gb_tt0=gb_tt_n(i,j)
         gb_tx0=gb_tx_n(i,j)
@@ -705,6 +711,10 @@ c----------------------------------------------------------------------
 
         ! set phi1 value
         phi10=phi1_n(i,j)
+
+        ! set phi1_ads derivatives
+        phi1_ads_y  = 4*PI*sin(PI*y0/L)**4*L**3
+        phi1_ads_yy = 16*PI**2*sin(PI*y0/L)**3*cos(PI*y0/L)*L**2
 
         ! set gads derivatives
         g0_tt_ads_x  =-2*x0/(1-x0)**3
@@ -1330,7 +1340,8 @@ c----------------------------------------------------------------------
         phi10_x(1)=phi1_t*(1-x0**2)**3
         phi10_x(2)=phi1_x*(1-x0**2)**3
      &            +phi10*(-6*x0)*(1-x0**2)**2
-        phi10_x(3)=phi1_y*(1-x0**2)**3     
+        phi10_x(3)=phi1_ads_y
+     &            +phi1_y*(1-x0**2)**3     
 
         phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
         phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
@@ -1341,7 +1352,8 @@ c----------------------------------------------------------------------
      &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
         phi10_xx(2,3)=phi1_xy*(1-x0**2)**3 
      &               +phi1_y*(-6*x0)*(1-x0**2)**2
-        phi10_xx(3,3)=phi1_yy*(1-x0**2)**3 
+        phi10_xx(3,3)=phi1_ads_yy
+     &               +phi1_yy*(1-x0**2)**3 
 
         do a=1,2
           do b=a+1,3
