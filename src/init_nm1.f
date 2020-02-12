@@ -15,9 +15,6 @@ c----------------------------------------------------------------------
      &                      gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
      &                      psi_np1,psi_n,psi_nm1,psi_t_n,
      &                      omega_np1,omega_n,omega_nm1,omega_t_n,
-     &                      fb_t_np1,fb_t_n,fb_t_nm1,fb_t_t_n,
-     &                      fb_x_np1,fb_x_n,fb_x_nm1,fb_x_t_n,
-     &                      fb_y_np1,fb_y_n,fb_y_nm1,fb_y_t_n,
      &                      Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
      &                      Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
      &                      Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
@@ -44,12 +41,6 @@ c----------------------------------------------------------------------
         real*8 psi_t_n(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
         real*8 omega_t_n(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_t_t_n(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_x_t_n(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
-        real*8 fb_y_t_n(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_t_t_n(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
@@ -76,7 +67,6 @@ c----------------------------------------------------------------------
         real*8 gb_yy_t,gb_yy_tt
         real*8 psi_t,psi_tt
         real*8 omega_t,omega_tt
-        real*8 fb_t_t,fb_x_t,fb_y_t
         real*8 Hb_t_t,Hb_x_t,Hb_y_t
         real*8 phi1_t,phi1_tt
 
@@ -244,9 +234,6 @@ c----------------------------------------------------------------------
      &                gb_yy_n,gb_yy_n,gb_yy_n,
      &                psi_n,psi_n,psi_n,
      &                omega_n,omega_n,omega_n,
-     &                fb_t_np1,fb_t_n,fb_t_nm1,
-     &                fb_x_np1,fb_x_n,fb_x_nm1,
-     &                fb_y_np1,fb_y_n,fb_y_nm1,
      &                Hb_t_n,Hb_t_n,Hb_t_n,
      &                Hb_x_n,Hb_x_n,Hb_x_n,
      &                Hb_y_n,Hb_y_n,Hb_y_n,
@@ -283,9 +270,6 @@ c----------------------------------------------------------------------
               A_l_x(1,1)    =Hb_t_t_n(i,j)*(1-x0**2)**2
               A_l_x(2,1)    =Hb_x_t_n(i,j)*(1-x0**2)**2
               A_l_x(3,1)    =Hb_y_t_n(i,j)*(1-x0**2)**2
-              f1_l_x(1,1)   =fb_t_t_n(i,j)*(1-x0**2)**3
-              f1_l_x(2,1)   =fb_x_t_n(i,j)*(1-x0**2)**3
-              f1_l_x(3,1)   =fb_y_t_n(i,j)*(1-x0**2)**3
               gA_x(1)       =psi_t_n(i,j)*(1-x0**2)*x0**2
               gB_x(1)       =omega_t_n(i,j)*(1-x0**2)**3
 
@@ -299,9 +283,6 @@ c----------------------------------------------------------------------
               gb_yy_t=gb_yy_t_n(i,j) 
               psi_t=psi_t_n(i,j) 
               omega_t=omega_t_n(i,j) 
-              fb_t_t =fb_t_t_n(i,j)
-              fb_x_t =fb_x_t_n(i,j)
-              fb_y_t =fb_y_t_n(i,j)
               Hb_t_t =Hb_t_t_n(i,j)
               Hb_x_t =Hb_x_t_n(i,j)
               Hb_y_t =Hb_y_t_n(i,j)
@@ -576,9 +557,6 @@ c----------------------------------------------------------------------
      &                     + psi_tt*dt**2/2
               omega_nm1(i,j)=omega_n(i,j) - omega_t*dt  
      &                     + omega_tt*dt**2/2
-              fb_t_nm1(i,j) =fb_t_n(i,j) - fb_t_t*dt
-              fb_x_nm1(i,j) =fb_x_n(i,j) - fb_x_t*dt
-              fb_y_nm1(i,j) =fb_y_n(i,j) - fb_y_t*dt
               Hb_t_nm1(i,j) =Hb_t_n(i,j) - Hb_t_t*dt
               Hb_x_nm1(i,j) =Hb_x_n(i,j) - Hb_x_t*dt
               Hb_y_nm1(i,j) =Hb_y_n(i,j) - Hb_y_t*dt
@@ -623,8 +601,6 @@ c----------------------------------------------------------------------
      &                 chr,ex,L,x,y,Nx,Ny)
         call axi_reg_Hb(Hb_t_nm1,Hb_x_nm1,Hb_y_nm1,chr,ex,L,x,y,Nx,Ny)
         call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,chr,ex,L,x,y,Nx,Ny)
-        call axi_reg_fb(fb_t_nm1,fb_x_nm1,fb_y_nm1,chr,ex,L,x,y,Nx,Ny)
-        call axi_reg_fb(fb_t_np1,fb_x_np1,fb_y_np1,chr,ex,L,x,y,Nx,Ny)
 
         return
         end

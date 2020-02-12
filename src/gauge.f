@@ -93,9 +93,6 @@ c----------------------------------------------------------------------
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
-     &                    fb_t_np1,fb_t_n,fb_t_nm1,
-     &                    fb_x_np1,fb_x_n,fb_x_nm1,
-     &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -118,9 +115,6 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
         real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
@@ -283,9 +277,6 @@ c-----------------------------------------------------------------------
      &                    gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                    psi_np1,psi_n,psi_nm1,
      &                    omega_np1,omega_n,omega_nm1,
-     &                    fb_t_np1,fb_t_n,fb_t_nm1,
-     &                    fb_x_np1,fb_x_n,fb_x_nm1,
-     &                    fb_y_np1,fb_y_n,fb_y_nm1,
      &                    Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                    Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                    Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -308,9 +299,6 @@ c-----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
         real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
