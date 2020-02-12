@@ -1329,23 +1329,30 @@ c----------------------------------------------------------------------
      &             +(dimB/2)*(gB_xx(3,3)/gB-gB_x(3)*gB_x(3)/gB**2)
 
         ! give values to the scalar field
-        phi10_x(1)=phi1_t*(1-x0**2)**3
-        phi10_x(2)=phi1_x*(1-x0**2)**3
-     &            +phi10*(-6*x0)*(1-x0**2)**2
+        phi10_x(1)=phi1_t*(1-x0**2)**3*sin(PI*y0/L)**4
+        phi10_x(2)=phi1_x*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi10*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
         phi10_x(3)=phi1_ads_y
-     &            +phi1_y*(1-x0**2)**3     
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi10*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
 
-        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
-        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
-     &               +phi1_t*(-6*x0)*(1-x0**2)**2
-        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3
-        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3
-     &               +phi1_x*(2)*(-6*x0)*(1-x0**2)**2
-     &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
-        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3 
-     &               +phi1_y*(-6*x0)*(1-x0**2)**2
+        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3*sin(PI*y0/L)**4
+        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_t*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_t*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_x*(2)*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+     &  +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))*sin(PI*y0/L)**4
+        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_x*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
         phi10_xx(3,3)=phi1_ads_yy
-     &               +phi1_yy*(1-x0**2)**3 
+     &  +phi1_yy*(1-x0**2)**3*sin(PI*y0/L)**4 
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L 
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+     &  +phi10*(1-x0**2)**3*(cos(2*PI*y0/L)-cos(4*PI*y0/L))*2*PI**2/L**2
 
         do a=1,2
           do b=a+1,3
