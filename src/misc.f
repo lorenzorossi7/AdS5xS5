@@ -655,6 +655,9 @@ c----------------------------------------------------------------------
         real*8 fb_t0,fb_x0,fb_y0
 
         real*8 f1_y_ads0
+
+        real*8 phi1_ads0
+        real*8 phi1_ads_y,phi1_ads_yy
 !----------------------------------------------------------------------
         
         dx=(x(2)-x(1))
@@ -683,6 +686,9 @@ c----------------------------------------------------------------------
         !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
         f1_y_ads0  = 4/L*PI
 
+        ! set phi1_ads values
+        phi1_ads0=(1.5d0/L*PI*y0-sin(2*PI*y0/L)+sin(4*PI*y0/L)/8)*L**4
+
         ! set gbar values
         gb_tt0=gb_tt_n(i,j)
         gb_tx0=gb_tx_n(i,j)
@@ -705,6 +711,10 @@ c----------------------------------------------------------------------
 
         ! set phi1 value
         phi10=phi1_n(i,j)
+
+        ! set phi1_ads derivatives
+        phi1_ads_y  = 4*PI*sin(PI*y0/L)**4*L**3
+        phi1_ads_yy = 16*PI**2*sin(PI*y0/L)**3*cos(PI*y0/L)*L**2
 
         ! set gads derivatives
         g0_tt_ads_x  =-2*x0/(1-x0)**3
@@ -1313,24 +1323,51 @@ c----------------------------------------------------------------------
         Hads_l_x(2,2)=8*x0*(1-x0)/(1-2*x0*(1-x0))**2
 
         ! give values to the full gh source functions
-        H0_l(1)=          A_l(1)
-        H0_l(2)=Hads_l(2)+A_l(2)
-        H0_l(3)=          A_l(3)
-        H0_l_x(1,1)=              A_l_x(1,1)
-        H0_l_x(1,2)=              A_l_x(1,2)
-        H0_l_x(1,3)=              A_l_x(1,3)
-        H0_l_x(2,1)=              A_l_x(2,1)
-        H0_l_x(2,2)=Hads_l_x(2,2)+A_l_x(2,2)
-        H0_l_x(2,3)=              A_l_x(2,3)
-        H0_l_x(3,1)=              A_l_x(3,1)
-        H0_l_x(3,2)=              A_l_x(3,2)
-        H0_l_x(3,3)=              A_l_x(3,3)
+        H0_l(1)=A_l(1)
+     &         +dimA*gA_x(1)/2/gA
+     &         +dimB*gB_x(1)/2/gB
+        H0_l(2)=Hads_l(2)
+     &         +A_l(2)
+     &         +dimA*gA_x(2)/2/gA
+     &         +dimB*gB_x(2)/2/gB
+        H0_l(3)=A_l(3)
+     &         +dimA*gA_x(3)/2/gA
+     &         +dimB*gB_x(3)/2/gB
+        H0_l_x(1,1)=A_l_x(1,1)
+     &             +(dimA/2)*(gA_xx(1,1)/gA-gA_x(1)*gA_x(1)/gA**2)
+     &             +(dimB/2)*(gB_xx(1,1)/gB-gB_x(1)*gB_x(1)/gB**2)
+        H0_l_x(1,2)=A_l_x(1,2)
+     &             +(dimA/2)*(gA_xx(1,2)/gA-gA_x(1)*gA_x(2)/gA**2)
+     &             +(dimB/2)*(gB_xx(1,2)/gB-gB_x(1)*gB_x(2)/gB**2)
+        H0_l_x(1,3)=A_l_x(1,3)
+     &             +(dimA/2)*(gA_xx(1,3)/gA-gA_x(1)*gA_x(3)/gA**2)
+     &             +(dimB/2)*(gB_xx(1,3)/gB-gB_x(1)*gB_x(3)/gB**2)
+        H0_l_x(2,1)=A_l_x(2,1)
+     &             +(dimA/2)*(gA_xx(2,1)/gA-gA_x(2)*gA_x(1)/gA**2)
+     &             +(dimB/2)*(gB_xx(2,1)/gB-gB_x(2)*gB_x(1)/gB**2)
+        H0_l_x(2,2)=Hads_l_x(2,2)
+     &             +A_l_x(2,2)
+     &             +(dimA/2)*(gA_xx(2,2)/gA-gA_x(2)*gA_x(2)/gA**2)
+     &             +(dimB/2)*(gB_xx(2,2)/gB-gB_x(2)*gB_x(2)/gB**2)
+        H0_l_x(2,3)=A_l_x(2,3)
+     &             +(dimA/2)*(gA_xx(2,3)/gA-gA_x(2)*gA_x(3)/gA**2)
+     &             +(dimB/2)*(gB_xx(2,3)/gB-gB_x(2)*gB_x(3)/gB**2)
+        H0_l_x(3,1)=A_l_x(3,1)
+     &             +(dimA/2)*(gA_xx(3,1)/gA-gA_x(3)*gA_x(1)/gA**2)
+     &             +(dimB/2)*(gB_xx(3,1)/gB-gB_x(3)*gB_x(1)/gB**2)
+        H0_l_x(3,2)=A_l_x(3,2)
+     &             +(dimA/2)*(gA_xx(3,2)/gA-gA_x(3)*gA_x(2)/gA**2)
+     &             +(dimB/2)*(gB_xx(3,2)/gB-gB_x(3)*gB_x(2)/gB**2)
+        H0_l_x(3,3)=A_l_x(3,3)
+     &             +(dimA/2)*(gA_xx(3,3)/gA-gA_x(3)*gA_x(3)/gA**2)
+     &             +(dimB/2)*(gB_xx(3,3)/gB-gB_x(3)*gB_x(3)/gB**2)
 
         ! give values to the scalar field
         phi10_x(1)=phi1_t*(1-x0**2)**3
         phi10_x(2)=phi1_x*(1-x0**2)**3
      &            +phi10*(-6*x0)*(1-x0**2)**2
-        phi10_x(3)=phi1_y*(1-x0**2)**3     
+        phi10_x(3)=phi1_ads_y
+     &            +phi1_y*(1-x0**2)**3     
 
         phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
         phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
@@ -1341,7 +1378,8 @@ c----------------------------------------------------------------------
      &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
         phi10_xx(2,3)=phi1_xy*(1-x0**2)**3 
      &               +phi1_y*(-6*x0)*(1-x0**2)**2
-        phi10_xx(3,3)=phi1_yy*(1-x0**2)**3 
+        phi10_xx(3,3)=phi1_ads_yy
+     &               +phi1_yy*(1-x0**2)**3 
 
         do a=1,2
           do b=a+1,3

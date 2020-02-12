@@ -2,10 +2,16 @@
 // in polar coordinates t,x,y for x in [0,1] and y in [0,1]
 // using r=x/(1-x) compactification and \chi=\pi y rescaling 
 //
+// dynamical coordinates are t,x,y
+//
 // coordinate labels are (1:t),(2:x),(3:y),(4,5,6,:theta1,theta2,theta3),
 // (7,8,9,10:phi2,phi3,phi4,phi5) 
-// for (t,x,theta1,theta2,theta3) in the AdS_5 sector and 
-// (y,phi2,phi3,phi4,phi5) in the S^5 sector
+// AdS_5 sector (t,x,theta1,theta2,theta3)
+// S^5 sector (y,phi2,phi3,phi4,phi5)
+//
+// source functions are full ten-dimensional source functions
+// H_a = H3_a + dA/2 gA^{-1} g_A,a + dB/2 gB^{-1} g_B,a
+// where dA=3 for the 3-sphere, dB=4 for the remainder of the 5-sphere
 //
 // application interface functions for AdS5xS5
 //=============================================================================

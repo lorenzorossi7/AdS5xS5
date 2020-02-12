@@ -60,17 +60,6 @@ c----------------------------------------------------------------------
 
         real*8 boxx_u(3),boxx_l(3)
 
-        real*8 f1_sq
-
-        !--------------------------------------------------------------
-        ! the following are first and second time derivatives of *n*
-        ! level variables, and as these are the only derivatives we
-        ! use we drop any _n identifier
-        !--------------------------------------------------------------
-        real*8 phi1_t,phi1_x
-        real*8 phi1_tt,phi1_tx
-        real*8 phi1_xx
-
         real*8 x0,y0
 
         real*8 phi1_res,phi1_J
@@ -231,10 +220,6 @@ c----------------------------------------------------------------------
         data ffe,ffe_J/3*0.0,3*0.0/
         data cd_ll,cd_J_ll/9*0.0,9*0.0/
 
-        data phi1_t,phi1_x/0.0,0.0/
-        data phi1_tt,phi1_tx/0.0,0.0/
-        data phi1_xx/0.0/
-
         data x0/0.0/
         data y0/0.0/
 
@@ -267,7 +252,6 @@ c----------------------------------------------------------------------
         data riemann_ulll/81*0.0/
 
         data f1_l,f1_l_x/3*0.0,9*0.0/
-        data f1_sq/0.0/
         data f2_ll,f2_ll_x/9*0.0,27*0.0/
         data f1ads_l,f1ads_l_x/3*0.0,9*0.0/
         data f2ads_ll,f2ads_ll_x/9*0.0,27*0.0/
@@ -412,19 +396,6 @@ c----------------------------------------------------------------------
      &                       phi10_x(1)*phi10_x(3)*g0_uu(1,3)+
      &                       phi10_x(2)*phi10_x(3)*g0_uu(2,3))
 
-                !----------------------------------------------------------------
-                ! f1_sq = g^ab f1_a f1_b
-                !----------------------------------------------------------------
-                f1_sq =  g0_uu(1,1)*f1_l(1)*f1_l(1)
-     &                  +g0_uu(1,2)*f1_l(1)*f1_l(2)
-     &                  +g0_uu(1,3)*f1_l(1)*f1_l(3)
-     &                  +g0_uu(2,1)*f1_l(2)*f1_l(1)
-     &                  +g0_uu(2,2)*f1_l(2)*f1_l(2)
-     &                  +g0_uu(2,3)*f1_l(2)*f1_l(3)
-     &                  +g0_uu(3,1)*f1_l(3)*f1_l(1)
-     &                  +g0_uu(3,2)*f1_l(3)*f1_l(2)
-     &                  +g0_uu(3,3)*f1_l(3)*f1_l(3)
-
                 !---------------------------------------------------------------- 
                 ! Included pure AdS terms in the EFEs,
                 ! efe_ab =   term1_ab + term2_ab + term3_ab + term4_ab 
@@ -441,7 +412,7 @@ c----------------------------------------------------------------------
                 ! term7_ab = -G^c_db G^d_ca
                 ! term8_ab = -dimA*(gA_,a gA_,b)/(4 gA^2)
                 !            -dimB*(gB_,a gB_,b)/(4 gB^2)
-                ! term9_ab = -(2*f1_a f1_b + g_ab g^cd f1_c f1_d)/4
+                ! term9_ab = -(2*phi1,a phi1,b - g_ab g^cd phi1,c phi1,d)/(4 gB^4)
                 !
                 ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
                 !
@@ -507,12 +478,12 @@ c----------------------------------------------------------------------
      &                            gamma_ull(3,3,b)*gamma_ull(3,3,a)
      &                              )
      &
-                    term8(a,b)=-dimA*( gA_x(a)*gA_x(b)/(4*gA**2) )
-     &                         -dimB*( gB_x(a)*gB_x(b)/(4*gB**2) )
+                    term8(a,b)=-dimA*gA_x(a)*gA_x(b)/(4*gA**2)
+     &                         -dimB*gB_x(a)*gB_x(b)/(4*gB**2)
      &
-                    term9(a,b)=-(2*f1_l(a)*f1_l(b)
-     &                          -g0_ll(a,b)*f1_sq
-     &                          )/4
+                    term9(a,b)=-(2*phi10_x(a)*phi10_x(b)
+     &                          -g0_ll(a,b)*grad_phi1_sq
+     &                          )/4/gB**4
      &
                     efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
      &                      +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
@@ -522,9 +493,9 @@ c----------------------------------------------------------------------
                 end do
 
                 !--------------------------------------------------------------------------
-                ! afe      = -g^ab ( gA_,ab/2 - H_a gA_,b/2 + (gA_,a gA_,b)/(2 gA)
+                ! afe      = -g^ab gA_,ab/2 - H_a gA_,b/2 + (gA_,a gA_,b)/(2 gA)
                 !            +(dimA-1)
-                !            +gA*(g^ab f1_a f1_b)/4
+                !            +gA*(g^ab phi1,a phi1,b)/4
                 !
                 ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
                 !--------------------------------------------------------------------------
@@ -559,12 +530,12 @@ c----------------------------------------------------------------------
      &
      &              +(dimA-1d0)
      &
-     &              +gA*f1_sq/4
+     &              +gA*grad_phi1_sq/4/gB**4
 
                 !--------------------------------------------------------------------------
-                ! bfe      = -g^ab ( gB_,ab/2 - H_a gB_,b/2 + (gB_,a gB_,b)/(2 gB)
+                ! bfe      = -g^ab gB_,ab/2 - H_a gB_,b/2 + (gB_,a gB_,b)/(2 gB)
                 !            +(dimB-1)
-                !            -gB*(g^ab f1_a f1_b)/4
+                !            -gB*(g^ab phi1,a phi1,b)/4
                 !
                 ! where G   = guu(g_ll_x-g_ll_x+g_ll_x)
                 !--------------------------------------------------------------------------
@@ -599,7 +570,7 @@ c----------------------------------------------------------------------
      &
      &              +(dimB-1d0)
      &
-     &              -gB*f1_sq/4
+     &              -grad_phi1_sq/4/gB**3
 
                 !---------------------------------------------------------------- 
                 ! ffe_t = -sqrtdetg g^tt f_t,t 
@@ -638,8 +609,8 @@ c----------------------------------------------------------------------
      &                 +2*f1_l(1)*gB_x(3)/gB-2*f1_l(3)*gB_x(1)/gB 
 
                 !--------------------------------------------------------------------------
-                ! phi1_res = g^ab phi1,ab + g^ab,a phi1,b + g^cb gamma^a_ab phi1,c  
-                !         (= g^ab phi1,ab - g^ab gamma^c_ab phi1,c) 
+                ! phi1_res = g^ab phi1,ab - g^ab gamma^c_ab phi1,c
+                !           +1.5d0/gA*g^ab gA,a phi1,b - 2.0d0/gB*g^ab gB,a phi1,b
                 !--------------------------------------------------------------------------
                 phi1_res= phi10_xx(1,1)*g0_uu(1,1)+
      &                    phi10_xx(2,2)*g0_uu(2,2)+
@@ -647,44 +618,51 @@ c----------------------------------------------------------------------
      &                 2*(phi10_xx(1,2)*g0_uu(1,2)+
      &                    phi10_xx(1,3)*g0_uu(1,3)+
      &                    phi10_xx(2,3)*g0_uu(2,3))
+     &                  -
+     &                      phi10_x(1)*( gamma_ull(1,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(1,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(1,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(1,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(1,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(1,2,3)*g0_uu(2,3)) )
+     &                  -
+     &                      phi10_x(2)*( gamma_ull(2,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(2,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(2,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(2,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(2,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(2,2,3)*g0_uu(2,3)) )
+     &                  -
+     &                      phi10_x(3)*( gamma_ull(3,1,1)*g0_uu(1,1)+
+     &                                   gamma_ull(3,2,2)*g0_uu(2,2)+
+     &                                   gamma_ull(3,3,3)*g0_uu(3,3)+
+     &                                2*(gamma_ull(3,1,2)*g0_uu(1,2)+
+     &                                   gamma_ull(3,1,3)*g0_uu(1,3)+
+     &                                   gamma_ull(3,2,3)*g0_uu(2,3)) )
      &                +
-     &                    phi10_x(1)*g0_uu_x(1,1,1)+
-     &                    phi10_x(1)*g0_uu_x(2,1,2)+
-     &                    phi10_x(1)*g0_uu_x(3,1,3)+
-     &                    phi10_x(2)*g0_uu_x(1,2,1)+
-     &                    phi10_x(2)*g0_uu_x(2,2,2)+
-     &                    phi10_x(2)*g0_uu_x(3,2,3)+
-     &                    phi10_x(3)*g0_uu_x(1,3,1)+
-     &                    phi10_x(3)*g0_uu_x(2,3,2)+
-     &                    phi10_x(3)*g0_uu_x(3,3,3)
-     &                +
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(1)*g0_uu(1,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(1)*g0_uu(1,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(1)*g0_uu(1,3)*gamma_ull(3,3,3)+
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(2)*g0_uu(2,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(2)*g0_uu(2,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(2)*g0_uu(2,3)*gamma_ull(3,3,3)+
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(1,1,1)+
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(2,2,1)+ 
-     &                    phi10_x(3)*g0_uu(3,1)*gamma_ull(3,3,1)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(1,1,2)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(2,2,2)+
-     &                    phi10_x(3)*g0_uu(3,2)*gamma_ull(3,3,2)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(1,1,3)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(2,2,3)+
-     &                    phi10_x(3)*g0_uu(3,3)*gamma_ull(3,3,3)
+     &                   1.5d0/gA*(
+     &                    gA_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                    gA_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                    gA_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                    gA_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                    gA_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                    gA_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                    gA_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                    gA_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                    gA_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                             )
+     &                -
+     &                   2.0d0/gB*(
+     &                    gB_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                    gB_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                    gB_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                    gB_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                    gB_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                    gB_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                    gB_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                    gB_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                    gB_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                             )
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of g_np1->L.g_np1 transformation
@@ -1292,6 +1270,18 @@ c----------------------------------------------------------------------
      &                    g0_uu(1,3)*gamma_ull(2,2,3)+
      &                    g0_uu(1,3)*gamma_ull(3,3,3)
      &                   )
+     &                +
+     &                   dphi1_J*(1-x0**2)**3*1.5d0/gA*(
+     &                    gA_x(1)*g0_uu(1,1)+
+     &                    gA_x(2)*g0_uu(1,2)+
+     &                    gA_x(3)*g0_uu(1,3)
+     &                                             )
+     &                -
+     &                   dphi1_J*(1-x0**2)**3*2.0d0/gB*(
+     &                    gB_x(1)*g0_uu(1,1)+
+     &                    gB_x(2)*g0_uu(1,2)+
+     &                    gB_x(3)*g0_uu(1,3)
+     &                                             )
 
                 ! constraint damping terms added to efe,efe_J
                 do a=1,3
@@ -1482,8 +1472,8 @@ c----------------------------------------------------------------------
                   write(*,*) ' g0u_33:',g0_uu(3,3)
                   write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j),
      &                     phi1_n(i,j),phi1_nm1(i,j)
-                  write(*,*) ' phi1_t/x:',phi1_t,phi1_x
-                  write(*,*) ' phi1_ti..:',phi1_tt,phi1_tx,phi1_xx
+                  write(*,*) ' phi1_t/x:',phi10_x(1),phi10_x(2)
+                  write(*,*) ' phi1_ti..:',phi10_xx(1,1),phi10_xx(1,2)
 
                   write(*,*) ' res J:'
                   write(*,*) ' tt:',efe(1,1),efe_J(1,1)
