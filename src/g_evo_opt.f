@@ -607,51 +607,40 @@ c----------------------------------------------------------------------
      &                 2*(phi10_xx(1,2)*g0_uu(1,2)+
      &                    phi10_xx(1,3)*g0_uu(1,3)+
      &                    phi10_xx(2,3)*g0_uu(2,3))
+     &                  +
+     &                     g0_uu(1,1)*H0_l(1)*phi10_x(1)+
+     &                     g0_uu(1,2)*H0_l(1)*phi10_x(2)+
+     &                     g0_uu(1,3)*H0_l(1)*phi10_x(3)+
+     &                     g0_uu(2,1)*H0_l(2)*phi10_x(1)+
+     &                     g0_uu(2,2)*H0_l(2)*phi10_x(2)+
+     &                     g0_uu(2,3)*H0_l(2)*phi10_x(3)+
+     &                     g0_uu(3,1)*H0_l(3)*phi10_x(1)+
+     &                     g0_uu(3,2)*H0_l(3)*phi10_x(2)+
+     &                     g0_uu(3,3)*H0_l(3)*phi10_x(3)
+     &                  +
+     &                     (3d0-dimA)/2/gA*(
+     &                      gA_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                      gA_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                      gA_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                      gA_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                      gA_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                      gA_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                      gA_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                      gA_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                      gA_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                               )
      &                  -
-     &                      phi10_x(1)*( gamma_ull(1,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(1,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(1,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(1,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(1,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(1,2,3)*g0_uu(2,3)) )
-     &                  -
-     &                      phi10_x(2)*( gamma_ull(2,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(2,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(2,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(2,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(2,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(2,2,3)*g0_uu(2,3)) )
-     &                  -
-     &                      phi10_x(3)*( gamma_ull(3,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(3,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(3,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(3,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(3,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(3,2,3)*g0_uu(2,3)) )
-     &                +
-     &                   1.5d0/gA*(
-     &                    gA_x(1)*phi10_x(1)*g0_uu(1,1)+
-     &                    gA_x(2)*phi10_x(2)*g0_uu(2,2)+
-     &                    gA_x(3)*phi10_x(3)*g0_uu(3,3)+
-     &                    gA_x(1)*phi10_x(2)*g0_uu(1,2)+
-     &                    gA_x(1)*phi10_x(3)*g0_uu(1,3)+
-     &                    gA_x(2)*phi10_x(3)*g0_uu(2,3)+
-     &                    gA_x(2)*phi10_x(1)*g0_uu(1,2)+
-     &                    gA_x(3)*phi10_x(1)*g0_uu(1,3)+
-     &                    gA_x(3)*phi10_x(2)*g0_uu(2,3)
-     &                                             )
-     &                -
-     &                   2.0d0/gB*(
-     &                    gB_x(1)*phi10_x(1)*g0_uu(1,1)+
-     &                    gB_x(2)*phi10_x(2)*g0_uu(2,2)+
-     &                    gB_x(3)*phi10_x(3)*g0_uu(3,3)+
-     &                    gB_x(1)*phi10_x(2)*g0_uu(1,2)+
-     &                    gB_x(1)*phi10_x(3)*g0_uu(1,3)+
-     &                    gB_x(2)*phi10_x(3)*g0_uu(2,3)+
-     &                    gB_x(2)*phi10_x(1)*g0_uu(1,2)+
-     &                    gB_x(3)*phi10_x(1)*g0_uu(1,3)+
-     &                    gB_x(3)*phi10_x(2)*g0_uu(2,3)
-     &                                             )
+     &                     (4d0+dimB)/2/gB*(
+     &                      gB_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                      gB_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                      gB_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                      gB_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                      gB_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                      gB_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                      gB_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                      gB_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                      gB_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                               )
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of g_np1->L.g_np1 transformation
