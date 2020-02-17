@@ -1154,7 +1154,7 @@ c----------------------------------------------------------------------
                 !----------------------------------------------------------------
                 ! computes diag. Jacobian of phi1_np1->L.phi1_np1 transformation
                 ! by differentiating L.phi1=box.phi1-dV/dphi1 wrt. phi1_np1
-                ! and remember: phi10=phi1*(1-x0**2)**3 
+                ! and remember: phi10=phi1*(1-x0**2)**3*sin(PI*y0)**5 
                 ! 
                 ! ddphi1_J_tx differs from ddphi_J due to forward/backward stencils
                 ! at excision surfaces that affect the cross-derivative tx 
@@ -1212,21 +1212,21 @@ c----------------------------------------------------------------------
 
                 phi1_J=    (
      &                 g0_uu(1,1)*ddphi1_J
-     &                           *(1-x0**2)**3
+     &                           *(1-x0**2)**3*sin(PI*y0)**5
      &                 -4*(3)*x0*g0_uu(1,2)*dphi1_J
-     &                           *(1-x0**2)**(3)
+     &                           *(1-x0**2)**3*sin(PI*y0)**5
      &                 +2*g0_uu(1,2)*ddphi1_J_tx
-     &                           *(1-x0**2)**(3)
+     &                           *(1-x0**2)**3*sin(PI*y0)**5
      &                     )
      &                +
-     &                  dphi1_J*(1-x0**2)**3
+     &                  dphi1_J*(1-x0**2)**3*sin(PI*y0)**5
      &                  *(
      &                    g0_uu_x(1,1,1)+
      &                    g0_uu_x(2,1,2)+
      &                    g0_uu_x(3,1,3)
      &                   )
      &                +
-     &                  dphi1_J*(1-x0**2)**3
+     &                  dphi1_J*(1-x0**2)**3*sin(PI*y0)**5
      &                  *(
      &                    g0_uu(1,1)*gamma_ull(1,1,1)+
      &                    g0_uu(1,1)*gamma_ull(2,2,1)+
@@ -1239,13 +1239,15 @@ c----------------------------------------------------------------------
      &                    g0_uu(1,3)*gamma_ull(3,3,3)
      &                   )
      &                +
-     &                   dphi1_J*(1-x0**2)**3*1.5d0/gA*(
+     &                   dphi1_J*(1-x0**2)**3*sin(PI*y0)**5
+     &                          *1.5d0/gA*(
      &                    gA_x(1)*g0_uu(1,1)+
      &                    gA_x(2)*g0_uu(1,2)+
      &                    gA_x(3)*g0_uu(1,3)
      &                                             )
      &                -
-     &                   dphi1_J*(1-x0**2)**3*2.0d0/gB*(
+     &                   dphi1_J*(1-x0**2)**3*sin(PI*y0)**5
+     &                          *2.0d0/gB*(
      &                    gB_x(1)*g0_uu(1,1)+
      &                    gB_x(2)*g0_uu(1,2)+
      &                    gB_x(3)*g0_uu(1,3)

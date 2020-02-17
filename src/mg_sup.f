@@ -87,11 +87,12 @@ c-----------------------------------------------------------------------
         ! sets AdS5D cosmological constant
         lambda5=-6/L/L
 
-        ! manually reconstruct phi10=phi1*(1-x^2)^3 
+        ! manually reconstruct phi10=phi1*(1-x^2)^3*sin(PI*y0)**5 
         do i=1,Nx
           do j=1,Ny
             x0=x(i)
             if (phi1(i,j).ne.0) phi10(i,j)=phi1(i,j)*(1-x0**2)**3
+     &                                              *sin(PI*y0)**5
             if (phi1(i,j).eq.0) phi10(i,j)=0
           end do
         end do
