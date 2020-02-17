@@ -31,7 +31,6 @@ extern int cp_version;
 
 extern real *phi1,*phi1_n,*phi1_np1,*phi1_nm1;
 extern real *phi1_t,*phi1_t_n;
-extern real *fb_res;
 
 extern real *gb_tt,*gb_tt_n,*gb_tt_np1,*gb_tt_nm1;
 extern real *gb_tx,*gb_tx_n,*gb_tx_np1,*gb_tx_nm1;
@@ -41,9 +40,6 @@ extern real *gb_ty,*gb_ty_n,*gb_ty_np1,*gb_ty_nm1;
 extern real *gb_xy,*gb_xy_n,*gb_xy_np1,*gb_xy_nm1;
 extern real *gb_yy,*gb_yy_n,*gb_yy_np1,*gb_yy_nm1;
 extern real *omega,*omega_n,*omega_np1,*omega_nm1;
-extern real *fb_t,*fb_t_n,*fb_t_np1,*fb_t_nm1;
-extern real *fb_x,*fb_x_n,*fb_x_np1,*fb_x_nm1;
-extern real *fb_y,*fb_y_n,*fb_y_np1,*fb_y_nm1;
 extern real *gb_tt_t,*gb_tt_t_n;
 extern real *gb_tx_t,*gb_tx_t_n;
 extern real *gb_xx_t,*gb_xx_t_n;
@@ -52,9 +48,6 @@ extern real *gb_ty_t,*gb_ty_t_n;
 extern real *gb_xy_t,*gb_xy_t_n;
 extern real *gb_yy_t,*gb_yy_t_n;
 extern real *omega_t,*omega_t_n;
-extern real *fb_t_t,*fb_t_t_n;
-extern real *fb_x_t,*fb_x_t_n;
-extern real *fb_y_t,*fb_y_t_n;
 extern real *gb_res;
 extern real *cl_res;
 
@@ -82,7 +75,6 @@ extern real base_bbox[4],bbox[4],dx,dy,dt,dx_Lc,dy_Lc;
 extern int g_L;
 
 extern int phi1_gfn,phi1_n_gfn,phi1_np1_gfn,phi1_nm1_gfn; 
-extern int fb_res_gfn;
 
 extern int gb_tt_gfn,gb_tt_n_gfn,gb_tt_np1_gfn,gb_tt_nm1_gfn;
 extern int gb_tx_gfn,gb_tx_n_gfn,gb_tx_np1_gfn,gb_tx_nm1_gfn;
@@ -92,9 +84,6 @@ extern int gb_ty_gfn,gb_ty_n_gfn,gb_ty_np1_gfn,gb_ty_nm1_gfn;
 extern int gb_xy_gfn,gb_xy_n_gfn,gb_xy_np1_gfn,gb_xy_nm1_gfn;
 extern int gb_yy_gfn,gb_yy_n_gfn,gb_yy_np1_gfn,gb_yy_nm1_gfn;
 extern int omega_gfn,omega_n_gfn,omega_np1_gfn,omega_nm1_gfn;
-extern int fb_t_gfn,fb_t_n_gfn,fb_t_np1_gfn,fb_t_nm1_gfn;
-extern int fb_x_gfn,fb_x_n_gfn,fb_x_np1_gfn,fb_x_nm1_gfn;
-extern int fb_y_gfn,fb_y_n_gfn,fb_y_np1_gfn,fb_y_nm1_gfn;
 extern int gb_tt_t_gfn,gb_tt_t_n_gfn;
 extern int gb_tx_t_gfn,gb_tx_t_n_gfn;
 extern int gb_xx_t_gfn,gb_xx_t_n_gfn;
@@ -103,9 +92,6 @@ extern int gb_ty_t_gfn,gb_ty_t_n_gfn;
 extern int gb_xy_t_gfn,gb_xy_t_n_gfn;
 extern int gb_yy_t_gfn,gb_yy_t_n_gfn;
 extern int omega_t_gfn,omega_t_n_gfn;
-extern int fb_t_t_gfn,fb_t_t_n_gfn;
-extern int fb_x_t_gfn,fb_x_t_n_gfn;
-extern int fb_y_t_gfn,fb_y_t_n_gfn;
 extern int gb_res_gfn;
 extern int cl_res_gfn;
 
@@ -138,7 +124,7 @@ void calc_gbu(void);
 void calc_gbu_nm1(void);
 
 /* prototypes for the various fortran functions we use: */
-void g_evo_opt_(real *gb_res, real *fb_res, real *cl_res,
+void g_evo_opt_(real *gb_res, real *cl_res,
                 real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
                 real *gb_tx_np1, real *gb_tx_n, real *gb_tx_nm1,
                 real *gb_ty_np1, real *gb_ty_n, real *gb_ty_nm1,
@@ -147,9 +133,6 @@ void g_evo_opt_(real *gb_res, real *fb_res, real *cl_res,
                 real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                 real *psi_np1, real *psi_n, real *psi_nm1,
                 real *omega_np1, real *omega_n, real *omega_nm1,
-                real *fb_t_np1, real *fb_t_n, real *fb_t_nm1,
-                real *fb_x_np1, real *fb_x_n, real *fb_x_nm1,
-                real *fb_y_np1, real *fb_y_n, real *fb_y_nm1,
                 real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                 real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                 real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
@@ -175,9 +158,6 @@ void init_nm1_(real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1, real *gb_tt_t_n,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1, real *gb_yy_t_n,
                real *psi_np1, real *psi_n, real *psi_nm1, real *psi_t_n,
                real *omega_np1, real *omega_n, real *omega_nm1, real *omega_t_n,
-               real *fb_t_np1, real *fb_t_n, real *fb_t_nm1, real *fb_t_t_n,   
-               real *fb_x_np1, real *fb_x_n, real *fb_x_nm1, real *fb_x_t_n,
-               real *fb_y_np1, real *fb_y_n, real *fb_y_nm1, real *fb_y_t_n,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1, real *Hb_t_t_n,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1, real *Hb_x_t_n,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1, real *Hb_y_t_n,
@@ -196,9 +176,6 @@ void ires_(real *efe_all_ires,real *kg_ires,
            real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
            real *psi_np1, real *psi_n, real *psi_nm1,
            real *omega_np1, real *omega_n, real *omega_nm1,
-           real *fb_t_np1, real *fb_t_n, real *fb_t_nm1,
-           real *fb_x_np1, real *fb_x_n, real *fb_x_nm1,
-           real *fb_y_np1, real *fb_y_n, real *fb_y_nm1,
            real *phi1_np1, real *phi1_n, real *phi1_nm1,
            real *x, real *y, real *dt, real *chr,
            real *AdS_L, real *ex, int *Nx, int *Ny, int *phys_bdy, int *ghost_width);
@@ -226,9 +203,6 @@ void hb_t_evo_(real *res,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *omega_np1, real *omega_n, real *omega_nm1,
-               real *fb_t_np1, real *fb_t_n, real *fb_t_nm1,
-               real *fb_x_np1, real *fb_x_n, real *fb_x_nm1,
-               real *fb_y_np1, real *fb_y_n, real *fb_y_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,
@@ -247,9 +221,6 @@ void hb_i_evo_(real *res,
                real *gb_yy_np1, real *gb_yy_n, real *gb_yy_nm1,
                real *psi_np1, real *psi_n, real *psi_nm1,
                real *omega_np1, real *omega_n, real *omega_nm1,
-               real *fb_t_np1, real *fb_t_n, real *fb_t_nm1,
-               real *fb_x_np1, real *fb_x_n, real *fb_x_nm1,
-               real *fb_y_np1, real *fb_y_n, real *fb_y_nm1,
                real *Hb_t_np1, real *Hb_t_n, real *Hb_t_nm1,
                real *Hb_x_np1, real *Hb_x_n, real *Hb_x_nm1,
                real *Hb_y_np1, real *Hb_y_n, real *Hb_y_nm1,

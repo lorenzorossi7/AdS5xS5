@@ -15,9 +15,6 @@ c----------------------------------------------------------------------
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  omega_np1,omega_n,omega_nm1,
-     &                  fb_t_np1,fb_t_n,fb_t_nm1,
-     &                  fb_x_np1,fb_x_n,fb_x_nm1,
-     &                  fb_y_np1,fb_y_n,fb_y_nm1,
      &                  phi1_np1,phi1_n,phi1_nm1,
      &                  x,y,dt,chr,L,ex,Nx,Ny,phys_bdy,ghost_width)
         implicit none
@@ -35,9 +32,6 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
 
         real*8 dimA,dimB
@@ -223,9 +217,6 @@ c----------------------------------------------------------------------
      &                gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                psi_np1,psi_n,psi_nm1,
      &                omega_np1,omega_n,omega_nm1,
-     &                fb_t_np1,fb_t_n,fb_t_nm1,
-     &                fb_x_np1,fb_x_n,fb_x_nm1,
-     &                fb_y_np1,fb_y_n,fb_y_nm1,
      &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
      &                zeros,zeros,zeros,
@@ -254,17 +245,17 @@ c----------------------------------------------------------------------
                 do a=1,3
                   do b=a,3
                     efe_ires(a,b)=ricci_ll(a,b)
-     &                           -(f1_l(a)*f1_l(b)
-     &                            +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-     &                            +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-     &                            +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-     &                            +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-     &                            +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-     &                            +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-     &                            +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-     &                            +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-     &                            +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
-     &                            )/4
+     &                     -(2*phi10_x(a)*phi10_x(b)
+     &                      -g0_ll(a,b)*g0_uu(1,1)*phi10_x(1)*phi10_x(1)
+     &                      -g0_ll(a,b)*g0_uu(1,2)*phi10_x(1)*phi10_x(2)
+     &                      -g0_ll(a,b)*g0_uu(1,3)*phi10_x(1)*phi10_x(3)
+     &                      -g0_ll(a,b)*g0_uu(2,1)*phi10_x(2)*phi10_x(1)
+     &                      -g0_ll(a,b)*g0_uu(2,2)*phi10_x(2)*phi10_x(2)
+     &                      -g0_ll(a,b)*g0_uu(2,3)*phi10_x(2)*phi10_x(3)
+     &                      -g0_ll(a,b)*g0_uu(3,1)*phi10_x(3)*phi10_x(1)
+     &                      -g0_ll(a,b)*g0_uu(3,2)*phi10_x(3)*phi10_x(2)
+     &                      -g0_ll(a,b)*g0_uu(3,3)*phi10_x(3)*phi10_x(3)
+     &                      )/4/gB**4
                   end do
                 end do
 

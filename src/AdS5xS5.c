@@ -74,7 +74,6 @@ int cp_version;
 
 real *phi1,*phi1_n,*phi1_np1,*phi1_nm1; // MGH, AMRH n/np1/nm1
 real *phi1_t,*phi1_t_n;
-real *fb_res;
 
 real *gb_tt,*gb_tt_n,*gb_tt_np1,*gb_tt_nm1;
 real *gb_tx,*gb_tx_n,*gb_tx_np1,*gb_tx_nm1;
@@ -84,9 +83,6 @@ real *omega,*omega_n,*omega_np1,*omega_nm1;
 real *gb_ty,*gb_ty_n,*gb_ty_np1,*gb_ty_nm1;
 real *gb_xy,*gb_xy_n,*gb_xy_np1,*gb_xy_nm1;
 real *gb_yy,*gb_yy_n,*gb_yy_np1,*gb_yy_nm1;
-real *fb_t,*fb_t_n,*fb_t_np1,*fb_t_nm1;
-real *fb_x,*fb_x_n,*fb_x_np1,*fb_x_nm1;
-real *fb_y,*fb_y_n,*fb_y_np1,*fb_y_nm1;
 real *gb_tt_t,*gb_tt_t_n;
 real *gb_tx_t,*gb_tx_t_n;
 real *gb_xx_t,*gb_xx_t_n;
@@ -95,9 +91,6 @@ real *gb_ty_t,*gb_ty_t_n;
 real *gb_xy_t,*gb_xy_t_n;
 real *gb_yy_t,*gb_yy_t_n;
 real *omega_t,*omega_t_n;
-real *fb_t_t,*fb_t_t_n;
-real *fb_x_t,*fb_x_t_n;
-real *fb_y_t,*fb_y_t_n;
 real *gb_res;
 real *cl_res;
 
@@ -132,7 +125,6 @@ int g_L;
 
 int phi1_gfn,phi1_n_gfn,phi1_np1_gfn,phi1_nm1_gfn; 
 int phi1_t_gfn,phi1_t_n_gfn;
-int fb_res_gfn;
 
 int gb_tt_gfn,gb_tt_n_gfn,gb_tt_np1_gfn,gb_tt_nm1_gfn;
 int gb_tx_gfn,gb_tx_n_gfn,gb_tx_np1_gfn,gb_tx_nm1_gfn;
@@ -142,9 +134,6 @@ int omega_gfn,omega_n_gfn,omega_np1_gfn,omega_nm1_gfn;
 int gb_ty_gfn,gb_ty_n_gfn,gb_ty_np1_gfn,gb_ty_nm1_gfn;
 int gb_xy_gfn,gb_xy_n_gfn,gb_xy_np1_gfn,gb_xy_nm1_gfn;
 int gb_yy_gfn,gb_yy_n_gfn,gb_yy_np1_gfn,gb_yy_nm1_gfn;
-int fb_t_gfn,fb_t_n_gfn,fb_t_np1_gfn,fb_t_nm1_gfn;
-int fb_x_gfn,fb_x_n_gfn,fb_x_np1_gfn,fb_x_nm1_gfn;
-int fb_y_gfn,fb_y_n_gfn,fb_y_np1_gfn,fb_y_nm1_gfn;
 int gb_tt_t_gfn,gb_tt_t_n_gfn;
 int gb_tx_t_gfn,gb_tx_t_n_gfn;
 int gb_xx_t_gfn,gb_xx_t_n_gfn;
@@ -153,9 +142,6 @@ int gb_ty_t_gfn,gb_ty_t_n_gfn;
 int gb_xy_t_gfn,gb_xy_t_n_gfn;
 int gb_yy_t_gfn,gb_yy_t_n_gfn;
 int omega_t_gfn,omega_t_n_gfn;
-int fb_t_t_gfn,fb_t_t_n_gfn;
-int fb_x_t_gfn,fb_x_t_n_gfn;
-int fb_y_t_gfn,fb_y_t_n_gfn;
 int gb_res_gfn;
 int cl_res_gfn;
 
@@ -192,7 +178,6 @@ void set_gfns(void)
     if ((phi1_np1_gfn = PAMR_get_gfn("phi1",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_t_gfn   = PAMR_get_gfn("phi1_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((phi1_t_n_gfn = PAMR_get_gfn("phi1_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_res_gfn   = PAMR_get_gfn("fb_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
     if ((gb_tt_gfn     = PAMR_get_gfn("gb_tt",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tt_nm1_gfn = PAMR_get_gfn("gb_tt",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
@@ -226,18 +211,6 @@ void set_gfns(void)
     if ((gb_yy_nm1_gfn = PAMR_get_gfn("gb_yy",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yy_n_gfn   = PAMR_get_gfn("gb_yy",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_yy_np1_gfn = PAMR_get_gfn("gb_yy",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_gfn      = PAMR_get_gfn("fb_t",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_nm1_gfn  = PAMR_get_gfn("fb_t",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_n_gfn    = PAMR_get_gfn("fb_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_np1_gfn  = PAMR_get_gfn("fb_t",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_gfn      = PAMR_get_gfn("fb_x",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_nm1_gfn  = PAMR_get_gfn("fb_x",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_n_gfn    = PAMR_get_gfn("fb_x",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_np1_gfn  = PAMR_get_gfn("fb_x",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_gfn      = PAMR_get_gfn("fb_y",PAMR_MGH, 0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_nm1_gfn  = PAMR_get_gfn("fb_y",PAMR_AMRH,3))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_n_gfn    = PAMR_get_gfn("fb_y",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_np1_gfn  = PAMR_get_gfn("fb_y",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tt_t_gfn   = PAMR_get_gfn("gb_tt_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tt_t_n_gfn = PAMR_get_gfn("gb_tt_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_tx_t_gfn   = PAMR_get_gfn("gb_tx_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
@@ -254,12 +227,6 @@ void set_gfns(void)
     if ((gb_yy_t_n_gfn = PAMR_get_gfn("gb_yy_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((omega_t_gfn   = PAMR_get_gfn("omega_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
     if ((omega_t_n_gfn = PAMR_get_gfn("omega_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_t_gfn    = PAMR_get_gfn("fb_t_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_t_t_n_gfn  = PAMR_get_gfn("fb_t_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_t_gfn    = PAMR_get_gfn("fb_x_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_x_t_n_gfn  = PAMR_get_gfn("fb_x_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_t_gfn    = PAMR_get_gfn("fb_y_t",PAMR_MGH,0))<0) AMRD_stop("set_gnfs error",0);
-    if ((fb_y_t_n_gfn  = PAMR_get_gfn("fb_y_t",PAMR_AMRH,2))<0) AMRD_stop("set_gnfs error",0);
     if ((gb_res_gfn    = PAMR_get_gfn("gb_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
     if ((cl_res_gfn    = PAMR_get_gfn("cl_res",PAMR_AMRH,1))<0) AMRD_stop("set_gnfs error",0);
 
@@ -373,7 +340,6 @@ void ldptr(void)
    phi1_nm1 = gfs[phi1_nm1_gfn-1];
    phi1_t   = gfs[phi1_t_gfn-1];
    phi1_t_n = gfs[phi1_t_n_gfn-1];
-   fb_res   = gfs[fb_res_gfn-1];
 
    gb_tt     = gfs[gb_tt_gfn-1];
    gb_tt_n   = gfs[gb_tt_n_gfn-1];
@@ -407,18 +373,6 @@ void ldptr(void)
    gb_yy_n   = gfs[gb_yy_n_gfn-1];
    gb_yy_np1 = gfs[gb_yy_np1_gfn-1];
    gb_yy_nm1 = gfs[gb_yy_nm1_gfn-1];
-   fb_t      = gfs[fb_t_gfn-1];
-   fb_t_n    = gfs[fb_t_n_gfn-1];
-   fb_t_np1  = gfs[fb_t_np1_gfn-1];
-   fb_t_nm1  = gfs[fb_t_nm1_gfn-1];
-   fb_x      = gfs[fb_x_gfn-1];
-   fb_x_n    = gfs[fb_x_n_gfn-1];
-   fb_x_np1  = gfs[fb_x_np1_gfn-1];
-   fb_x_nm1  = gfs[fb_x_nm1_gfn-1];
-   fb_y      = gfs[fb_y_gfn-1];
-   fb_y_n    = gfs[fb_y_n_gfn-1];
-   fb_y_np1  = gfs[fb_y_np1_gfn-1];
-   fb_y_nm1  = gfs[fb_y_nm1_gfn-1];
    gb_tt_t   = gfs[gb_tt_t_gfn-1];
    gb_tt_t_n = gfs[gb_tt_t_n_gfn-1];
    gb_tx_t   = gfs[gb_tx_t_gfn-1];
@@ -435,12 +389,6 @@ void ldptr(void)
    gb_yy_t_n = gfs[gb_yy_t_n_gfn-1];
    omega_t   = gfs[omega_t_gfn-1];
    omega_t_n = gfs[omega_t_n_gfn-1];
-   fb_t_t    = gfs[fb_t_t_gfn-1];
-   fb_t_t_n  = gfs[fb_t_t_n_gfn-1];
-   fb_x_t    = gfs[fb_x_t_gfn-1];
-   fb_x_t_n  = gfs[fb_x_t_n_gfn-1];
-   fb_y_t    = gfs[fb_y_t_gfn-1];
-   fb_y_t_n  = gfs[fb_y_t_n_gfn-1];
    gb_res    = gfs[gb_res_gfn-1];
    cl_res    = gfs[cl_res_gfn-1];
 
@@ -715,9 +663,6 @@ void AdS5xS5_free_data(void)
    zero_f(gb_yy_t_n);
    zero_f(psi_t_n);
    zero_f(omega_t_n);
-   zero_f(fb_t_t_n);
-   zero_f(fb_x_t_n);
-   zero_f(fb_y_t_n);
    zero_f(Hb_t_t_n);
    zero_f(Hb_x_t_n);
    zero_f(Hb_y_t_n);
@@ -782,16 +727,6 @@ void AdS5xS5_t0_cnst_data(void)
                 &AdS_L,phys_bdy,chr_mg,&AMRD_ex,x,y,&Nx,&Ny);
    }   
 
-//TEST//
-//   zero_f(gb_tt);
-//   zero_f(gb_tx);
-//   zero_f(gb_ty);
-//   zero_f(gb_xx);
-//   zero_f(gb_xy);
-//   zero_f(gb_yy);
-//   zero_f(psi);
-//   zero_f(omega);
-
    // initialize nm1,np1 time levels and hbars
    if (AMRD_id_pl_method==3 && phi1_nm1)
    {
@@ -815,9 +750,6 @@ void AdS5xS5_t0_cnst_data(void)
                gb_yy_np1,gb_yy_n,gb_yy_nm1,gb_yy_t_n,
                psi_np1,psi_n,psi_nm1,psi_t_n,
                omega_np1,omega_n,omega_nm1,omega_t_n,
-               fb_t_np1,fb_t_n,fb_t_nm1,fb_t_t_n, 
-               fb_x_np1,fb_x_n,fb_x_nm1,fb_x_t_n,
-               fb_y_np1,fb_y_n,fb_y_nm1,fb_y_t_n,
                Hb_t_np1,Hb_t_n,Hb_t_nm1,Hb_t_t_n,
                Hb_x_np1,Hb_x_n,Hb_x_nm1,Hb_x_t_n,
                Hb_y_np1,Hb_y_n,Hb_y_nm1,Hb_y_t_n,
@@ -882,9 +814,6 @@ void AdS5xS5_pre_io_calc(void)
         gb_yy_n,gb_yy_nm1,gb_yy_np1,
         psi_n,psi_nm1,psi_np1,
         omega_n,omega_nm1,omega_np1,
-        fb_t_np1,fb_t_n,fb_t_nm1,
-        fb_x_np1,fb_x_n,fb_x_nm1,
-        fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_n,phi1_nm1,phi1_np1,
         x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
    }
@@ -901,9 +830,6 @@ void AdS5xS5_pre_io_calc(void)
         gb_yy_np1,gb_yy_n,gb_yy_nm1,
         psi_np1,psi_n,psi_nm1,
         omega_np1,omega_n,omega_nm1,
-        fb_t_np1,fb_t_n,fb_t_nm1,
-        fb_x_np1,fb_x_n,fb_x_nm1,
-        fb_y_np1,fb_y_n,fb_y_nm1,
         phi1_np1,phi1_n,phi1_nm1,
         x,y,&dt,chr,&AdS_L,&AMRD_ex,&Nx,&Ny,phys_bdy,ghost_width);
    }
@@ -943,7 +869,7 @@ void check_nan_(real *x, int *is_nan)
 int lin_zero_bnd_all=1;
 real AdS5xS5_evo_residual(void)
 {
-   real l2norm=0,l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_fb;
+   real l2norm=0,l2norm_gb,l2norm_hb_t,l2norm_hb_i;
    int is_nan;
 
    ldptr();
@@ -953,22 +879,20 @@ real AdS5xS5_evo_residual(void)
       lin_zero_bnd_res_(gb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
       lin_zero_bnd_res_(hb_t_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
       lin_zero_bnd_res_(hb_i_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
-      lin_zero_bnd_res_(fb_res,phys_bdy,&lin_zero_bnd_all,&Nx,&Ny);
    }
 
    l2norm_gb  =norm_l2(gb_res,mask,chr);
    l2norm_hb_t=norm_l2(hb_t_res,mask,chr);
    l2norm_hb_i=norm_l2(hb_i_res,mask,chr);
-   l2norm_fb=norm_l2(fb_res,mask,chr);
 
-   l2norm=l2norm_gb+l2norm_hb_t+l2norm_hb_i+l2norm_fb;
+   l2norm=l2norm_gb+l2norm_hb_t+l2norm_hb_i;
 
    check_nan_(&l2norm,&is_nan);
 
    if (is_nan)
    {
-      printf("\nl2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf, l2norm_fb=%lf\n",
-              l2norm_gb,l2norm_hb_t,l2norm_hb_i,l2norm_fb);
+      printf("\nl2norm_gb=%lf, l2norm_hb_t=%lf, l2norm_hb_i=%lf\n",
+              l2norm_gb,l2norm_hb_t,l2norm_hb_i);
       printf("Nx=%i,Ny=%i,L=%i\n",Nx,Ny,g_L);
       AMRD_stop("l2norm is nan ... stopping","");
       l2norm=0;
@@ -1002,9 +926,6 @@ void AdS5xS5_evolve(int iter)
              gb_yy_np1,gb_yy_n,gb_yy_nm1,
              psi_np1,psi_n,psi_nm1,
              omega_np1,omega_n,omega_nm1,
-             fb_t_np1,fb_t_n,fb_t_nm1,
-             fb_x_np1,fb_x_n,fb_x_nm1,
-             fb_y_np1,fb_y_n,fb_y_nm1,
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -1023,9 +944,6 @@ void AdS5xS5_evolve(int iter)
              gb_yy_np1,gb_yy_n,gb_yy_nm1,
              psi_np1,psi_n,psi_nm1,
              omega_np1,omega_n,omega_nm1,
-             fb_t_np1,fb_t_n,fb_t_nm1,
-             fb_x_np1,fb_x_n,fb_x_nm1,
-             fb_y_np1,fb_y_n,fb_y_nm1,
              Hb_t_np1,Hb_t_n,Hb_t_nm1,
              Hb_x_np1,Hb_x_n,Hb_x_nm1,
              Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -1035,14 +953,7 @@ void AdS5xS5_evolve(int iter)
              Hb_t_0,Hb_x_0,Hb_y_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
 
-//     //TEST//
-//     for (i=0; i<size; i++)
-//     {
-//       printf("omega_np1[i]=%.16f,omega_n[i]=%.16f,omega_nm1[i]=%.16f\n",omega_np1[i],omega_n[i],omega_nm1[i]);
-//     }
-//     //TEST//
-
-   g_evo_opt_(gb_res,fb_res,cl_res,
+   g_evo_opt_(gb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
               gb_tx_np1,gb_tx_n,gb_tx_nm1,
               gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -1051,9 +962,6 @@ void AdS5xS5_evolve(int iter)
               gb_yy_np1,gb_yy_n,gb_yy_nm1,
               psi_np1,psi_n,psi_nm1,
               omega_np1,omega_n,omega_nm1,
-              fb_t_np1,fb_t_n,fb_t_nm1,
-              fb_x_np1,fb_x_n,fb_x_nm1,
-              fb_y_np1,fb_y_n,fb_y_nm1,
               Hb_t_np1,Hb_t_n,Hb_t_nm1,
               Hb_x_np1,Hb_x_n,Hb_x_nm1,
               Hb_y_np1,Hb_y_n,Hb_y_nm1,

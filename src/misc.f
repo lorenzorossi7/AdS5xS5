@@ -499,9 +499,6 @@ c----------------------------------------------------------------------
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  omega_np1,omega_n,omega_nm1,
-     &                  fb_t_np1,fb_t_n,fb_t_nm1,
-     &                  fb_x_np1,fb_x_n,fb_x_nm1,
-     &                  fb_y_np1,fb_y_n,fb_y_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -544,9 +541,6 @@ c----------------------------------------------------------------------
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
         real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
         real*8 phi1_np1(Nx,Ny),phi1_n(Nx,Ny),phi1_nm1(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
 
         integer a,b,c,d,e,f,m,n,o,p
 
@@ -642,19 +636,11 @@ c----------------------------------------------------------------------
         real*8 gA_ads_x,gA_ads_xx        
         real*8 gB_ads_y,gB_ads_yy
 
-        real*8 fb_t_t,fb_t_x,fb_t_y 
-        real*8 fb_x_t,fb_x_x,fb_x_y
-        real*8 fb_y_t,fb_y_x,fb_y_y
-
         real*8 Hb_t_t,Hb_t_x,Hb_t_y 
         real*8 Hb_x_t,Hb_x_x,Hb_x_y
         real*8 Hb_y_t,Hb_y_x,Hb_y_y
 
         real*8 Hb_t0,Hb_x0,Hb_y0
-
-        real*8 fb_t0,fb_x0,fb_y0
-
-        real*8 f1_y_ads0
 
         real*8 phi1_ads0
         real*8 phi1_ads_y,phi1_ads_yy
@@ -682,10 +668,6 @@ c----------------------------------------------------------------------
         ! set gBads values
         gB_ads0=L**2*sin(PI*y0/L)**2 !y-dependence
 
-        ! set f1ads values using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
-        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f1_y_ads0  = 4/L*PI
-
         ! set phi1_ads values
         phi1_ads0=(1.5d0/L*PI*y0-sin(2*PI*y0/L)+sin(4*PI*y0/L)/8)*L**4
 
@@ -698,11 +680,6 @@ c----------------------------------------------------------------------
         gb_yy0=gb_yy_n(i,j)
         psi0  =psi_n(i,j) 
         omega0=omega_n(i,j)
-
-        ! set fbar values
-        fb_t0=fb_t_n(i,j)
-        fb_x0=fb_x_n(i,j)
-        fb_y0=fb_y_n(i,j)
 
         ! set hbar values
         Hb_t0=Hb_t_n(i,j)
@@ -775,17 +752,6 @@ c----------------------------------------------------------------------
      &       omega_tt,omega_tx,omega_ty,
      &       omega_xx,omega_xy,omega_yy,
      &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
-
-        ! calculate fbar derivatives
-        call df1_int(fb_t_np1,fb_t_n,fb_t_nm1,
-     &       fb_t_t,fb_t_x,fb_t_y,
-     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_t')
-        call df1_int(fb_x_np1,fb_x_n,fb_x_nm1,
-     &       fb_x_t,fb_x_x,fb_x_y,
-     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_x')
-        call df1_int(fb_y_np1,fb_y_n,fb_y_nm1,
-     &       fb_y_t,fb_y_x,fb_y_y,
-     &       dx,dy,dt,i,j,chr,ex,Nx,Ny,'fb_y')
 
         ! calculate hbar derivatives
         call df1_int(Hb_t_np1,Hb_t_n,Hb_t_nm1,
@@ -1363,23 +1329,30 @@ c----------------------------------------------------------------------
      &             +(dimB/2)*(gB_xx(3,3)/gB-gB_x(3)*gB_x(3)/gB**2)
 
         ! give values to the scalar field
-        phi10_x(1)=phi1_t*(1-x0**2)**3
-        phi10_x(2)=phi1_x*(1-x0**2)**3
-     &            +phi10*(-6*x0)*(1-x0**2)**2
+        phi10_x(1)=phi1_t*(1-x0**2)**3*sin(PI*y0/L)**4
+        phi10_x(2)=phi1_x*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi10*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
         phi10_x(3)=phi1_ads_y
-     &            +phi1_y*(1-x0**2)**3     
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi10*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
 
-        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3
-        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3
-     &               +phi1_t*(-6*x0)*(1-x0**2)**2
-        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3
-        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3
-     &               +phi1_x*(2)*(-6*x0)*(1-x0**2)**2
-     &               +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))
-        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3 
-     &               +phi1_y*(-6*x0)*(1-x0**2)**2
+        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3*sin(PI*y0/L)**4
+        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_t*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_t*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_x*(2)*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+     &  +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))*sin(PI*y0/L)**4
+        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3*sin(PI*y0/L)**4
+     &  +phi1_x*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
         phi10_xx(3,3)=phi1_ads_yy
-     &               +phi1_yy*(1-x0**2)**3 
+     &  +phi1_yy*(1-x0**2)**3*sin(PI*y0/L)**4 
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L 
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+     &  +phi10*(1-x0**2)**3*(cos(2*PI*y0/L)-cos(4*PI*y0/L))*2*PI**2/L**2
 
         do a=1,2
           do b=a+1,3
@@ -1501,115 +1474,6 @@ c----------------------------------------------------------------------
                 volads_x(a,b,c,d)=levicivi3(a,b,c)*sqrtdetgads_x(d)
                 volh_x(a,b,c,d)=vol_x(a,b,c,d)-volads_x(a,b,c,d)
               end do
-            end do
-          end do
-        end do
-
-        ! give values to the field strength, using sin(phi2)=sin(phi3)=sin(phi4)=1 w.l.o.g 
-        !(considering phi2,phi3,phi4-independent case, so phi2=phi3=phi4=pi/2 slice will do)
-        f1_l(1)   =0        +fb_t0*(1-x0**2)**3
-        f1_l(2)   =0        +fb_x0*(1-x0**2)**3
-        f1_l(3)   =f1_y_ads0+fb_y0*(1-x0**2)**3
-        f2_ll(1,2)=-vol(1,2,3)*f1_l(1)*g0_uu(3,1)
-     &             -vol(1,2,3)*f1_l(2)*g0_uu(3,2)
-     &             -vol(1,2,3)*f1_l(3)*g0_uu(3,3) 
-        f2_ll(1,3)=-vol(1,3,2)*f1_l(1)*g0_uu(2,1)
-     &             -vol(1,3,2)*f1_l(2)*g0_uu(2,2)
-     &             -vol(1,3,2)*f1_l(3)*g0_uu(2,3)
-        f2_ll(2,3)=-vol(2,3,1)*f1_l(1)*g0_uu(1,1)
-     &             -vol(2,3,1)*f1_l(2)*g0_uu(1,2)
-     &             -vol(2,3,1)*f1_l(3)*g0_uu(1,3)
-
-        f1_l_x(1,1)=fb_t_t*(1-x0**2)**3
-        f1_l_x(1,2)=fb_t_x*(1-x0**2)**3
-     &             +fb_t0*3*(1-x0**2)**2*(-2*x0)
-        f1_l_x(1,3)=fb_t_y*(1-x0**2)**3
-        f1_l_x(2,1)=fb_x_t*(1-x0**2)**3
-        f1_l_x(2,2)=fb_x_x*(1-x0**2)**3
-     &             +fb_x0*3*(1-x0**2)**2*(-2*x0)
-        f1_l_x(2,3)=fb_x_y*(1-x0**2)**3
-        f1_l_x(3,1)=fb_y_t*(1-x0**2)**3
-        f1_l_x(3,2)=fb_y_x*(1-x0**2)**3
-     &             +fb_y0*3*(1-x0**2)**2*(-2*x0)
-        f1_l_x(3,3)=fb_y_y*(1-x0**2)**3
-
-        do c=1,3
-          f2_ll_x(1,2,c)=-vol_x(1,2,3,c)*f1_l(1)*g0_uu(3,1)
-     &                   -vol_x(1,2,3,c)*f1_l(2)*g0_uu(3,2)
-     &                   -vol_x(1,2,3,c)*f1_l(3)*g0_uu(3,3)
-     &                   -vol(1,2,3)*f1_l_x(1,c)*g0_uu(3,1)
-     &                   -vol(1,2,3)*f1_l_x(2,c)*g0_uu(3,2)
-     &                   -vol(1,2,3)*f1_l_x(3,c)*g0_uu(3,3)
-     &                   -vol(1,2,3)*f1_l(1)*g0_uu_x(3,1,c)
-     &                   -vol(1,2,3)*f1_l(2)*g0_uu_x(3,2,c)
-     &                   -vol(1,2,3)*f1_l(3)*g0_uu_x(3,3,c)
-          f2_ll_x(1,3,c)=-vol_x(1,3,2,c)*f1_l(1)*g0_uu(2,1)
-     &                   -vol_x(1,3,2,c)*f1_l(2)*g0_uu(2,2)
-     &                   -vol_x(1,3,2,c)*f1_l(3)*g0_uu(2,3)
-     &                   -vol(1,3,2)*f1_l_x(1,c)*g0_uu(2,1)
-     &                   -vol(1,3,2)*f1_l_x(2,c)*g0_uu(2,2)
-     &                   -vol(1,3,2)*f1_l_x(3,c)*g0_uu(2,3)
-     &                   -vol(1,3,2)*f1_l(1)*g0_uu_x(2,1,c)
-     &                   -vol(1,3,2)*f1_l(2)*g0_uu_x(2,2,c)
-     &                   -vol(1,3,2)*f1_l(3)*g0_uu_x(2,3,c)
-          f2_ll_x(2,3,c)=-vol_x(2,3,1,c)*f1_l(1)*g0_uu(1,1)
-     &                   -vol_x(2,3,1,c)*f1_l(2)*g0_uu(1,2)
-     &                   -vol_x(2,3,1,c)*f1_l(3)*g0_uu(1,3)
-     &                   -vol(2,3,1)*f1_l_x(1,c)*g0_uu(1,1)
-     &                   -vol(2,3,1)*f1_l_x(2,c)*g0_uu(1,2)
-     &                   -vol(2,3,1)*f1_l_x(3,c)*g0_uu(1,3)
-     &                   -vol(2,3,1)*f1_l(1)*g0_uu_x(1,1,c)
-     &                   -vol(2,3,1)*f1_l(2)*g0_uu_x(1,2,c)
-     &                   -vol(2,3,1)*f1_l(3)*g0_uu_x(1,3,c)
-        end do
-
-        f1ads_l(3)   =f1_y_ads0
-
-        f2ads_ll(1,2)=-volads(1,2,3)*f1ads_l(3)*gads_uu(3,3)
-        f2ads_ll(1,3)=-volads(1,3,2)*f1ads_l(3)*gads_uu(2,3)
-        f2ads_ll(2,3)=-volads(2,3,1)*f1ads_l(3)*gads_uu(1,3)
-
-        do c=1,3
-          f2ads_ll_x(1,2,c)=-volads_x(1,2,3,c)*f1ads_l(3)*gads_uu(3,3)
-     &                      -volads(1,2,3)*f1ads_l(3)*gads_uu_x(3,3,c)
-          f2ads_ll_x(1,3,c)=-volads_x(1,3,2,c)*f1ads_l(3)*gads_uu(2,3)
-     &                      -volads(1,3,2)*f1ads_l(3)*gads_uu_x(2,3,c)
-          f2ads_ll_x(2,3,c)=-volads_x(2,3,1,c)*f1ads_l(3)*gads_uu(1,3)
-     &                      -volads(2,3,1)*f1ads_l(3)*gads_uu_x(1,3,c)
-        end do
-
-        h1_l(1)   =fb_t0*(1-x0**2)**3
-        h1_l(2)   =fb_x0*(1-x0**2)**3
-        h1_l(3)   =fb_y0*(1-x0**2)**3
-        h2_ll(1,2)=f2_ll(1,2)-f2ads_ll(1,2) 
-        h2_ll(1,3)=f2_ll(1,3)-f2ads_ll(1,3)
-        h2_ll(2,3)=f2_ll(2,3)-f2ads_ll(2,3)
-
-        h1_l_x(1,1)=fb_t_t*(1-x0**2)**3
-        h1_l_x(1,2)=fb_t_x*(1-x0**2)**3
-        h1_l_x(1,3)=fb_t_y*(1-x0**2)**3
-        h1_l_x(2,1)=fb_x_t*(1-x0**2)**3
-        h1_l_x(2,2)=fb_x_x*(1-x0**2)**3
-        h1_l_x(2,3)=fb_x_y*(1-x0**2)**3
-        h1_l_x(3,1)=fb_y_t*(1-x0**2)**3
-        h1_l_x(3,2)=fb_y_x*(1-x0**2)**3
-        h1_l_x(3,3)=fb_y_y*(1-x0**2)**3
-
-        do c=1,3
-          h2_ll_x(1,2,c)=f2_ll_x(1,2,c)-f2ads_ll_x(1,2,c) 
-          h2_ll_x(1,3,c)=f2_ll_x(1,3,c)-f2ads_ll_x(1,3,c)
-          h2_ll_x(2,3,c)=f2_ll_x(2,3,c)-f2ads_ll_x(2,3,c)
-        end do
-
-        do a=1,2
-          do b=a+1,3
-            f2_ll(b,a)=-f2_ll(a,b)
-            f2ads_ll(b,a)=-f2ads_ll(a,b)
-            h2_ll(b,a)=-h2_ll(a,b)
-            do c=1,3
-              f2_ll_x(b,a,c)=f2_ll_x(a,b,c)
-              f2ads_ll_x(b,a,c)=f2ads_ll_x(a,b,c)
-              h2_ll_x(b,a,c)=h2_ll_x(a,b,c)
             end do
           end do
         end do

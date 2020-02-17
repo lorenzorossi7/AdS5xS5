@@ -6,7 +6,7 @@ c the residual at the time just prior to updated
 c
 c L below is AdS_L (the length scale)
 c----------------------------------------------------------------------
-        subroutine g_evo_opt(gb_res,fb_res,cl_res,
+        subroutine g_evo_opt(gb_res,cl_res,
      &                       gb_tt_np1,gb_tt_n,gb_tt_nm1,
      &                       gb_tx_np1,gb_tx_n,gb_tx_nm1,
      &                       gb_ty_np1,gb_ty_n,gb_ty_nm1,
@@ -15,9 +15,6 @@ c----------------------------------------------------------------------
      &                       gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                       psi_np1,psi_n,psi_nm1,
      &                       omega_np1,omega_n,omega_nm1,
-     &                       fb_t_np1,fb_t_n,fb_t_nm1,
-     &                       fb_x_np1,fb_x_n,fb_x_nm1,
-     &                       fb_y_np1,fb_y_n,fb_y_nm1,
      &                       Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                       Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                       Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -30,7 +27,7 @@ c----------------------------------------------------------------------
         integer phys_bdy(4),ghost_width(4)
         integer background
         real*8 kappa_cd,rho_cd
-        real*8 gb_res(Nx,Ny),fb_res(Nx,Ny),cl_res(Nx,Ny)
+        real*8 gb_res(Nx,Ny),cl_res(Nx,Ny)
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
         real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
@@ -39,9 +36,6 @@ c----------------------------------------------------------------------
         real*8 gb_yy_np1(Nx,Ny),gb_yy_n(Nx,Ny),gb_yy_nm1(Nx,Ny)
         real*8 psi_np1(Nx,Ny),psi_n(Nx,Ny),psi_nm1(Nx,Ny)
         real*8 omega_np1(Nx,Ny),omega_n(Nx,Ny),omega_nm1(Nx,Ny)
-        real*8 fb_t_np1(Nx,Ny),fb_t_n(Nx,Ny),fb_t_nm1(Nx,Ny)
-        real*8 fb_x_np1(Nx,Ny),fb_x_n(Nx,Ny),fb_x_nm1(Nx,Ny)
-        real*8 fb_y_np1(Nx,Ny),fb_y_n(Nx,Ny),fb_y_nm1(Nx,Ny)
         real*8 Hb_t_np1(Nx,Ny),Hb_t_n(Nx,Ny),Hb_t_nm1(Nx,Ny)
         real*8 Hb_x_np1(Nx,Ny),Hb_x_n(Nx,Ny),Hb_x_nm1(Nx,Ny)
         real*8 Hb_y_np1(Nx,Ny),Hb_y_n(Nx,Ny),Hb_y_nm1(Nx,Ny)
@@ -150,7 +144,6 @@ c----------------------------------------------------------------------
         real*8 H0_t_ads0,H0_x_ads0,H0_y_ads0
 
         real*8 dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty
-        real*8 dfb_J
         real*8 dphi1_J,ddphi1_J,ddphi1_J_tx
         real*8 dc_J
 
@@ -204,7 +197,6 @@ c----------------------------------------------------------------------
         data H0_t_ads0,H0_x_ads0,H0_y_ads0/0.0,0.0,0.0/
 
         data dgb_J,ddgb_J,ddgb_J_tx,ddgb_J_ty/0.0,0.0,0.0,0.0/
-        data dfb_J/0.0/
         data dphi1_J,ddphi1_J/0.0,0.0/
         data dc_J/0.0/
 
@@ -330,9 +322,6 @@ c----------------------------------------------------------------------
      &                  gb_yy_np1,gb_yy_n,gb_yy_nm1,
      &                  psi_np1,psi_n,psi_nm1,
      &                  omega_np1,omega_n,omega_nm1,
-     &                  fb_t_np1,fb_t_n,fb_t_nm1,
-     &                  fb_x_np1,fb_x_n,fb_x_nm1,
-     &                  fb_y_np1,fb_y_n,fb_y_nm1,
      &                  Hb_t_np1,Hb_t_n,Hb_t_nm1,
      &                  Hb_x_np1,Hb_x_n,Hb_x_nm1,
      &                  Hb_y_np1,Hb_y_n,Hb_y_nm1,
@@ -618,51 +607,40 @@ c----------------------------------------------------------------------
      &                 2*(phi10_xx(1,2)*g0_uu(1,2)+
      &                    phi10_xx(1,3)*g0_uu(1,3)+
      &                    phi10_xx(2,3)*g0_uu(2,3))
+     &                  +
+     &                     g0_uu(1,1)*H0_l(1)*phi10_x(1)+
+     &                     g0_uu(1,2)*H0_l(1)*phi10_x(2)+
+     &                     g0_uu(1,3)*H0_l(1)*phi10_x(3)+
+     &                     g0_uu(2,1)*H0_l(2)*phi10_x(1)+
+     &                     g0_uu(2,2)*H0_l(2)*phi10_x(2)+
+     &                     g0_uu(2,3)*H0_l(2)*phi10_x(3)+
+     &                     g0_uu(3,1)*H0_l(3)*phi10_x(1)+
+     &                     g0_uu(3,2)*H0_l(3)*phi10_x(2)+
+     &                     g0_uu(3,3)*H0_l(3)*phi10_x(3)
+     &                  +
+     &                     (3d0-dimA)/2/gA*(
+     &                      gA_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                      gA_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                      gA_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                      gA_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                      gA_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                      gA_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                      gA_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                      gA_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                      gA_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                               )
      &                  -
-     &                      phi10_x(1)*( gamma_ull(1,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(1,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(1,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(1,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(1,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(1,2,3)*g0_uu(2,3)) )
-     &                  -
-     &                      phi10_x(2)*( gamma_ull(2,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(2,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(2,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(2,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(2,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(2,2,3)*g0_uu(2,3)) )
-     &                  -
-     &                      phi10_x(3)*( gamma_ull(3,1,1)*g0_uu(1,1)+
-     &                                   gamma_ull(3,2,2)*g0_uu(2,2)+
-     &                                   gamma_ull(3,3,3)*g0_uu(3,3)+
-     &                                2*(gamma_ull(3,1,2)*g0_uu(1,2)+
-     &                                   gamma_ull(3,1,3)*g0_uu(1,3)+
-     &                                   gamma_ull(3,2,3)*g0_uu(2,3)) )
-     &                +
-     &                   1.5d0/gA*(
-     &                    gA_x(1)*phi10_x(1)*g0_uu(1,1)+
-     &                    gA_x(2)*phi10_x(2)*g0_uu(2,2)+
-     &                    gA_x(3)*phi10_x(3)*g0_uu(3,3)+
-     &                    gA_x(1)*phi10_x(2)*g0_uu(1,2)+
-     &                    gA_x(1)*phi10_x(3)*g0_uu(1,3)+
-     &                    gA_x(2)*phi10_x(3)*g0_uu(2,3)+
-     &                    gA_x(2)*phi10_x(1)*g0_uu(1,2)+
-     &                    gA_x(3)*phi10_x(1)*g0_uu(1,3)+
-     &                    gA_x(3)*phi10_x(2)*g0_uu(2,3)
-     &                                             )
-     &                -
-     &                   2.0d0/gB*(
-     &                    gB_x(1)*phi10_x(1)*g0_uu(1,1)+
-     &                    gB_x(2)*phi10_x(2)*g0_uu(2,2)+
-     &                    gB_x(3)*phi10_x(3)*g0_uu(3,3)+
-     &                    gB_x(1)*phi10_x(2)*g0_uu(1,2)+
-     &                    gB_x(1)*phi10_x(3)*g0_uu(1,3)+
-     &                    gB_x(2)*phi10_x(3)*g0_uu(2,3)+
-     &                    gB_x(2)*phi10_x(1)*g0_uu(1,2)+
-     &                    gB_x(3)*phi10_x(1)*g0_uu(1,3)+
-     &                    gB_x(3)*phi10_x(2)*g0_uu(2,3)
-     &                                             )
+     &                     (4d0+dimB)/2/gB*(
+     &                      gB_x(1)*phi10_x(1)*g0_uu(1,1)+
+     &                      gB_x(2)*phi10_x(2)*g0_uu(2,2)+
+     &                      gB_x(3)*phi10_x(3)*g0_uu(3,3)+
+     &                      gB_x(1)*phi10_x(2)*g0_uu(1,2)+
+     &                      gB_x(1)*phi10_x(3)*g0_uu(1,3)+
+     &                      gB_x(2)*phi10_x(3)*g0_uu(2,3)+
+     &                      gB_x(2)*phi10_x(1)*g0_uu(1,2)+
+     &                      gB_x(3)*phi10_x(1)*g0_uu(1,3)+
+     &                      gB_x(3)*phi10_x(2)*g0_uu(2,3)
+     &                                               )
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of g_np1->L.g_np1 transformation
@@ -1174,16 +1152,6 @@ c----------------------------------------------------------------------
      &                )*(1-x0**2)**3
 
                 !----------------------------------------------------------------
-                ! computes diag. Jacobian of f_np1->L.f_np1 transformation
-                ! by differentiating L.f wrt. f(a)_i_np1 same-i entries
-                !----------------------------------------------------------------
-                dfb_J=1d0/2d0/dt
-
-                ffe_J(1)=-sqrtdetg*g0_uu(1,1)*dfb_J
-                ffe_J(2)=-dfb_J
-                ffe_J(3)=-dfb_J
-
-                !----------------------------------------------------------------
                 ! computes diag. Jacobian of phi1_np1->L.phi1_np1 transformation
                 ! by differentiating L.phi1=box.phi1-dV/dphi1 wrt. phi1_np1
                 ! and remember: phi10=phi1*(1-x0**2)**3 
@@ -1399,28 +1367,6 @@ c----------------------------------------------------------------------
                   omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
                 end if
 
-                ! update fbars 
-                if (is_nan(ffe(1)).or.is_nan(ffe_J(1)).or.
-     &            ffe_J(1).eq.0) then
-                  dump=.true.
-                else
-                  fb_t_np1(i,j)=fb_t_np1(i,j)-ffe(1)/ffe_J(1)
-                end if
-
-                if (is_nan(ffe(2)).or.is_nan(ffe_J(2)).or.
-     &            ffe_J(2).eq.0) then
-                  dump=.true.
-                else
-                  fb_x_np1(i,j)=fb_x_np1(i,j)-ffe(2)/ffe_J(2)
-                end if
-
-                if (is_nan(ffe(3)).or.is_nan(ffe_J(3)).or.
-     &            ffe_J(3).eq.0) then
-                  dump=.true.
-                else
-                  fb_y_np1(i,j)=fb_y_np1(i,j)-ffe(3)/ffe_J(3)
-                end if
-
                 ! update phi1 
                 if (is_nan(phi1_res).or.is_nan(phi1_J)) then
                   dump=.true.
@@ -1437,10 +1383,6 @@ c----------------------------------------------------------------------
      &                abs(efe(3,3)/efe_J(3,3)),
      &                abs(afe/afe_J),
      &                abs(bfe/bfe_J))
-                fb_res(i,j)=
-     &            max(abs(ffe(1)/ffe_J(1)),
-     &                abs(ffe(2)/ffe_J(2)),
-     &                abs(ffe(3)/ffe_J(3)))
                 cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
@@ -1508,7 +1450,6 @@ c----------------------------------------------------------------------
      &                 gb_xy_np1,gb_yy_np1,psi_np1,omega_np1,
      &                 chr,ex,L,x,y,Nx,Ny)
         call axi_reg_Hb(Hb_t_np1,Hb_x_np1,Hb_y_np1,chr,ex,L,x,y,Nx,Ny)
-        call axi_reg_fb(fb_t_np1,fb_x_np1,fb_y_np1,chr,ex,L,x,y,Nx,Ny)
 
         return
         end
