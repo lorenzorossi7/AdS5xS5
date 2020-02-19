@@ -420,15 +420,10 @@ c-----------------------------------------------------------------------
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
-!     &                   +psi_np1(i,j)*3.0d0
-!     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
-!     &                    /2/dy
-!     &                    *cos(PI*y0)/sin(PI*y0)/PI
-!     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
-!     &                    /dy/dy
-!     &                    /4/PI**2
+     &                   +gb_tt_yy/4.0d0/PI**2
      &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
-     &                   +gb_tt_yy/4/PI**2
+     &                   +gb_xx_yy/16.0d0/PI**2
+     &                   +gb_xx_y*cos(PI*y0)/sin(PI*y0)/4.0d0/PI
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
 !     &                   -omega_np1(i,j)*3.0d0*PI/sin(PI*y0)/cos(PI*y0)
 !     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))
