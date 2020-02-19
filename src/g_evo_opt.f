@@ -1383,8 +1383,8 @@ c----------------------------------------------------------------------
      &                abs(efe(2,2)/efe_J(2,2)),
      &                abs(efe(2,3)/efe_J(2,3)),
      &                abs(efe(3,3)/efe_J(3,3)),
-     &                abs(afe/afe_J),
-     &                abs(bfe/bfe_J))
+     &                abs(afe/afe_J),abs(bfe/bfe_J),
+     &                abs(phi1_res/phi1_J))
                 cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
