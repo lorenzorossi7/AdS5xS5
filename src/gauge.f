@@ -237,12 +237,13 @@ c----------------------------------------------------------------------
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
-!     &                   +(gb_tx_np1(i,j+1)-gb_tx_np1(i,j-1))
+     &                   +(gb_tx_np1(i,j+1)-2*gb_tx_np1(i,j) 
+     &                    +gb_tx_np1(i,j-1))/dy/dy
+     &                    /10.0d0/PI**2
+!     &                   +(gb_tx_np1(i,j+1)-gb_tx_np1(i,j-1)) !induces instability at poles 
 !     &                    /2/dy
-!     &                    *cos(PI*y0)/sin(PI*y0)*2.0d0/5/PI
-!     &                   +(gb_tx_np1(i,j+1)-2*gb_tx_np1(i,j)
-!     &                    +gb_tx_np1(i,j-1))/dy/dy
-!     &                    /10/PI**2
+!     &                    *cos(PI*y0)/sin(PI*y0)
+!     &                    *2.0d0/5.0d0/PI
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
