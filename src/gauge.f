@@ -237,12 +237,10 @@ c----------------------------------------------------------------------
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
-!     &                   +(gb_tx_np1(i,j+1)-gb_tx_np1(i,j-1))
-!     &                    /2/dy
-!     &                    *cos(PI*y0)/sin(PI*y0)*2.0d0/5/PI
-!     &                   +(gb_tx_np1(i,j+1)-2*gb_tx_np1(i,j)
-!     &                    +gb_tx_np1(i,j-1))/dy/dy
-!     &                    /10/PI**2
+     &                   +gb_tx_yy/10.0d0/PI**2
+!     &                   +gb_tx_y  !induces instability at poles 
+!     &                   *cos(PI*y0)/sin(PI*y0)
+!     &                   *2.0d0/5.0d0/PI
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
@@ -422,15 +420,10 @@ c-----------------------------------------------------------------------
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
-!     &                   +psi_np1(i,j)*3.0d0
-!     &                   -(psi_np1(i,j+1)-psi_np1(i,j-1))
-!     &                    /2/dy
-!     &                    *cos(PI*y0)/sin(PI*y0)/PI
-!     &                   -(psi_np1(i,j+1)-2*psi_np1(i,j)+psi_np1(i,j-1))
-!     &                    /dy/dy
-!     &                    /4/PI**2
+     &                   +gb_tt_yy/4.0d0/PI**2
      &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
-     &                   +gb_tt_yy/4/PI**2
+     &                   +gb_xx_yy/16.0d0/PI**2
+     &                   +gb_xx_y*cos(PI*y0)/sin(PI*y0)/4.0d0/PI
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
 !     &                   -omega_np1(i,j)*3.0d0*PI/sin(PI*y0)/cos(PI*y0)
 !     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))

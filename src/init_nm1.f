@@ -260,7 +260,7 @@ c----------------------------------------------------------------------
               ! initial first time derivatives; gb_ii_t_n,Hb_i_t_n,phi1_t_n were set in AdS5xS5_free_data()
 
               ! need this in h0_ll_tt,psi_tt,omega_tt,phi10_tt calculations
-              phi10_x(1)    =phi1_t_n(i,j)*(1-x0**2)**3   
+              phi10_x(1)    =phi1_t_n(i,j)*(1-x0**2)**3*sin(PI*y0)**5 
               h0_ll_x(1,1,1)=gb_tt_t_n(i,j)*(1-x0**2)  
               h0_ll_x(1,2,1)=gb_tx_t_n(i,j)*(1-x0**2)
               h0_ll_x(1,3,1)=gb_ty_t_n(i,j)*(1-x0**2)**2

@@ -1329,30 +1329,31 @@ c----------------------------------------------------------------------
      &             +(dimB/2)*(gB_xx(3,3)/gB-gB_x(3)*gB_x(3)/gB**2)
 
         ! give values to the scalar field
-        phi10_x(1)=phi1_t*(1-x0**2)**3*sin(PI*y0/L)**4
-        phi10_x(2)=phi1_x*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi10*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
+        phi10_x(1)=phi1_t*(1-x0**2)**3*sin(PI*y0/L)**5
+        phi10_x(2)=phi1_x*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi10*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**5
         phi10_x(3)=phi1_ads_y
-     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi10*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi10*(1-x0**2)**3*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L
 
-        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3*sin(PI*y0/L)**4
-        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi1_t*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
-        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi1_t*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
-        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi1_x*(2)*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
-     &  +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))*sin(PI*y0/L)**4
-        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3*sin(PI*y0/L)**4
-     &  +phi1_x*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
-     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4
-     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
+        phi10_xx(1,1)=phi1_tt*(1-x0**2)**3*sin(PI*y0/L)**5
+        phi10_xx(1,2)=phi1_tx*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi1_t*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**5
+        phi10_xx(1,3)=phi1_ty*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi1_t*(1-x0**2)**3*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L
+        phi10_xx(2,2)=phi1_xx*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi1_x*(2)*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**5
+     &  +phi10*(-6*(1-x0**2)**2+24*x0**2*(1-x0**2))*sin(PI*y0/L)**5
+        phi10_xx(2,3)=phi1_xy*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi1_x*(1-x0**2)**3*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**5
+     &  +phi1_y*(-6*x0)*(1-x0**2)**2*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L
         phi10_xx(3,3)=phi1_ads_yy
-     &  +phi1_yy*(1-x0**2)**3*sin(PI*y0/L)**4 
-     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L 
-     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**3*cos(PI*y0/L)*4*PI/L
-     &  +phi10*(1-x0**2)**3*(cos(2*PI*y0/L)-cos(4*PI*y0/L))*2*PI**2/L**2
+     &  +phi1_yy*(1-x0**2)**3*sin(PI*y0/L)**5
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L 
+     &  +phi1_y*(1-x0**2)**3*sin(PI*y0/L)**4*cos(PI*y0/L)*5*PI/L
+     &  +phi10*(1-x0**2)**3
+     &        *sin(PI*y0/L)**3*(3+5*cos(2*PI*y0/L))*5*PI**2/L**2
 
         do a=1,2
           do b=a+1,3
@@ -1619,121 +1620,6 @@ c----------------------------------------------------------------------
             end do
           end do
         end do
-
-!TEST!
-!        phi1_np1(i)=omega_t
-!!TEST!
-!              do a=1,3
-!                do b=a,3
-!
-!                  term1(a,b)=-0.5d0*(
-!     &                          g0_uu(1,1)*g0_ll_xx(a,b,1,1)+
-!     &                          g0_uu(2,2)*g0_ll_xx(a,b,2,2)+
-!     &                          g0_uu(3,3)*g0_ll_xx(a,b,3,3)+
-!     &                       2*(g0_uu(1,2)*g0_ll_xx(a,b,1,2)+
-!     &                          g0_uu(1,3)*g0_ll_xx(a,b,1,3)+
-!     &                          g0_uu(2,3)*g0_ll_xx(a,b,2,3))
-!     &                              )
-!     &
-!                  term2(a,b)=-0.5d0*(
-!     &                          g0_uu_x(1,1,a)* g0_ll_x(b,1,1) +
-!     &                          g0_uu_x(1,2,a)*(g0_ll_x(b,1,2) +
-!     &                                          g0_ll_x(b,2,1))+
-!     &                          g0_uu_x(1,3,a)*(g0_ll_x(b,1,3) +
-!     &                                          g0_ll_x(b,3,1))+
-!     &                          g0_uu_x(2,2,a)* g0_ll_x(b,2,2) +
-!     &                          g0_uu_x(2,3,a)*(g0_ll_x(b,2,3) +
-!     &                                          g0_ll_x(b,3,2))+
-!     &                          g0_uu_x(3,3,a)* g0_ll_x(b,3,3)
-!     &                            )
-!     &
-!                  term3(a,b)=-0.5d0*(
-!     &                          g0_uu_x(1,1,b)* g0_ll_x(a,1,1) +
-!     &                          g0_uu_x(1,2,b)*(g0_ll_x(a,1,2) +
-!     &                                          g0_ll_x(a,2,1))+
-!     &                          g0_uu_x(1,3,b)*(g0_ll_x(a,1,3) +
-!     &                                          g0_ll_x(a,3,1))+
-!     &                          g0_uu_x(2,2,b)* g0_ll_x(a,2,2) +
-!     &                          g0_uu_x(2,3,b)*(g0_ll_x(a,2,3) +
-!     &                                          g0_ll_x(a,3,2))+
-!     &                          g0_uu_x(3,3,b)* g0_ll_x(a,3,3)
-!     &                            )
-!     &
-!                  term4(a,b)=-0.5d0*(Hads_l_x(a,b)+A_l_x(a,b))
-!     &
-!                  term5(a,b)=-0.5d0*(Hads_l_x(b,a)+A_l_x(b,a))
-!     &
-!                  term6(a,b)=     (
-!     &                          (Hads_l(1)+A_l(1))*gamma_ull(1,a,b)+
-!     &                          (Hads_l(2)+A_l(2))*gamma_ull(2,a,b)+
-!     &                          (Hads_l(3)+A_l(3))*gamma_ull(3,a,b)
-!     &                            )
-!     &
-!                  term7(a,b)=    -(
-!     &                          gamma_ull(1,1,b)*gamma_ull(1,1,a)+
-!     &                          gamma_ull(1,2,b)*gamma_ull(2,1,a)+
-!     &                          gamma_ull(1,3,b)*gamma_ull(3,1,a)+
-!     &                          gamma_ull(2,1,b)*gamma_ull(1,2,a)+
-!     &                          gamma_ull(2,2,b)*gamma_ull(2,2,a)+
-!     &                          gamma_ull(2,3,b)*gamma_ull(3,2,a)+
-!     &                          gamma_ull(3,1,b)*gamma_ull(1,3,a)+
-!     &                          gamma_ull(3,2,b)*gamma_ull(2,3,a)+
-!     &                          gamma_ull(3,3,b)*gamma_ull(3,3,a)
-!     &                            )
-!     &
-!                    term8(a,b)=-dimA*( (gA_xx(a,b)
-!     &                                 -gamma_ull(1,b,a)*gA_x(1)
-!     &                                 -gamma_ull(2,b,a)*gA_x(2)
-!     &                                 -gamma_ull(3,b,a)*gA_x(3)
-!     &                                 )/(2*gA)
-!     &                               - (gA_x(a)*gA_x(b))/(4*gA**2) )
-!     &                         -dimB*( (gB_xx(a,b)
-!     &                                 -gamma_ull(1,b,a)*gB_x(1)
-!     &                                 -gamma_ull(2,b,a)*gB_x(2)
-!     &                                 -gamma_ull(3,b,a)*gB_x(3)
-!     &                                 )/(2*gB)
-!     &                               - (gB_x(a)*gB_x(b))/(4*gB**2) )
-!     &
-!                    term9(a,b)=-(f1_l(a)*f1_l(b)
-!     &                          +g0_uu(1,1)*f2_ll(a,1)*f2_ll(b,1)
-!     &                          +g0_uu(1,2)*f2_ll(a,1)*f2_ll(b,2)
-!     &                          +g0_uu(1,3)*f2_ll(a,1)*f2_ll(b,3)
-!     &                          +g0_uu(2,1)*f2_ll(a,2)*f2_ll(b,1)
-!     &                          +g0_uu(2,2)*f2_ll(a,2)*f2_ll(b,2)
-!     &                          +g0_uu(2,3)*f2_ll(a,2)*f2_ll(b,3)
-!     &                          +g0_uu(3,1)*f2_ll(a,3)*f2_ll(b,1)
-!     &                          +g0_uu(3,2)*f2_ll(a,3)*f2_ll(b,2)
-!     &                          +g0_uu(3,3)*f2_ll(a,3)*f2_ll(b,3)
-!     &                          )/4
-!     &
-!                  efe(a,b)=term1(a,b)+term2(a,b)+term3(a,b)+term4(a,b)
-!     &                    +term5(a,b)+term6(a,b)+term7(a,b)+term8(a,b)
-!     &                    +term9(a,b)
-!     &
-!                  efest(a,b)=riccibar_ll(a,b)+term8(a,b)+term9(a,b)
-!
-!                end do
-!              end do
-!
-!              efe_norm=
-!     &        max(abs(efe(1,1)),abs(efe(1,2)),
-!     &            abs(efe(2,2)),abs(efe(3,3)))
-!              efest_norm=
-!     &        max(abs(efest(1,1)),abs(efest(1,2)),
-!     &            abs(efest(2,2)),abs(efest(3,3)))
-!
-!!TEST!
-!        if (x0.eq.0.5d0) then
-!          write(*,*) 'efe_norm=',efe_norm
-!          write(*,*) 'efest_norm=',efest_norm
-!          write(*,*) 'g0_ll_x(2,2,1)=',g0_ll_x(2,2,1)
-!          write(*,*) 'g0_ll_xx(2,2,1,1)=',g0_ll_xx(2,2,1,1)
-!          write(*,*) 'riccibar_ll(1,1)=',riccibar_ll(1,1)
-!          write(*,*) 'riccibar_ll(1,2)=',riccibar_ll(1,2)
-!          write(*,*) 'riccibar_ll(2,2)=',riccibar_ll(2,2)
-!          write(*,*) 'riccibar_ll(3,3)=',riccibar_ll(3,3)
-!        end if
-!!TEST!
 
         return
         end
