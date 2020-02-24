@@ -159,6 +159,8 @@ c----------------------------------------------------------------------
         real*8 psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy
         real*8 omega_t,omega_x,omega_y
         real*8 omega_tt,omega_tx,omega_ty,omega_xx,omega_xy,omega_yy
+        real*8 phi1_t,phi1_x,phi1_y
+        real*8 phi1_tt,phi1_tx,phi1_ty,phi1_xx,phi1_xy,phi1_yy
 
         !--------------------------------------------------------------
 
@@ -235,6 +237,11 @@ c----------------------------------------------------------------------
      &                 omega_tt,omega_tx,omega_ty,
      &                 omega_xx,omega_xy,omega_yy,
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+                  call df2_int(phi1_np1,phi1_np1,phi1_np1,
+     &                 phi1_t,phi1_x,phi1_y,
+     &                 phi1_tt,phi1_tx,phi1_ty,
+     &                 phi1_xx,phi1_xy,phi1_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
                   F_t_np1=gb_tx_np1(i,j)*2.0d0
      &                   +gb_tx_yy/10.0d0/PI**2
@@ -341,6 +348,8 @@ c-----------------------------------------------------------------------
         real*8 psi_tt,psi_tx,psi_ty,psi_xx,psi_xy,psi_yy
         real*8 omega_t,omega_x,omega_y
         real*8 omega_tt,omega_tx,omega_ty,omega_xx,omega_xy,omega_yy
+        real*8 phi1_t,phi1_x,phi1_y
+        real*8 phi1_tt,phi1_tx,phi1_ty,phi1_xx,phi1_xy,phi1_yy
 
         !--------------------------------------------------------------
 
@@ -418,20 +427,27 @@ c-----------------------------------------------------------------------
      &                 omega_tt,omega_tx,omega_ty,
      &                 omega_xx,omega_xy,omega_yy,
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+                  call df2_int(phi1_np1,phi1_np1,phi1_np1,
+     &                 phi1_t,phi1_x,phi1_y,
+     &                 phi1_tt,phi1_tx,phi1_ty,
+     &                 phi1_xx,phi1_xy,phi1_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
      &                   +gb_tt_yy/4.0d0/PI**2
      &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
      &                   +gb_xx_yy/16.0d0/PI**2
      &                   +gb_xx_y*cos(PI*y0)/sin(PI*y0)/4.0d0/PI
+     &                   -psi_yy/4.0d0/PI**2
+     &                   -psi_y*cos(PI*y0)/sin(PI*y0)/PI
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
-!     &                   -omega_np1(i,j)*3.0d0*PI/sin(PI*y0)/cos(PI*y0)
-!     &                   -(omega_np1(i,j+1)-omega_np1(i,j-1))
-!     &                    /2/dy
-!     &                    *4.0d0
-!     &                   -(omega_np1(i,j+1)-2*omega_np1(i,j)
-!     &                    +omega_np1(i,j-1))/dy/dy
-!     &                    *sin(PI*y0)/cos(PI*y0)/2/PI
+     &                   -omega_yy*sin(PI*y0)/cos(PI*y0)/2.0d0/PI
+     &                   -omega_y*2.0d0
+!     &                   +omega_np1(i,j)*(13.0d0*sin(PI*y0)/cos(PI*y0)
+!     &                                   -3.0d0*cos(PI*y0)/sin(PI*y0))
+!     &                                  *PI
+!     &                   -sin(PI*y0)*phi1_yy/4.0d0
+!     &                   -cos(PI*y0)*phi1_y*1.5d0
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
