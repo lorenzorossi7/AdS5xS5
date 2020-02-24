@@ -210,7 +210,8 @@ void hb_t_evo_(real *res,
                real *AdS_L, real *x, real *y, real *dt, real *chr, real *ex,
                int *phys_bdy, int *ghost_width, int *Nx, int *Ny,
                real *Hb_t_0, real *Hb_x_0, real *Hb_y_0,
-               int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2);
+               int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2,
+			   real *a1, real *a2);
 
 void hb_i_evo_(real *res, 
                real *gb_tt_np1, real *gb_tt_n, real *gb_tt_nm1,
@@ -228,7 +229,8 @@ void hb_i_evo_(real *res,
                real *AdS_L, real *x, real *y, real *dt, real *chr, real *ex,
                int *phys_bdy, int *ghost_width, int *Nx, int *Ny,
                real *Hb_t_0, real *Hb_x_0, real *Hb_y_0,
-               int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2);
+               int *gauge, real *t_n, real *rho1, real *rho2, real *xi1, real *xi2,
+			   real *b1, real *b2, real *b3, real *c1, real *c2, real *c3, real *c4, real *c5, real *c6, real *c7);
 
 void init_ghb_(real *zetab, real *phi1, real *gb_tt, real *gb_tx, real *gb_ty, real *gb_xx, real *gb_xy, real *gb_yy, real *psi, real *omega, real* rhoa, real* rhob,
                real *AdS_L, int *phys_bdy, real *chr, real *ex, real *x, real *y, int *Nx, int *Ny);
