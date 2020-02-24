@@ -445,13 +445,11 @@ c-----------------------------------------------------------------------
      &                   +(-psi_yy/4.0d0/PI**2
      &                     -psi_y*cos(PI*y0)/sin(PI*y0)/PI)*b3
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
-     &                   -omega_yy*sin(PI*y0)/cos(PI*y0)/2.0d0/PI
-     &                   -omega_y*2.0d0
-!     &                   +omega_np1(i,j)*(13.0d0*sin(PI*y0)/cos(PI*y0)
-!     &                                   -3.0d0*cos(PI*y0)/sin(PI*y0))
-!     &                                  *PI
-!     &                   -sin(PI*y0)*phi1_yy/4.0d0
-!     &                   -cos(PI*y0)*phi1_y*1.5d0
+     &                   +gb_xy_yy/8.0d0/PI**2*c1
+     &                   +(-omega_yy*tan(PI*y0)/2.0d0/PI
+     &                     -omega_y*2.0d0)*c2
+     &                   +(-sin(PI*y0)*phi1_yy/4.0d0/PI
+     &                     -cos(PI*y0)*phi1_y*1.5d0)*c3
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
