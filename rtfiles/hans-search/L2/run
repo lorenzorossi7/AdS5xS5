@@ -1,0 +1,3 @@
+cat AdS5xS5.fparam AdS5xS5.rtparam_L2 > localAdS5xS5.param
+/bin/cp ../../../src/AdS5xS5 localAdS5xS5
+mpirun -np 6 ./localAdS5xS5 localAdS5xS5.param | tee out
