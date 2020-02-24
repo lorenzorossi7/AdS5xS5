@@ -65,6 +65,7 @@ int gauge_i;
 real rho1_t,rho2_t,xi1_t,xi2_t;
 real rho1_i,rho2_i,xi1_i,xi2_i;
 real rhoa,rhob;
+real a1,a2,b1,b2,b3,c1,c2,c3,c4,c5,c6,c7;
 
 int cp_version; 
 
@@ -591,6 +592,18 @@ void AdS5xS5_var_post_init(char *pfile)
    rho2_i=1; AMRD_real_param(pfile,"rho2_i",&rho2_i,1);
    xi1_i=1; AMRD_real_param(pfile,"xi1_i",&xi1_i,1);
    xi2_i=1; AMRD_real_param(pfile,"xi2_i",&xi2_i,1);
+   a1=1; AMRD_real_param(pfile,"a1",&a1,1);
+   a2=0; AMRD_real_param(pfile,"a2",&a2,1);
+   b1=1; AMRD_real_param(pfile,"b1",&b1,1);
+   b2=1; AMRD_real_param(pfile,"b2",&b2,1);
+   b3=1; AMRD_real_param(pfile,"b3",&b3,1);
+   c1=0; AMRD_real_param(pfile,"c1",&c1,1);
+   c2=0; AMRD_real_param(pfile,"c2",&c2,1);
+   c3=0; AMRD_real_param(pfile,"c3",&c3,1);
+   c4=0; AMRD_real_param(pfile,"c4",&c4,1);
+   c5=0; AMRD_real_param(pfile,"c5",&c5,1);
+   c6=0; AMRD_real_param(pfile,"c6",&c6,1);
+   c7=0; AMRD_real_param(pfile,"c7",&c7,1);
 
    rhoa=1; AMRD_real_param(pfile,"rhoa",&rhoa,1);
    rhob=1; AMRD_real_param(pfile,"rhob",&rhob,1);
@@ -933,7 +946,8 @@ void AdS5xS5_evolve(int iter)
              &AdS_L,x,y,&dt,chr,&AMRD_ex,
              phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,Hb_y_0,
-             &gauge_t,&ct,&rho1_t,&rho2_t,&xi1_t,&xi2_t);
+             &gauge_t,&ct,&rho1_t,&rho2_t,&xi1_t,&xi2_t,
+			 &a1,&a2);
 
    hb_i_evo_(hb_i_res,
              gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -951,7 +965,8 @@ void AdS5xS5_evolve(int iter)
              &AdS_L,x,y,&dt,chr,&AMRD_ex,
              phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,Hb_y_0,
-             &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i);
+             &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i,
+			 &b1,&b2,&b3,&c1,&c2,&c3,&c4,&c5,&c6,&c7);
 
    g_evo_opt_(gb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,

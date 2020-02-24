@@ -100,13 +100,15 @@ c----------------------------------------------------------------------
      &                    L,x,y,dt,chr,ex,
      &                    phys_bdy,ghost_width,Nx,Ny,
      &                    Hb_t_0,Hb_x_0,Hb_y_0,
-     &                    gauge,t_n,rho1,rho2,xi1,xi2)
+     &                    gauge,t_n,rho1,rho2,xi1,xi2,
+     &                    a1,a2)
 
         implicit none
         integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
         real*8 res(Nx,Ny),t_n,t_np1
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
+        real*8 a1,a2
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
         real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
@@ -243,11 +245,11 @@ c----------------------------------------------------------------------
      &                 phi1_xx,phi1_xy,phi1_yy,
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
-                  F_t_np1=gb_tx_np1(i,j)*2.0d0
+                  F_t_np1=gb_tx_np1(i,j)*2.0d0*a1
      &                   +gb_tx_yy/10.0d0/PI**2
-!     &                   +gb_tx_y  !induces instability at poles 
-!     &                   *cos(PI*y0)/sin(PI*y0)
-!     &                   *2.0d0/5.0d0/PI
+     &                   +gb_tx_y  
+     &                   *cos(PI*y0)/sin(PI*y0)
+     &                   *2.0d0/5.0d0/PI*a2 !nonzero a2 induces instability at poles 
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
@@ -289,13 +291,15 @@ c-----------------------------------------------------------------------
      &                    L,x,y,dt,chr,ex,
      &                    phys_bdy,ghost_width,Nx,Ny,
      &                    Hb_t_0,Hb_x_0,Hb_y_0,
-     &                    gauge,t_n,rho1,rho2,xi1,xi2)
+     &                    gauge,t_n,rho1,rho2,xi1,xi2,
+     &                    b1,b2,b3,c1,c2,c3,c4,c5,c6,c7)
 
         implicit none
         integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
         real*8 res(Nx,Ny),t_n,t_np1
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
+        real*8 b1,b2,b3,c1,c2,c3,c4,c5,c6,c7
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
         real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
@@ -434,12 +438,12 @@ c-----------------------------------------------------------------------
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
                   F_x_np1=gb_xx_np1(i,j)*2.0d0
-     &                   +gb_tt_yy/4.0d0/PI**2
-     &                   +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI
-     &                   +gb_xx_yy/16.0d0/PI**2
-     &                   +gb_xx_y*cos(PI*y0)/sin(PI*y0)/4.0d0/PI
-     &                   -psi_yy/4.0d0/PI**2
-     &                   -psi_y*cos(PI*y0)/sin(PI*y0)/PI
+     &                   +(gb_tt_yy/4.0d0/PI**2
+     &                    +gb_tt_y*cos(PI*y0)/sin(PI*y0)/PI)*b1
+     &                   +(gb_xx_yy/16.0d0/PI**2
+     &                    +gb_xx_y*cos(PI*y0)/sin(PI*y0)/4.0d0/PI)*b2
+     &                   +(-psi_yy/4.0d0/PI**2
+     &                     -psi_y*cos(PI*y0)/sin(PI*y0)/PI)*b3
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
      &                   -omega_yy*sin(PI*y0)/cos(PI*y0)/2.0d0/PI
      &                   -omega_y*2.0d0
