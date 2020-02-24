@@ -451,9 +451,9 @@ c-----------------------------------------------------------------------
 !     &                   +omega_np1(i,j)*(13.0d0*sin(PI*y0)/cos(PI*y0)
 !     &                                   -3.0d0*cos(PI*y0)/sin(PI*y0))
 !     &                                  *PI
-!     &                   -sin(PI*y0)*phi1_yy/4.0d0
-!     &                   -cos(PI*y0)*phi1_y*1.5d0
-!     &                   +sin(PI*y0)*phi1_np1(i,j)*1.25d0
+     &                   -sin(PI*y0)*phi1_yy/4.0d0/PI
+     &                   -cos(PI*y0)*phi1_y*1.5d0
+     &                   +sin(PI*y0)*phi1_np1(i,j)*1.25d0*PI
 
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
