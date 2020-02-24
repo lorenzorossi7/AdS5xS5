@@ -947,7 +947,7 @@ void AdS5xS5_evolve(int iter)
              phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,Hb_y_0,
              &gauge_t,&ct,&rho1_t,&rho2_t,&xi1_t,&xi2_t,
-			 &a1,&a2);
+             &a1,&a2);
 
    hb_i_evo_(hb_i_res,
              gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -966,7 +966,7 @@ void AdS5xS5_evolve(int iter)
              phys_bdy,ghost_width,&Nx,&Ny,
              Hb_t_0,Hb_x_0,Hb_y_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i,
-			 &b1,&b2,&b3,&c1,&c2,&c3,&c4,&c5,&c6,&c7);
+             &b1,&b2,&b3,&c1,&c2,&c3,&c4,&c5,&c6,&c7);
 
    g_evo_opt_(gb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,
