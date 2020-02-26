@@ -245,8 +245,8 @@ c----------------------------------------------------------------------
      &                 phi1_xx,phi1_xy,phi1_yy,
      &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
 
-                  F_t_np1=gb_tx_np1(i,j)*2.0d0*a1
-     &                   +gb_tx_yy/10.0d0/PI**2
+                  F_t_np1=gb_tx_np1(i,j)*2.0d0
+     &                   +gb_tx_yy/10.0d0/PI**2*a1
      &                   +gb_tx_y  
      &                   *cos(PI*y0)/sin(PI*y0)
      &                   *2.0d0/5.0d0/PI*a2 !nonzero a2 induces instability at poles 
