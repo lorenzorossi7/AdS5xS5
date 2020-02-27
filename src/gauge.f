@@ -292,7 +292,8 @@ c-----------------------------------------------------------------------
      &                    phys_bdy,ghost_width,Nx,Ny,
      &                    Hb_t_0,Hb_x_0,Hb_y_0,
      &                    gauge,t_n,rho1,rho2,xi1,xi2,
-     &                    b1,b2,b3,b4,b5,b6,b7,
+     &                    b1,b2,b3,b4,b5,b6,b7,b8,b9,
+     &                    b10,b11,b12,
      &                    c1,c2,c3,c4,c5,c6,c7)
 
         implicit none
@@ -300,7 +301,7 @@ c-----------------------------------------------------------------------
         real*8 res(Nx,Ny),t_n,t_np1
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
-        real*8 b1,b2,b3,b4,b5,b6,b7
+        real*8 b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12
         real*8 c1,c2,c3,c4,c5,c6,c7
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
@@ -452,6 +453,12 @@ c-----------------------------------------------------------------------
      &                   +(-8.0d0*gb_yy_np1(i,j))*b6
      &                   +(4.0d0*cos(PI*y0)/sin(PI*y0)
      &                     *gb_xy_np1(i,j))*b7
+     &                   +(-sin(PI*y0)*phi1_y/PI
+     &                     -5.0d0*cos(PI*y0)*phi1_np1(i,j))*b8
+     &                   +(-3.0d0/2.0d0*psi_np1(i,j))*b9
+     &                   +(8.0d0*omega_np1(i,j))*b10
+     &                   +(2.0d0*gb_yy_np1(i,j))*b11
+     &                   +(0.5d0*gb_tt_np1(i,j))*b12
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
      &                   +gb_xy_yy/8.0d0/PI**2*c1
      &                   +(-omega_yy*tan(PI*y0)/2.0d0/PI
