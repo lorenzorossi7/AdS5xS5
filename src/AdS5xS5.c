@@ -67,7 +67,7 @@ real rho1_i,rho2_i,xi1_i,xi2_i;
 real rhoa,rhob;
 real a1,a2;
 real b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12;
-real c1,c2,c3,c4,c5,c6,c7;
+real c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13;
 
 int cp_version; 
 
@@ -615,6 +615,12 @@ void AdS5xS5_var_post_init(char *pfile)
    c5=0; AMRD_real_param(pfile,"c5",&c5,1);
    c6=0; AMRD_real_param(pfile,"c6",&c6,1);
    c7=0; AMRD_real_param(pfile,"c7",&c7,1);
+   c8=0; AMRD_real_param(pfile,"c8",&c8,1);
+   c9=0; AMRD_real_param(pfile,"c9",&c9,1);
+   c10=0; AMRD_real_param(pfile,"c10",&c10,1);
+   c11=0; AMRD_real_param(pfile,"c11",&c11,1);
+   c12=0; AMRD_real_param(pfile,"c12",&c12,1);
+   c13=0; AMRD_real_param(pfile,"c13",&c13,1);
 
    rhoa=1; AMRD_real_param(pfile,"rhoa",&rhoa,1);
    rhob=1; AMRD_real_param(pfile,"rhob",&rhob,1);
@@ -978,7 +984,7 @@ void AdS5xS5_evolve(int iter)
              Hb_t_0,Hb_x_0,Hb_y_0,
              &gauge_i,&ct,&rho1_i,&rho2_i,&xi1_i,&xi2_i,
              &b1,&b2,&b3,&b4,&b5,&b6,&b7,&b8,&b9,&b10,&b11,&b12,
-             &c1,&c2,&c3,&c4,&c5,&c6,&c7);
+             &c1,&c2,&c3,&c4,&c5,&c6,&c7,&c8,&c9,&c10,&c11,&c12,&c13);
 
    g_evo_opt_(gb_res,cl_res,
               gb_tt_np1,gb_tt_n,gb_tt_nm1,

@@ -294,7 +294,8 @@ c-----------------------------------------------------------------------
      &                    gauge,t_n,rho1,rho2,xi1,xi2,
      &                    b1,b2,b3,b4,b5,b6,b7,b8,b9,
      &                    b10,b11,b12,
-     &                    c1,c2,c3,c4,c5,c6,c7)
+     &                    c1,c2,c3,c4,c5,c6,c7,c8,c9,
+     &                    c10,c11,c12,c13)
 
         implicit none
         integer Nx,Ny,gauge,phys_bdy(4),ghost_width(4)
@@ -302,7 +303,7 @@ c-----------------------------------------------------------------------
         real*8 chr(Nx,Ny),ex,L
         real*8 x(Nx),y(Ny),dt,rho1,rho2,xi1,xi2
         real*8 b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12
-        real*8 c1,c2,c3,c4,c5,c6,c7
+        real*8 c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13
         real*8 gb_tt_np1(Nx,Ny),gb_tt_n(Nx,Ny),gb_tt_nm1(Nx,Ny)
         real*8 gb_tx_np1(Nx,Ny),gb_tx_n(Nx,Ny),gb_tx_nm1(Nx,Ny)
         real*8 gb_ty_np1(Nx,Ny),gb_ty_n(Nx,Ny),gb_ty_nm1(Nx,Ny)
@@ -450,22 +451,34 @@ c-----------------------------------------------------------------------
      &                   +(4.0d0*sin(PI*y0)*phi1_y/PI
      &                    +20.0d0*cos(PI*y0)*phi1_np1(i,j))*b4
      &                   +(-32.0d0*omega_np1(i,j))*b5
-     &                   +(-8.0d0*gb_yy_np1(i,j))*b6
+     &                   +(-8.0d0*gb_yy_np1(i,j)*PI**2)*b6
      &                   +(4.0d0*cos(PI*y0)/sin(PI*y0)
-     &                     *gb_xy_np1(i,j))*b7
+     &                     *gb_xy_np1(i,j)*PI)*b7
      &                   +(-sin(PI*y0)*phi1_y/PI
      &                     -5.0d0*cos(PI*y0)*phi1_np1(i,j))*b8
-     &                   +(-3.0d0/2.0d0*psi_np1(i,j))*b9
+     &                   +(-1.5d0*psi_np1(i,j))*b9
      &                   +(8.0d0*omega_np1(i,j))*b10
-     &                   +(2.0d0*gb_yy_np1(i,j))*b11
+     &                   +(2.0d0*gb_yy_np1(i,j)*PI**2)*b11
      &                   +(0.5d0*gb_tt_np1(i,j))*b12
                   F_y_np1=gb_xy_np1(i,j)*1.5d0
      &                   +gb_xy_yy/8.0d0/PI**2*c1
-     &                   +(-omega_yy*tan(PI*y0)/2.0d0/PI
-     &                     -omega_y*2.0d0)*c2
-     &                   +(-sin(PI*y0)*phi1_yy/4.0d0/PI
-     &                     -cos(PI*y0)*phi1_y*1.5d0)*c3
-
+     &                   +(-omega_yy*tan(PI*y0)/2.0d0/PI**2
+     &                     -omega_y*2.0d0/PI)/PI*c2
+     &                   +(-sin(PI*y0)*phi1_yy/4.0d0/PI**2
+     &                     -cos(PI*y0)*phi1_y*1.5d0/PI)/PI*c3
+     &                   +(4.0d0*omega_y/PI**2)*c4
+     &                   +(1.25d0*sin(PI*y0)*phi1_np1(i,j)/PI)*c5
+     &                   +(0.375d0*psi_y/PI**2)*c6
+     &                   +(2.0d0*omega_np1(i,j)/PI)*c7
+     &                   +(-0.5d0*gb_yy_y)*c8
+     &                   +(0.125d0*gb_xx_y/PI**2)*c9
+     &                   +(-0.125d0*gb_tt_y/PI**2)*c10
+     &                   +(6.0d0/sin(2.0d0*PI*y0)/PI*
+     &                    (gb_yy_np1(i,j)/PI**2-omega_np1(i,j)))*c11
+     &                   +(-2.0d0*sin(PI*y0)/PI
+     &                     *(5.0d0*phi1_np1(i,j)
+     &                      +tan(PI*y0)*phi1_y/PI))*c12
+     &                   +(16.0d0/PI*omega_np1(i,j))*c13
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
