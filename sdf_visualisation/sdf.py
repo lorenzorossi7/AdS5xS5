@@ -28,7 +28,7 @@ class SDFData(dict):
             self.dataName = fileStream.read(header.pnlen*ct.sizeof(ct.c_char))
         except OverflowError:
             raise HeaderError
-        if ("_c_" in self.dataName):
+        if (b"_c_" in self.dataName):
             self.isCellCentered = True
         else: 
             self.isCellCentered = False
@@ -67,7 +67,7 @@ class SDFData(dict):
             try:
                 self._coordData = np.fromfile(fileStream, dt, self._csize)
             except OverflowError:
-                print "Data is corrupted"
+                print("Data is corrupted")
                 raise DataCorruptError
                 data = 0 
         else:
@@ -75,11 +75,11 @@ class SDFData(dict):
         try:
             data = np.fromfile(fileStream, dt, self._dsize)
         except OverflowError:
-            print "Data is corrupted"
+            print("Data is corrupted")
             raise DataCorruptError
             data = 0 
         if (data.size!=np.prod(self.shape)):
-            print "Data is corrupted"
+            print("Data is corrupted")
             raise DataCorruptError
             data = 0 
         else:
@@ -104,7 +104,7 @@ class SDFData(dict):
                 coordData = np.array([])
             dataf = np.fromfile(f, dt, self._dsize)
             if (dataf.size!=np.prod(self.shape)):
-                print "Data is corrupted"
+                print("Data is corrupted")
                 raise DataCorruptError
                 data = 0
             else:
@@ -116,7 +116,7 @@ class SDFData(dict):
             dt = np.dtype(np.float64).newbyteorder('B')
             self._data = data.astype(dt) 
         else:
-            print "Error in setData: data size doesn't match."
+            print("Error in setData: data size doesn't match.")
     def freeData(self):
         if (not self._data.size):
             del self._data
