@@ -248,11 +248,15 @@ c----------------------------------------------------------------------
 
           call df1_int_y(f_n,f_y_im1,dy,i-1,j,chr,ex,Nx,Ny)
           call df1_int_y(f_n,f_y_im2,dy,i-2,j,chr,ex,Nx,Ny)
-          f_xy=(3*f_y-4*f_y_ip1+f_y_ip2)/2/dx
+          f_xy=(3*f_y-4*f_y_im1+f_y_im2)/2/dx
 
         else if (chr(i+1,j).ne.ex.and.chr(i-1,j).ne.ex) then
 
           f_xx=(f_n(i+1,j)-2*f_n(i,j)+f_n(i-1,j))/dx/dx 
+
+          call df1_int_y(f_n,f_y_im1,dy,i-1,j,chr,ex,Nx,Ny)
+          call df1_int_y(f_n,f_y_ip1,dy,i+1,j,chr,ex,Nx,Ny)
+          f_xy=(f_y_ip1-f_y_im1)/2/dx
 
         else
           if (first) then
