@@ -1318,73 +1318,74 @@ c----------------------------------------------------------------------
                   gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
                 end if
 
-                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
-     &            efe_J(1,2).eq.0) then
-                  dump=.true.
-                else
-                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
-                end if
+!                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
+!     &            efe_J(1,2).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
+!                end if
+!
+!                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
+!     &            efe_J(1,3).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
+!                end if
+!
+!                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
+!     &            efe_J(2,2).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
+!                end if
+!
+!                if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
+!     &            efe_J(2,3).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
+!                end if
+!
+!                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
+!     &            efe_J(3,3).eq.0) then
+!                  dump=.true.
+!                else
+!                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
+!                end if
+!
+!                ! update psi
+!                if (is_nan(afe).or.is_nan(afe_J).or.
+!     &            afe_J.eq.0) then
+!                  dump=.true.
+!                else
+!                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
+!                end if
+!
+!                ! update omega
+!                if (is_nan(bfe).or.is_nan(bfe_J).or.
+!     &            bfe_J.eq.0) then
+!                  dump=.true.
+!                else
+!                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
+!                end if
+!
+!                ! update phi1 
+!                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
+!                  dump=.true.
+!                else
+!                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
+!                end if
 
-                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
-     &            efe_J(1,3).eq.0) then
-                  dump=.true.
-                else
-                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
-                end if
-
-                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
-     &            efe_J(2,2).eq.0) then
-                  dump=.true.
-                else
-                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
-                end if
-
-                if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
-     &            efe_J(2,3).eq.0) then
-                  dump=.true.
-                else
-                  gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
-                end if
-
-                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
-     &            efe_J(3,3).eq.0) then
-                  dump=.true.
-                else
-                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
-                end if
-
-                ! update psi
-                if (is_nan(afe).or.is_nan(afe_J).or.
-     &            afe_J.eq.0) then
-                  dump=.true.
-                else
-                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
-                end if
-
-                ! update omega
-                if (is_nan(bfe).or.is_nan(bfe_J).or.
-     &            bfe_J.eq.0) then
-                  dump=.true.
-                else
-                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
-                end if
-
-                ! update phi1 
-                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
-                  dump=.true.
-                else
-                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
-                end if
-
-                gb_res(i,j) =
-     &            max(abs(efe(1,1)/efe_J(1,1)),
-     &                abs(efe(1,2)/efe_J(1,2)),
-     &                abs(efe(1,3)/efe_J(1,3)),
-     &                abs(efe(2,2)/efe_J(2,2)),
-     &                abs(efe(2,3)/efe_J(2,3)),
-     &                abs(efe(3,3)/efe_J(3,3)),
-     &                abs(afe/afe_J),abs(bfe/bfe_J),
-     &                abs(phi1_res/phi1_J))
+!                gb_res(i,j) =
+!     &            max(abs(efe(1,1)/efe_J(1,1)),
+!     &                abs(efe(1,2)/efe_J(1,2)),
+!     &                abs(efe(1,3)/efe_J(1,3)),
+!     &                abs(efe(2,2)/efe_J(2,2)),
+!     &                abs(efe(2,3)/efe_J(2,3)),
+!     &                abs(efe(3,3)/efe_J(3,3)),
+!     &                abs(afe/afe_J),abs(bfe/bfe_J),
+!     &                abs(phi1_res/phi1_J))
+                gb_res(i,j) = abs(efe(1,1)/efe_J(1,1))
                 cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
