@@ -530,50 +530,81 @@ c----------------------------------------------------------------------
               phi1_tt =phi10_tt/(1-x0**2)**3/sin(PI*y0/L)**5
 
               ! initialize past time level by O(h^3) expansion
-              gb_tt_nm1(i,j)=gb_tt_n(i,j) - gb_tt_t*dt
-     &                     + gb_tt_tt*dt**2/2
-              gb_tx_nm1(i,j)=gb_tx_n(i,j) - gb_tx_t*dt
-     &                     + gb_tx_tt*dt**2/2
-              gb_ty_nm1(i,j)=gb_ty_n(i,j) - gb_ty_t*dt
-     &                     + gb_ty_tt*dt**2/2
-              gb_xx_nm1(i,j)=gb_xx_n(i,j) - gb_xx_t*dt
-     &                     + gb_xx_tt*dt**2/2
-              gb_xy_nm1(i,j)=gb_xy_n(i,j) - gb_xy_t*dt
-     &                     + gb_xy_tt*dt**2/2
-              gb_yy_nm1(i,j)=gb_yy_n(i,j) - gb_yy_t*dt
-     &                     + gb_yy_tt*dt**2/2
-              psi_nm1(i,j)  =psi_n(i,j) - psi_t*dt  
-     &                     + psi_tt*dt**2/2
-              omega_nm1(i,j)=omega_n(i,j) - omega_t*dt  
-     &                     + omega_tt*dt**2/2
-              Hb_t_nm1(i,j) =Hb_t_n(i,j) - Hb_t_t*dt
-              Hb_x_nm1(i,j) =Hb_x_n(i,j) - Hb_x_t*dt
-              Hb_y_nm1(i,j) =Hb_y_n(i,j) - Hb_y_t*dt
-              phi1_nm1(i,j) =phi1_n(i,j) - phi1_t*dt
-     &                     + phi1_tt*dt**2/2
+!              gb_tt_nm1(i,j)=gb_tt_n(i,j) - gb_tt_t*dt
+!     &                     + gb_tt_tt*dt**2/2
+!              gb_tx_nm1(i,j)=gb_tx_n(i,j) - gb_tx_t*dt
+!     &                     + gb_tx_tt*dt**2/2
+!              gb_ty_nm1(i,j)=gb_ty_n(i,j) - gb_ty_t*dt
+!     &                     + gb_ty_tt*dt**2/2
+!              gb_xx_nm1(i,j)=gb_xx_n(i,j) - gb_xx_t*dt
+!     &                     + gb_xx_tt*dt**2/2
+!              gb_xy_nm1(i,j)=gb_xy_n(i,j) - gb_xy_t*dt
+!     &                     + gb_xy_tt*dt**2/2
+!              gb_yy_nm1(i,j)=gb_yy_n(i,j) - gb_yy_t*dt
+!     &                     + gb_yy_tt*dt**2/2
+!              psi_nm1(i,j)  =psi_n(i,j) - psi_t*dt  
+!     &                     + psi_tt*dt**2/2
+!              omega_nm1(i,j)=omega_n(i,j) - omega_t*dt  
+!     &                     + omega_tt*dt**2/2
+!              Hb_t_nm1(i,j) =Hb_t_n(i,j) - Hb_t_t*dt
+!              Hb_x_nm1(i,j) =Hb_x_n(i,j) - Hb_x_t*dt
+!              Hb_y_nm1(i,j) =Hb_y_n(i,j) - Hb_y_t*dt
+!              phi1_nm1(i,j) =phi1_n(i,j) - phi1_t*dt
+!     &                     + phi1_tt*dt**2/2
+!
+!              ! initialize future time level by O(h^3) expansion
+!              gb_tt_np1(i,j)=gb_tt_n(i,j) + gb_tt_t*dt
+!     &                     + gb_tt_tt*dt**2/2
+!              gb_tx_np1(i,j)=gb_tx_n(i,j) + gb_tx_t*dt
+!     &                     + gb_tx_tt*dt**2/2
+!              gb_ty_np1(i,j)=gb_ty_n(i,j) + gb_ty_t*dt
+!     &                     + gb_ty_tt*dt**2/2
+!              gb_xx_np1(i,j)=gb_xx_n(i,j) + gb_xx_t*dt
+!     &                     + gb_xx_tt*dt**2/2
+!              gb_xy_np1(i,j)=gb_xy_n(i,j) + gb_xy_t*dt
+!     &                     + gb_xy_tt*dt**2/2
+!              gb_yy_np1(i,j)=gb_yy_n(i,j) + gb_yy_t*dt
+!     &                     + gb_yy_tt*dt**2/2
+!              psi_np1(i,j)  =psi_n(i,j) + psi_t*dt  
+!     &                     + psi_tt*dt**2/2
+!              omega_np1(i,j)=omega_n(i,j) + omega_t*dt  
+!     &                     + omega_tt*dt**2/2
+!              Hb_t_np1(i,j) =Hb_t_n(i,j) + Hb_t_t*dt
+!              Hb_x_np1(i,j) =Hb_x_n(i,j) + Hb_x_t*dt     
+!              Hb_y_np1(i,j) =Hb_y_n(i,j) + Hb_y_t*dt     
+!              phi1_np1(i,j) =phi1_n(i,j) + phi1_t*dt
+!     &                     + phi1_tt*dt**2/2
+
+
+
+!!!!!!!!TEST with pure AdS values!!!!
+              gb_tt_nm1(i,j)=0.0d0
+              gb_tx_nm1(i,j)=0.0d0
+              gb_ty_nm1(i,j)=0.0d0
+              gb_xx_nm1(i,j)=0.0d0
+              gb_xy_nm1(i,j)=0.0d0
+              gb_yy_nm1(i,j)=0.0d0
+              psi_nm1(i,j)  =0.0d0
+              omega_nm1(i,j)=0.0d0
+              Hb_t_nm1(i,j) =0.0d0
+              Hb_x_nm1(i,j) =0.0d0
+              Hb_y_nm1(i,j) =0.0d0
+              phi1_nm1(i,j) =0.0d0
         
               ! initialize future time level by O(h^3) expansion
-              gb_tt_np1(i,j)=gb_tt_n(i,j) + gb_tt_t*dt
-     &                     + gb_tt_tt*dt**2/2
-              gb_tx_np1(i,j)=gb_tx_n(i,j) + gb_tx_t*dt
-     &                     + gb_tx_tt*dt**2/2
-              gb_ty_np1(i,j)=gb_ty_n(i,j) + gb_ty_t*dt
-     &                     + gb_ty_tt*dt**2/2
-              gb_xx_np1(i,j)=gb_xx_n(i,j) + gb_xx_t*dt
-     &                     + gb_xx_tt*dt**2/2
-              gb_xy_np1(i,j)=gb_xy_n(i,j) + gb_xy_t*dt
-     &                     + gb_xy_tt*dt**2/2
-              gb_yy_np1(i,j)=gb_yy_n(i,j) + gb_yy_t*dt
-     &                     + gb_yy_tt*dt**2/2
-              psi_np1(i,j)  =psi_n(i,j) + psi_t*dt  
-     &                     + psi_tt*dt**2/2
-              omega_np1(i,j)=omega_n(i,j) + omega_t*dt  
-     &                     + omega_tt*dt**2/2
-              Hb_t_np1(i,j) =Hb_t_n(i,j) + Hb_t_t*dt
-              Hb_x_np1(i,j) =Hb_x_n(i,j) + Hb_x_t*dt     
-              Hb_y_np1(i,j) =Hb_y_n(i,j) + Hb_y_t*dt     
-              phi1_np1(i,j) =phi1_n(i,j) + phi1_t*dt
-     &                     + phi1_tt*dt**2/2
+              gb_tt_np1(i,j)=0.0d0
+              gb_tx_np1(i,j)=0.0d0
+              gb_ty_np1(i,j)=0.0d0
+              gb_xx_np1(i,j)=0.0d0
+              gb_xy_np1(i,j)=0.0d0
+              gb_yy_np1(i,j)=0.0d0
+              psi_np1(i,j)  =0.0d0
+              omega_np1(i,j)=0.0d0
+              Hb_t_np1(i,j) =0.0d0
+              Hb_x_np1(i,j) =0.0d0   
+              Hb_y_np1(i,j) =0.0d0
+              phi1_np1(i,j) =0.0d0
+!!!!!!!!!!!!!
   
             end if
 

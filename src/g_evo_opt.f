@@ -312,6 +312,43 @@ c----------------------------------------------------------------------
               !(REGION) interior points; evolve 
               if (chr(i,j).ne.ex) then
 
+
+!                  write(*,*)
+!                  write(*,*) 'Pre variables update'
+!                  write(*,*) 'x,y=',x(i),y(j)
+!                  write(*,*) 'dt,dx,dy=',dt,dx,dy
+!                  write(*,*) 'x0,y0',x0,y0
+!
+!                  write(*,*) ' at tn:'
+!                  write(*,*) ' gb_tt np1,n,nm1:',gb_tt_np1(i,j),
+!     &                   gb_tt_n(i,j),gb_tt_nm1(i,j)
+!                  write(*,*) ' gb_tx np1,n,nm1:',gb_tx_np1(i,j),
+!     &                   gb_tx_n(i,j),gb_tx_nm1(i,j)
+!                  write(*,*) ' gb_xx np1,n,nm1:',gb_xx_np1(i,j),
+!     &                   gb_xx_n(i,j),gb_xx_nm1(i,j)
+!                  write(*,*) ' psi np1,n,nm1:',psi_np1(i,j),
+!     &                   psi_n(i,j),psi_nm1(i,j)
+!                  write(*,*) ' g0_11 :',g0_ll(1,1)
+!                  write(*,*) ' g0_12 :',g0_ll(1,2)
+!                  write(*,*) ' g0_22 :',g0_ll(2,2)
+!                  write(*,*) ' g0_33:',g0_ll(3,3)
+!                  write(*,*) ' g0u_11 :',g0_uu(1,1)
+!                  write(*,*) ' g0u_12 :',g0_uu(1,2)
+!                  write(*,*) ' g0u_22 :',g0_uu(2,2)
+!                  write(*,*) ' g0u_33:',g0_uu(3,3)
+!                  write(*,*) ' phi np1,n,nm1:',phi1_np1(i,j),
+!     &                     phi1_n(i,j),phi1_nm1(i,j)
+!                  write(*,*) ' phi1_t/x:',phi10_x(1),phi10_x(2)
+!                  write(*,*) ' phi1_ti..:',phi10_xx(1,1),phi10_xx(1,2)
+!
+!                  write(*,*) ' res J:'
+!                  write(*,*) ' tt:',efe(1,1),efe_J(1,1)
+!                  write(*,*) ' tx:',efe(1,2),efe_J(1,2)
+!                  write(*,*) ' xx:',efe(2,2),efe_J(2,2)
+!                  write(*,*) ' psi:',efe(3,3),efe_J(3,3)
+!                  write(*,*) ' phi1:',phi1_res,phi1_J
+
+
                 ! computes tensors at point i,j
                 call tensor_init(
      &                  gb_tt_np1,gb_tt_n,gb_tt_nm1,
@@ -641,6 +678,24 @@ c----------------------------------------------------------------------
      &                      gB_x(3)*phi10_x(1)*g0_uu(1,3)+
      &                      gB_x(3)*phi10_x(2)*g0_uu(2,3)
      &                                               )
+
+
+!            if (abs(x0-(0.0)).lt.10.0d0**(-1)) then
+!                  write(*,*)
+!                  write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!                  write(*,*) 'phi10_xx(1,1)=',phi10_xx(1,1)
+!                  write(*,*) 'phi10_xx(1,2)=',phi10_xx(1,2)
+!                  write(*,*) 'phi10_xx(1,3)=',phi10_xx(1,3)
+!                  write(*,*) 'phi10_xx(2,2)=',phi10_xx(2,2)
+!                  write(*,*) 'phi10_xx(2,3)=',phi10_xx(2,3)
+!                  write(*,*) 'phi10_xx(3,3)=',phi10_xx(3,3)
+!                  write(*,*) 'g0_uu(1,1)=',g0_uu(1,1)
+!                  write(*,*) 'g0_uu(1,2)=',g0_uu(1,2)
+!                  write(*,*) 'g0_uu(1,3)=',g0_uu(1,3)
+!                  write(*,*) 'g0_uu(2,2)=',g0_uu(2,2)
+!                  write(*,*) 'g0_uu(2,3)=',g0_uu(2,3)
+!                  write(*,*) 'g0_uu(3,3)=',g0_uu(3,3)
+!            end if
 
                 !---------------------------------------------------------------- 
                 ! computes diag. Jacobian of g_np1->L.g_np1 transformation
@@ -1308,6 +1363,22 @@ c----------------------------------------------------------------------
                   efe_J(2,2)=efe_J(2,2)+cd_J_ll(2,2)
                   efe_J(2,3)=efe_J(2,3)+cd_J_ll(2,3)
                   efe_J(3,3)=efe_J(3,3)+cd_J_ll(3,3)
+
+!                  efe(1,1)=0.0d0
+!                  efe(1,2)=0.0d0
+!                  efe(1,3)=0.0d0
+!                  efe(2,2)=0.0d0
+!                  efe(2,3)=0.0d0
+!                  efe(3,3)=0.0d0
+!                  efe_J(1,1)=0.0d0
+!                  efe_J(1,2)=0.0d0
+!                  efe_J(1,3)=0.0d0
+!                  efe_J(2,2)=0.0d0
+!                  efe_J(2,3)=0.0d0
+!                  efe_J(3,3)=0.0d0
+!                  afe=0.0d0
+!                  bfe=0.0d0
+!                  phi1_res=0.0d0
                 end if
 
                 ! update gbars 
@@ -1318,74 +1389,87 @@ c----------------------------------------------------------------------
                   gb_tt_np1(i,j)=gb_tt_np1(i,j)-efe(1,1)/efe_J(1,1)
                 end if
 
-!                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
-!     &            efe_J(1,2).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
-!                end if
-!
-!                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
-!     &            efe_J(1,3).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
-!                end if
-!
-!                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
-!     &            efe_J(2,2).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
-!                end if
-!
-!                if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
-!     &            efe_J(2,3).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
-!                end if
-!
-!                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
-!     &            efe_J(3,3).eq.0) then
-!                  dump=.true.
-!                else
-!                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
-!                end if
-!
-!                ! update psi
-!                if (is_nan(afe).or.is_nan(afe_J).or.
-!     &            afe_J.eq.0) then
-!                  dump=.true.
-!                else
-!                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
-!                end if
-!
-!                ! update omega
-!                if (is_nan(bfe).or.is_nan(bfe_J).or.
-!     &            bfe_J.eq.0) then
-!                  dump=.true.
-!                else
-!                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
-!                end if
-!
-!                ! update phi1 
-!                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
-!                  dump=.true.
-!                else
-!                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J 
-!                end if
+                if (is_nan(efe(1,2)).or.is_nan(efe_J(1,2)).or.
+     &            efe_J(1,2).eq.0) then
+                  dump=.true.
+                else
+                  gb_tx_np1(i,j)=gb_tx_np1(i,j)-efe(1,2)/efe_J(1,2)
+                end if
 
-!                gb_res(i,j) =
-!     &            max(abs(efe(1,1)/efe_J(1,1)),
-!     &                abs(efe(1,2)/efe_J(1,2)),
-!     &                abs(efe(1,3)/efe_J(1,3)),
-!     &                abs(efe(2,2)/efe_J(2,2)),
-!     &                abs(efe(2,3)/efe_J(2,3)),
-!     &                abs(efe(3,3)/efe_J(3,3)),
-!     &                abs(afe/afe_J),abs(bfe/bfe_J),
-!     &                abs(phi1_res/phi1_J))
-                gb_res(i,j) = abs(efe(1,1)/efe_J(1,1))
+                if (is_nan(efe(1,3)).or.is_nan(efe_J(1,3)).or.
+     &            efe_J(1,3).eq.0) then
+                  dump=.true.
+                else
+                  gb_ty_np1(i,j)=gb_ty_np1(i,j)-efe(1,3)/efe_J(1,3)
+                end if
+
+                if (is_nan(efe(2,2)).or.is_nan(efe_J(2,2)).or.
+     &            efe_J(2,2).eq.0) then
+                  dump=.true.
+                else
+                  gb_xx_np1(i,j)=gb_xx_np1(i,j)-efe(2,2)/efe_J(2,2)
+                end if
+
+                if (is_nan(efe(2,3)).or.is_nan(efe_J(2,3)).or.
+     &            efe_J(2,3).eq.0) then
+                  dump=.true.
+                else
+                  gb_xy_np1(i,j)=gb_xy_np1(i,j)-efe(2,3)/efe_J(2,3)
+                end if
+
+                if (is_nan(efe(3,3)).or.is_nan(efe_J(3,3)).or.
+     &            efe_J(3,3).eq.0) then
+                  dump=.true.
+                else
+                  gb_yy_np1(i,j)=gb_yy_np1(i,j)-efe(3,3)/efe_J(3,3)
+                end if
+
+                ! update psi
+                if (is_nan(afe).or.is_nan(afe_J).or.
+     &            afe_J.eq.0) then
+                  dump=.true.
+                else
+                  psi_np1(i,j)=psi_np1(i,j)-afe/afe_J
+                end if
+
+                ! update omega
+                if (is_nan(bfe).or.is_nan(bfe_J).or.
+     &            bfe_J.eq.0) then
+                  dump=.true.
+                else
+                  omega_np1(i,j)=omega_np1(i,j)-bfe/bfe_J
+                end if
+
+                ! update phi1 
+                if (is_nan(phi1_res).or.is_nan(phi1_J)) then
+                  dump=.true.
+                else
+                  phi1_np1(i,j)=phi1_np1(i,j)-phi1_res/phi1_J
+                end if
+
+                gb_res(i,j) =
+     &            max(abs(efe(1,1)/efe_J(1,1)),
+     &                abs(efe(1,2)/efe_J(1,2)),
+     &                abs(efe(1,3)/efe_J(1,3)),
+     &                abs(efe(2,2)/efe_J(2,2)),
+     &                abs(efe(2,3)/efe_J(2,3)),
+     &                abs(efe(3,3)/efe_J(3,3)),
+     &                abs(afe/afe_J),abs(bfe/bfe_J),
+     &                abs(phi1_res/phi1_J))
+
+!            if (gb_res(i,j).gt.10.0d0**(-10)) then
+!
+!            if (( (abs(x0-(0.8125)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.4375)).lt.10.0d0**(-10))).or.
+!     &          ( (abs(x0-(0.937584375)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.5)).lt.10.0d0**(-10))) ) then
+!               write(*,*) "g_evo_opt"
+!               write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!               write(*,*) "gb_res(i,j)=",gb_res(i,j)
+!
+!            end if
+
+!                gb_res(i,j) = abs(efe(1,1)/efe_J(1,1))
                 cl_res(i,j)=max(abs(c_l(1)),abs(c_l(2)),abs(c_l(3)))
 
                 ! check for NaNs
@@ -1394,6 +1478,11 @@ c----------------------------------------------------------------------
                   write(*,*)
                   write(*,*) 'g_evo_opt: Nan/zero at i,j,Nx,Ny=',
      &                                              i,j,Nx,Ny
+
+!            if (gb_res(i,j).gt.10.0d0**(-10)) then
+!                  write(*,*)
+!                  write(*,*) 'Post variables update'
+
                   write(*,*) 'x,y=',x(i),y(j)
                   write(*,*) 'dt,dx,dy=',dt,dx,dy
                   write(*,*) 'x0,y0',x0,y0

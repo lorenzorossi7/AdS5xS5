@@ -252,6 +252,109 @@ c----------------------------------------------------------------------
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
 
+!            if (( (abs(x0-(0.8125)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.4375)).lt.10.0d0**(-10))).or.
+!     &          ( (abs(x0-(0.9375)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.5)).lt.10.0d0**(-10))) ) then
+!               write(*,*) "gauge 1"
+!               write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!               write(*,*) "F_t_np1=",F_t_np1
+!
+!            end if
+
+                  if (xi2.le.1e-16) then
+                    Hb_t_np1(i,j)=F_t_np1
+                  else
+                    Hb_t_np1(i,j)=F_t_np1+(Hb_t0-F_t_np1)*exp(-g0)
+                  end if
+              end if
+            end do
+          end do
+          return
+        end if
+
+
+        !--------------------------------------------------------------
+        ! gauge 2
+        !--------------------------------------------------------------
+
+        if (gauge.eq.2) then
+          do i=2,Nx-1
+            do j=2,Ny-1
+              if (chr(i,j).ne.ex) then
+                  x0=x(i)
+                  y0=y(j)
+                  Hb_t0=Hb_t_0(i,j)
+
+                  f0=trans(x0,rho1,rho2)
+                  g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+!                g0=(t_np1/(xi1*(1-f0)))**4 !if we want no transition near the boundary
+
+                  ! calculate gbar derivatives for np1 time level
+                  call df2_int(gb_tt_np1,gb_tt_np1,gb_tt_np1,
+     &                 gb_tt_t,gb_tt_x,gb_tt_y,
+     &                 gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &                 gb_tt_xx,gb_tt_xy,gb_tt_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
+                  call df2_int(gb_tx_np1,gb_tx_np1,gb_tx_np1,
+     &                 gb_tx_t,gb_tx_x,gb_tx_y,
+     &                 gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &                 gb_tx_xx,gb_tx_xy,gb_tx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+                  call df2_int(gb_ty_np1,gb_ty_np1,gb_ty_np1,
+     &                 gb_ty_t,gb_ty_x,gb_ty_y,
+     &                 gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &                 gb_ty_xx,gb_ty_xy,gb_ty_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
+                  call df2_int(gb_xx_np1,gb_xx_np1,gb_xx_np1,
+     &                 gb_xx_t,gb_xx_x,gb_xx_y,
+     &                 gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &                 gb_xx_xx,gb_xx_xy,gb_xx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+                  call df2_int(gb_xy_np1,gb_xy_np1,gb_xy_np1,
+     &                 gb_xy_t,gb_xy_x,gb_xy_y,
+     &                 gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &                 gb_xy_xx,gb_xy_xy,gb_xy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
+                  call df2_int(gb_yy_np1,gb_yy_np1,gb_yy_np1,
+     &                 gb_yy_t,gb_yy_x,gb_yy_y,
+     &                 gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &                 gb_yy_xx,gb_yy_xy,gb_yy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
+                  call df2_int(psi_np1,psi_np1,psi_np1,
+     &                 psi_t,psi_x,psi_y,
+     &                 psi_tt,psi_tx,psi_ty,
+     &                 psi_xx,psi_xy,psi_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
+                  call df2_int(omega_np1,omega_np1,omega_np1,
+     &                 omega_t,omega_x,omega_y,
+     &                 omega_tt,omega_tx,omega_ty,
+     &                 omega_xx,omega_xy,omega_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+                  call df2_int(phi1_np1,phi1_np1,phi1_np1,
+     &                 phi1_t,phi1_x,phi1_y,
+     &                 phi1_tt,phi1_tx,phi1_ty,
+     &                 phi1_xx,phi1_xy,phi1_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
+
+                  F_t_np1=!0.0d0
+     &             f0*(1/10.0d0)*(20.0d0*gb_tx_np1(i,j)
+     &                 +4.0d0*(cos(PI*y0)/sin(PI*y0))*
+     &                  (10.0d0*gb_ty_np1(i,j)+gb_tx_y/PI)
+     &                 +gb_tx_yy/PI**2)
+
+
+!            if (( (abs(x0-(0.8125)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.4375)).lt.10.0d0**(-10))).or.
+!     &          ( (abs(x0-(0.9375)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.5)).lt.10.0d0**(-10))) ) then
+!                    write(*,*) "gauge 2"
+!               write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!               write(*,*) "F_t_np1=",F_t_np1
+!
+!            end if
+
+
                   if (xi2.le.1e-16) then
                     Hb_t_np1(i,j)=F_t_np1
                   else
@@ -479,6 +582,165 @@ c-----------------------------------------------------------------------
      &                   +(16.0d0*tan(PI*y0)*omega_np1(i,j)*PI)*c13
                   f0=trans(x0,rho1,rho2)
                   g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+
+!            if (( (abs(x0-(0.8125)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.4375)).lt.10.0d0**(-10))).or.
+!     &          ( (abs(x0-(0.9375)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.5)).lt.10.0d0**(-10))) ) then
+!                    write(*,*) "gauge 1"
+!               write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!               write(*,*) "F_x_np1=",F_x_np1
+!               write(*,*) "F_y_np1=",F_y_np1
+!
+!            end if
+
+                  if (xi2.le.1e-16) then
+                    Hb_x_np1(i,j)=F_x_np1
+                    Hb_y_np1(i,j)=F_y_np1
+                  else
+                    Hb_x_np1(i,j)=F_x_np1+(Hb_x0-F_x_np1)*exp(-g0)
+                    Hb_y_np1(i,j)=F_y_np1+(Hb_y0-F_y_np1)*exp(-g0)
+                  end if
+              end if
+            end do
+          end do
+          return
+        end if
+
+        !--------------------------------------------------------------
+        ! gauge 2
+        !--------------------------------------------------------------
+
+        if (gauge.eq.2) then 
+          do i=2,Nx-1
+            do j=2,Ny-1
+              if (chr(i,j).ne.ex) then
+                  x0=x(i)
+                  y0=y(j)
+                  Hb_x0=Hb_x_0(i,j)
+                  Hb_y0=Hb_y_0(i,j)
+
+                  ! calculate gbar derivatives for np1 time level
+                  call df2_int(gb_tt_np1,gb_tt_np1,gb_tt_np1,
+     &                 gb_tt_t,gb_tt_x,gb_tt_y,
+     &                 gb_tt_tt,gb_tt_tx,gb_tt_ty,
+     &                 gb_tt_xx,gb_tt_xy,gb_tt_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tt')
+                  call df2_int(gb_tx_np1,gb_tx_np1,gb_tx_np1,
+     &                 gb_tx_t,gb_tx_x,gb_tx_y,
+     &                 gb_tx_tt,gb_tx_tx,gb_tx_ty,
+     &                 gb_tx_xx,gb_tx_xy,gb_tx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_tx')
+                  call df2_int(gb_ty_np1,gb_ty_np1,gb_ty_np1,
+     &                 gb_ty_t,gb_ty_x,gb_ty_y,
+     &                 gb_ty_tt,gb_ty_tx,gb_ty_ty,
+     &                 gb_ty_xx,gb_ty_xy,gb_ty_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_ty')
+                  call df2_int(gb_xx_np1,gb_xx_np1,gb_xx_np1,
+     &                 gb_xx_t,gb_xx_x,gb_xx_y,
+     &                 gb_xx_tt,gb_xx_tx,gb_xx_ty,
+     &                 gb_xx_xx,gb_xx_xy,gb_xx_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xx')
+                  call df2_int(gb_xy_np1,gb_xy_np1,gb_xy_np1,
+     &                 gb_xy_t,gb_xy_x,gb_xy_y,
+     &                 gb_xy_tt,gb_xy_tx,gb_xy_ty,
+     &                 gb_xy_xx,gb_xy_xy,gb_xy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_xy')
+                  call df2_int(gb_yy_np1,gb_yy_np1,gb_yy_np1,
+     &                 gb_yy_t,gb_yy_x,gb_yy_y,
+     &                 gb_yy_tt,gb_yy_tx,gb_yy_ty,
+     &                 gb_yy_xx,gb_yy_xy,gb_yy_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'gb_yy')
+                  call df2_int(psi_np1,psi_np1,psi_np1,
+     &                 psi_t,psi_x,psi_y,
+     &                 psi_tt,psi_tx,psi_ty,
+     &                 psi_xx,psi_xy,psi_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'psi')
+                  call df2_int(omega_np1,omega_np1,omega_np1,
+     &                 omega_t,omega_x,omega_y,
+     &                 omega_tt,omega_tx,omega_ty,
+     &                 omega_xx,omega_xy,omega_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'omega')
+                  call df2_int(phi1_np1,phi1_np1,phi1_np1,
+     &                 phi1_t,phi1_x,phi1_y,
+     &                 phi1_tt,phi1_tx,phi1_ty,
+     &                 phi1_xx,phi1_xy,phi1_yy,
+     &                 dx,dy,dt,i,j,chr,ex,Nx,Ny,'phi1')
+
+                  f0=trans(x0,rho1,rho2)
+                  g0=(t_np1/(xi2*f0+xi1*(1-f0)))**4
+!                g0=(t_np1/(xi1*(1-f0)))**4 !if we want no transition near the boundary
+
+                  F_x_np1=!0.0d0
+     &             f0*(50.0d0*cos(PI*y0)*phi1_np1(i,j)
+     &                   -96.0d0*omega_np1(i,j)
+     &                   +2.0d0*gb_xx_np1(i,j)
+     &                   -24.0d0*(1/PI**2)*gb_yy_np1(i,j)
+     &                   +10.0d0*sin(PI*y0)*phi1_y/PI
+     &                   -2.0d0*(cos(PI*y0)/sin(PI*y0))*psi_y/PI
+     &                   -(0.50d0)*psi_yy/PI**2
+     &                   -(0.50d0)*(cos(PI*y0)/sin(PI*y0))*gb_xx_y/PI
+     &                   -(1.0d0/8.00d0)*gb_xx_yy/PI**2
+     &                   -gb_xy_y/PI**2)
+
+        if (abs(y0-0.5).lt.10.0d0**(-10)) then
+          F_y_np1=!0.0d0
+     &     f0*(PI/64.0d0)*(720.0d0*sin(PI*y0)*phi1_np1(i,j)
+     &                      +8.0d0*psi_y/PI
+     &                      +128.0d0*omega_y/PI
+     &                      -4.0d0*gb_xx_y/PI
+     &                      -32.0d0*gb_yy_y/PI**3
+!     &           -1536.0d0*(sin(PI*y0)/cos(PI*y0))*omega_np1(i,j)
+!     &     -384.0d0*(sin(PI*y0)/cos(PI*y0))*(1/PI**2)*gb_yy_np1(i,j)
+!     &     +144.0d0*sin(PI*y0)*(sin(PI*y0)/cos(PI*y0))*phi1_y/PI
+!     &           -4.0d0*(sin(PI*y0)/cos(PI*y0))*psi_yy/PI**2
+!     &           -2.0d0*(sin(PI*y0)/cos(PI*y0))*gb_tt_yy/PI**2
+!     &           -3.0d0*(sin(PI*y0)/cos(PI*y0))*gb_xx_yy/PI**2
+!     &           -24.0d0*(sin(PI*y0)/cos(PI*y0))*gb_xy_y/PI
+     &              )
+
+        else
+          F_y_np1=!0.0d0
+     &     f0*(PI/64.0d0)*(720.0d0*sin(PI*y0)*phi1_np1(i,j)
+     &                      +8.0d0*psi_y/PI
+     &                      +128.0d0*omega_y/PI
+     &                      -4.0d0*gb_xx_y/PI
+     &                      -32.0d0*gb_yy_y/PI**3
+     &           -1536.0d0*(sin(PI*y0)/cos(PI*y0))*omega_np1(i,j)
+     &     -384.0d0*(sin(PI*y0)/cos(PI*y0))*(1/PI**2)*gb_yy_np1(i,j)
+     &     +144.0d0*sin(PI*y0)*(sin(PI*y0)/cos(PI*y0))*phi1_y/PI
+     &           -4.0d0*(sin(PI*y0)/cos(PI*y0))*psi_yy/PI**2
+     &           -2.0d0*(sin(PI*y0)/cos(PI*y0))*gb_tt_yy/PI**2
+     &           -3.0d0*(sin(PI*y0)/cos(PI*y0))*gb_xx_yy/PI**2
+     &           -24.0d0*(sin(PI*y0)/cos(PI*y0))*gb_xy_y/PI
+     &              )
+        end if
+
+!            if (( (abs(x0-(0.8125)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.4375)).lt.10.0d0**(-10))).or.
+!     &          ( (abs(x0-(0.9375)).lt.10.0d0**(-10)).and.
+!     &          (abs(y0-(0.5)).lt.10.0d0**(-10))) ) then
+!                    write(*,*) "gauge 2"
+!               write(*,*) "i,j,x0,y0=",i,j,x0,y0
+!               write(*,*) "F_x_np1=",F_x_np1
+!               write(*,*) "F_y_np1=",F_y_np1
+!        write(*,*) "-1536.0d0*(sin(PI*y0)/cos(PI*y0))*omega_np1(i,j)="
+!     &          ,-1536.0d0*(sin(PI*y0)/cos(PI*y0))*omega_np1(i,j)
+!          write(*,*) "omega_np1(i,j)="
+!     &          ,omega_np1(i,j)
+!          write(*,*) "-1536.0d0*(sin(PI*y0)/cos(PI*y0))="
+!     &          ,-1536.0d0*(sin(PI*y0)/cos(PI*y0))
+!      write(*,*) "--------------------------"
+!        write(*,*) "144.0d0*sin(PI*y0)
+!     &       *(sin(PI*y0)/cos(PI*y0))*phi1_y/PI="
+!     &   ,144.0d0*sin(PI*y0)*(sin(PI*y0)/cos(PI*y0))*phi1_y/PI
+!        write(*,*) "phi1_y/PI="
+!     &   ,phi1_y/PI
+!        write(*,*) "144.0d0*sin(PI*y0)
+!     &       *(sin(PI*y0)/cos(PI*y0))="
+!     &   ,144.0d0*sin(PI*y0)*(sin(PI*y0)/cos(PI*y0))
+!
+!            end if
 
                   if (xi2.le.1e-16) then
                     Hb_x_np1(i,j)=F_x_np1

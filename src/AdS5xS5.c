@@ -928,6 +928,11 @@ real AdS5xS5_evo_residual(void)
       l2norm=0;
    }
 
+//   printf("l2norm=%.15f\n",l2norm);
+//   printf("l2norm_gb=%.15f\n",l2norm_gb);
+//   printf("l2norm_hb_t=%.15f\n",l2norm_hb_t);
+//   printf("l2norm_hb_i=%.15f\n",l2norm_hb_i);
+
    return l2norm;
 }
 
