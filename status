@@ -1,5 +1,5 @@
 STATUS OF THIS BRANCH:
-This code aims to evolve perturbations of AdS_5xS^5 that preserve an SO(3) isometry group in AdS5 (so 2 the fields change over 1+1 coordinates t and r) and an SO(5) in S^5 (so the fields change over an additional angular coordinate theta).
+This code aims to evolve perturbations of AdS_5xS^5 that preserve an SO(4) isometry group in AdS5 (so the fields change over 1+1 coordinates t and r) and an SO(5) in S^5 (so the fields change over an additional angular coordinate theta).
 The theory of gravity used is 10-dimensional bosonic supergravity with only the self-dual 5-form included.
 The goal is to achieve stable evolution. This code is inherited by Hans Bantilan, who first attempted to solve this problem without success. 
 This branch contains Lorenzo Rossi's early attempts.
